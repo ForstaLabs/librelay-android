@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:layout_gravity="center"
+              android:layout_height="fill_parent"
+              android:layout_width="fill_parent"
+              android:orientation="vertical"
+              xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <io.forsta.librelay.components.ContactFilterToolbar
+            android:id="@+id/toolbar"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_width="match_parent"
+            android:minHeight="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            android:theme="?attr/actionBarStyle" />
+    <RadioGroup
+        android:id="@+id/new_conversation_thread_type"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <RadioButton
+            android:id="@+id/new_conversation_button_conversation"
+            android:checked="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:text="Conversation"
+            android:background="@drawable/new_conversation_thread_type"
+            android:button="@color/transparent"
+            android:layout_gravity="center"
+            android:paddingTop="5dp"
+            android:paddingBottom="15dp"
+            android:textColor="@drawable/new_conversation_thread_type_text_colors"
+            android:textAlignment="center"
+            android:layout_weight="1"/>
+        <RadioButton
+            android:id="@+id/new_conversation_button_announcement"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:text="Announcement"
+            android:layout_gravity="center"
+            android:button="@color/transparent"
+            android:paddingTop="5dp"
+            android:paddingBottom="15dp"
+            android:textColor="@drawable/new_conversation_thread_type_text_colors"
+            android:textAlignment="center"
+            android:background="@drawable/new_conversation_thread_type"
+            android:layout_weight="1"/>
+    </RadioGroup>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:minHeight="20dp"
+        android:padding="5dp"
+        android:layout_marginBottom="0dp">
+        <io.forsta.librelay.components.FlowLayout
+            android:id="@+id/contact_expression_elements"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_weight="1">
+        </io.forsta.librelay.components.FlowLayout>
+    </LinearLayout>
+
+    <fragment android:id="@+id/contact_selection_list_fragment"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_weight="1"
+              android:name="io.forsta.librelay.contacts.ContactSelectionListFragment" />
+
+    <ProgressBar
+        android:id="@+id/contact_search_progress"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="50dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="50dp"
+        android:visibility="gone"
+        android:background="@android:color/transparent"/>
+
+</LinearLayout>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/gray95">
+
+    <io.forsta.librelay.components.ZoomingImageView
+               android:id="@+id/image"
+               android:layout_width="match_parent"
+               android:layout_height="match_parent"
+               android:contentDescription="@string/media_preview_activity__image_content_description" />
+    <io.forsta.librelay.video.VideoPlayer
+        android:id="@+id/video_player"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
+
+</RelativeLayout>
