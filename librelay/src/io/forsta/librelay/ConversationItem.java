@@ -474,9 +474,7 @@ public class ConversationItem extends LinearLayout
   }
 
   private boolean shouldInterceptClicks(MessageRecord messageRecord) {
-    return batchSelected.isEmpty() &&
-            (messageRecord.isFailed() ||
-            messageRecord.isBundleKeyExchange());
+    return batchSelected.isEmpty() && messageRecord.isBundleKeyExchange();
   }
 
   private void setRecipientText(MessageRecord messageRecord, Recipient recipient) {
