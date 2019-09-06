@@ -13,7 +13,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 
 public class DbHelper extends SQLiteOpenHelper {
-  private static final String DB_NAME = "relay.db";
+  private static final String DB_NAME = "librelay.db";
   private static final int VERSION = 1;
 
   public DbHelper(Context context) {
