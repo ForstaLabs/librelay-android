@@ -129,10 +129,6 @@ android {
         multiDexEnabled true
         buildConfigField "long", "BUILD_TIMESTAMP", getLastCommitTimestamp() + "L"
         buildConfigField "String", "RECAPTCHA_KEY", "\"6LetY10UAAAAAKugwBLDP31SVLcl1iem9K1fqJlA\""
-        resValue "string", "forsta_authorities", 'io.forsta.librelay.provider'
-        resValue "string", "forsta_database_provider", 'io.forsta.librelay.provider.database'
-        resValue "string", "forsta_account_type", 'io.forsta.librelay'
-
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     flavorDimensions "forsta"
@@ -151,6 +147,9 @@ android {
             buildConfigField "String", "SIGNAL_API_URL", "\"https://signal.forsta.io\""
             buildConfigField "String", "FORSTA_SYNC_NUMBER", "\"cf40fca2-dfa8-4356-8ae7-45f56f7551ca\""
             buildConfigField "String", "FORSTA_PROVIDER", "\"io.forsta.librelay.provider\""
+            resValue "string", "forsta_authorities", 'io.forsta.librelay.provider'
+            resValue "string", "forsta_database_provider", 'io.forsta.librelay.provider.database'
+            resValue "string", "forsta_account_type", 'io.forsta.librelay'
         }
     }
     compileOptions {
