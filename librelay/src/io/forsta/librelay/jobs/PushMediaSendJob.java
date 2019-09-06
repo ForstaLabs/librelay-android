@@ -121,6 +121,7 @@ public class PushMediaSendJob extends PushSendJob {
         List<NetworkFailure> failures = new LinkedList<>();
         for (NetworkFailureException nfe : e.getNetworkExceptions()) {
           Recipient recipient = RecipientFactory.getRecipientsFromString(context, nfe.getE164number(), false).getPrimaryRecipient();
+          Log.w(TAG, "Network failure " + nfe.getE164number() + " message: " + e.getMessage());
           failures.add(new NetworkFailure(recipient.getRecipientId()));
         }
 
