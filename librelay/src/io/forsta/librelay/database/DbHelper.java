@@ -30,7 +30,7 @@ public class DbHelper extends SQLiteOpenHelper {
     db.execSQL(GroupDatabase.CREATE_TABLE);
     db.execSQL(RecipientPreferenceDatabase.CREATE_TABLE);
     db.execSQL(ThreadPreferenceDatabase.CREATE_TABLE);
-    db.execSQL(MessageAddressDatabase.CREATE_TABLE);
+    db.execSQL(MessageReceiptsDatabase.CREATE_TABLE);
 
     db.execSQL(Contacts.CREATE_TABLE);
     db.execSQL(Identities.CREATE_TABLE);
@@ -39,7 +39,7 @@ public class DbHelper extends SQLiteOpenHelper {
     db.execSQL(Sessions.CREATE_TABLE);
 
     executeStatements(db, MessageDatabase.CREATE_INDEXS);
-    executeStatements(db, MessageAddressDatabase.CREATE_INDEXS);
+    executeStatements(db, MessageReceiptsDatabase.CREATE_INDEXS);
     executeStatements(db, AttachmentDatabase.CREATE_INDEXS);
     executeStatements(db, ThreadDatabase.CREATE_INDEXS);
     executeStatements(db, DraftDatabase.CREATE_INDEXS);

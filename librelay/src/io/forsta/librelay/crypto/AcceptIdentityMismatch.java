@@ -13,7 +13,7 @@ import io.forsta.librelay.database.DbFactory;
 import io.forsta.librelay.database.Identities;
 import io.forsta.librelay.database.MessageDatabase;
 import io.forsta.librelay.ApplicationContext;
-import io.forsta.librelay.database.MessageAddressDatabase;
+import io.forsta.librelay.database.MessageReceiptsDatabase;
 import io.forsta.librelay.database.PushDatabase;
 import io.forsta.librelay.database.documents.IdentityKeyMismatch;
 import io.forsta.librelay.database.model.MessageRecord;
@@ -83,13 +83,13 @@ public class AcceptIdentityMismatch extends AsyncTask<Void, Void, Void> {
 
   private void processOutgoingMessageRecord(MessageRecord messageRecord) {
     MessageDatabase messageDatabase = DbFactory.getMessageDatabase(context);
-    MessageAddressDatabase messageAddressDatabase = DbFactory.getMessageReceiptDatabase(context);
+    MessageReceiptsDatabase messageReceiptsDatabase = DbFactory.getMessageReceiptDatabase(context);
 
     messageDatabase.removeMismatchedIdentity(messageRecord.getId(),
         mismatch.getRecipientId(),
         mismatch.getIdentityKey());
 
-    Recipients recipients = messageAddressDatabase.getRecipientsForId(messageRecord.getId());
+    Recipients recipients = messageReceiptsDatabase.getRecipientsForId(messageRecord.getId());
 
     MessageSender.resend(context, messageRecord);
   }

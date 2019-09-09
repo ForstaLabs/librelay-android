@@ -28,9 +28,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import io.forsta.relay.AuthenticationRequiredActionBarActivity;
-import io.forsta.relay.LoginActivity;
-
 import io.forsta.librelay.BuildConfig;
 import io.forsta.librelay.atlas.AtlasApi;
 import io.forsta.librelay.atlas.AtlasPreferences;
@@ -45,7 +42,7 @@ import io.forsta.librelay.database.Contacts;
 import io.forsta.librelay.database.DbFactory;
 import io.forsta.librelay.database.GroupDatabase;
 import io.forsta.librelay.database.Identities;
-import io.forsta.librelay.database.MessageAddressDatabase;
+import io.forsta.librelay.database.MessageReceiptsDatabase;
 import io.forsta.librelay.database.MessageDatabase;
 import io.forsta.librelay.database.ThreadDatabase;
 import io.forsta.librelay.database.model.MessageRecord;
@@ -386,7 +383,7 @@ public class DashboardActivity extends AuthenticationRequiredActionBarActivity {
       Cursor cursor = DbFactory.getMessageDatabase(DashboardActivity.this).getConversation(tId);
       MessageRecord record;
       MessageDatabase.Reader reader = DbFactory.getMessageDatabase(DashboardActivity.this).readerFor(cursor);
-      MessageAddressDatabase addressDatabase = DbFactory.getMessageReceiptDatabase(DashboardActivity.this);
+      MessageReceiptsDatabase addressDatabase = DbFactory.getMessageReceiptDatabase(DashboardActivity.this);
 
       while ((record = reader.getNext()) != null) {
         Recipient recipient = record.getIndividualRecipient();
@@ -534,11 +531,11 @@ public class DashboardActivity extends AuthenticationRequiredActionBarActivity {
       Cursor cursor = DbFactory.getMessageReceiptDatabase(DashboardActivity.this).getAllAddresses();
       if (cursor != null) {
         while (cursor.moveToNext()) {
-          sb.append(cursor.getString(cursor.getColumnIndex(MessageAddressDatabase.MESSAGE_ID))).append(" ");
-          sb.append(cursor.getString(cursor.getColumnIndex(MessageAddressDatabase.ADDRESS))).append(" ");
-          sb.append(cursor.getString(cursor.getColumnIndex(MessageAddressDatabase.DELIVERED))).append(" ");
-          sb.append(cursor.getString(cursor.getColumnIndex(MessageAddressDatabase.READ))).append(" ");
-          sb.append(cursor.getString(cursor.getColumnIndex(MessageAddressDatabase.TIMESTAMP))).append(" ");
+          sb.append(cursor.getString(cursor.getColumnIndex(MessageReceiptsDatabase.MESSAGE_ID))).append(" ");
+          sb.append(cursor.getString(cursor.getColumnIndex(MessageReceiptsDatabase.ADDRESS))).append(" ");
+          sb.append(cursor.getString(cursor.getColumnIndex(MessageReceiptsDatabase.DELIVERED))).append(" ");
+          sb.append(cursor.getString(cursor.getColumnIndex(MessageReceiptsDatabase.READ))).append(" ");
+          sb.append(cursor.getString(cursor.getColumnIndex(MessageReceiptsDatabase.TIMESTAMP))).append(" ");
           sb.append("\n");
         }
       }
