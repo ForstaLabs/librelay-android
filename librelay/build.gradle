@@ -139,7 +139,7 @@ android {
             buildConfigField "String", "FORSTA_SYNC_NUMBER", "\"1e1116aa-31b3-4fb2-a4db-21e8136d4f3a\""
             buildConfigField "String", "FORSTA_PROVIDER", "\"io.forsta.librelay.provider.dev\""
             resValue "string", "forsta_authorities", 'io.forsta.librelay.provider.dev'
-            resValue "string", "forsta_database_provider", 'io.forsta.librelay.provider.dev.database'
+            resValue "string", "forsta_database_provider", 'io.forsta.librelay.dev.provider.database'
             resValue "string", "forsta_account_type", 'io.forsta.librelay.dev'
         }
         prod {
@@ -220,6 +220,12 @@ android {
             res.srcDirs = ['res']
             assets.srcDirs = ['assets']
             jniLibs.srcDirs = ['libs']
+        }
+        dev {
+            manifest.srcFile 'dev/AndroidManifest.xml'
+        }
+        prod {
+            manifest.srcFile 'prod/AndroidManifest.xml'
         }
         androidTest {
             java.srcDirs = ['test/androidTest/java']
