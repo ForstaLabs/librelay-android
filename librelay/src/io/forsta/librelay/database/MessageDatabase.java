@@ -288,7 +288,7 @@ public class MessageDatabase extends DbBase {
   }
 
   public void incrementDeliveryReceiptCount(SyncMessageId syncMessageId) {
-    MessageAddressDatabase addressDatabase = DbFactory.getMessageReceiptDatabase(context);
+    MessageReceiptsDatabase addressDatabase = DbFactory.getMessageReceiptDatabase(context);
     SQLiteDatabase     database        = dbHelper.getWritableDatabase();
     Cursor             cursor          = null;
     boolean            found           = false;
@@ -324,7 +324,7 @@ public class MessageDatabase extends DbBase {
                 notifyConversationListeners(threadId);
               }
             } catch (Exception e) {
-              Log.w("MessageDatabase", e);
+              Log.w(TAG, e);
             }
           }
         }
@@ -515,7 +515,7 @@ public class MessageDatabase extends DbBase {
   }
 
   public List<Pair<Long, Long>> setTimestampRead(SyncMessageId messageId, long expireStarted) {
-    MessageAddressDatabase addressDatabase = DbFactory.getMessageReceiptDatabase(context);
+    MessageReceiptsDatabase addressDatabase = DbFactory.getMessageReceiptDatabase(context);
     SQLiteDatabase         database        = dbHelper.getWritableDatabase();
     List<Pair<Long, Long>> expiring        = new LinkedList<>();
     Cursor                 cursor          = null;
@@ -573,7 +573,7 @@ public class MessageDatabase extends DbBase {
   public OutgoingMediaMessage getOutgoingMessage(long messageId)
       throws MmsException, NoSuchMessageException
   {
-    MessageAddressDatabase addr               = DbFactory.getMessageReceiptDatabase(context);
+    MessageReceiptsDatabase addr               = DbFactory.getMessageReceiptDatabase(context);
     AttachmentDatabase attachmentDatabase = DbFactory.getAttachmentDatabase(context);
     Cursor             cursor             = null;
 
@@ -751,7 +751,7 @@ public class MessageDatabase extends DbBase {
   {
     SQLiteDatabase     db              = dbHelper.getWritableDatabase();
     AttachmentDatabase partsDatabase   = DbFactory.getAttachmentDatabase(context);
-    MessageAddressDatabase messageAddressDb = DbFactory.getMessageReceiptDatabase(context);
+    MessageReceiptsDatabase messageAddressDb = DbFactory.getMessageReceiptDatabase(context);
 
     if (!TextUtils.isEmpty(body)) {
       contentValues.put(BODY, body);
@@ -777,7 +777,7 @@ public class MessageDatabase extends DbBase {
 
   public boolean delete(long messageId) {
     long               threadId           = getThreadIdForMessage(messageId);
-    MessageAddressDatabase addrDatabase       = DbFactory.getMessageReceiptDatabase(context);
+    MessageReceiptsDatabase addrDatabase       = DbFactory.getMessageReceiptDatabase(context);
     AttachmentDatabase attachmentDatabase = DbFactory.getAttachmentDatabase(context);
     attachmentDatabase.deleteAttachmentsForMessage(messageId);
     addrDatabase.deleteAddressesForId(messageId);

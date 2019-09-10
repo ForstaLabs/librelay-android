@@ -23,7 +23,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 
 import io.forsta.librelay.database.model.MessageReceipt;
-import io.forsta.librelay.recipients.Recipient;
 import io.forsta.librelay.recipients.RecipientFactory;
 import io.forsta.librelay.recipients.Recipients;
 
@@ -32,9 +31,9 @@ import java.util.List;
 
 import io.forsta.librelay.util.TextSecurePreferences;
 
-public class MessageAddressDatabase extends DbBase {
+public class MessageReceiptsDatabase extends DbBase {
 
-  private static final String TAG = MessageAddressDatabase.class.getSimpleName();
+  private static final String TAG = MessageReceiptsDatabase.class.getSimpleName();
 
   private static final String TABLE_NAME = "message_receipts";
   private static final String ID = "_id";
@@ -43,15 +42,17 @@ public class MessageAddressDatabase extends DbBase {
   public static final String TIMESTAMP = "timestamp";
   public static final String READ = "read";
   public static final String DELIVERED = "delivered";
+  public static final String FAILED = "failed"; //TODO Store timestamp for each event in the field.
 
   public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + " (" + ID + " INTEGER PRIMARY KEY, " +
-      MESSAGE_ID + " INTEGER, " +  ADDRESS + " TEXT, " + READ + " INTEGER DEFAULT 0, " + DELIVERED + " INTEGER DEFAULT 0, " + TIMESTAMP + " INTEGER DEFAULT 0);";
+      MESSAGE_ID + " INTEGER, " +  ADDRESS + " TEXT, " + READ + " INTEGER DEFAULT 0, " + DELIVERED + " INTEGER DEFAULT 0, " + FAILED + " INTEGER DEFAULT 0, "+ TIMESTAMP + " INTEGER DEFAULT 0);";
 
   public static final String[] CREATE_INDEXS = {
-    "CREATE INDEX IF NOT EXISTS message_receipts_message_id_index ON " + TABLE_NAME + " (" + MESSAGE_ID + ");",
+      "CREATE INDEX IF NOT EXISTS message_receipts_message_id_index ON " + TABLE_NAME + " (" + MESSAGE_ID + ");",
+      "CREATE INDEX IF NOT EXISTS message_receipts_address_index ON " + TABLE_NAME + " (" + ADDRESS + ");",
   };
 
-  public MessageAddressDatabase(Context context, DbHelper dbHelper) {
+  public MessageReceiptsDatabase(Context context, DbHelper dbHelper) {
     super(context, dbHelper);
   }
 
@@ -136,6 +137,13 @@ public class MessageAddressDatabase extends DbBase {
     SQLiteDatabase database = dbHelper.getWritableDatabase();
     ContentValues contentValues = new ContentValues();
     contentValues.put(READ, 1);
+    database.update(TABLE_NAME, contentValues, TIMESTAMP + " = ? AND " + ADDRESS + " = ?", new String[] {timestamp+"", address});
+  }
+
+  public void updateFailed(long timestamp, String address) {
+    SQLiteDatabase database = dbHelper.getWritableDatabase();
+    ContentValues contentValues = new ContentValues();
+    contentValues.put(FAILED, 1);
     database.update(TABLE_NAME, contentValues, TIMESTAMP + " = ? AND " + ADDRESS + " = ?", new String[] {timestamp+"", address});
   }
 

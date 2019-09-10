@@ -123,7 +123,7 @@ public class MessageRecipientListItem extends RelativeLayout
           new AcceptIdentityMismatch(getContext(), record, keyMismatch).execute();
         }
       });
-    } else if (networkFailure != null || (!isPushGroup && record.isFailed())) {
+    } else if (networkFailure != null && record.isFailed()) {
       resendButton.setVisibility(View.VISIBLE);
       resendButton.setEnabled(true);
       resendButton.requestFocus();

@@ -116,10 +116,7 @@ public class Sessions extends DbBase {
     {
       while (cursor != null && cursor.moveToNext()) {
         int device = cursor.getInt(cursor.getColumnIndexOrThrow(DEVICE));
-
-        if (device != 1) { // Why this check?
-          results.add(device);
-        }
+        results.add(device);
       }
     }
 

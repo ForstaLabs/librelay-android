@@ -95,9 +95,12 @@ public class PushMediaSendJob extends PushSendJob {
     OutgoingMediaMessage outgoingMessage = database.getOutgoingMessage(messageId);
     RelayContent relayContent = MessageManager.fromMessagBodyString(outgoingMessage.getBody());
     RelayDistribution distribution = AtlasApi.getMessageDistribution(context, relayContent.getUniversalExpression());
-    Log.w(TAG, "Outgoing message recipients: " + outgoingMessage.getRecipients().toFullString());
+
+    Log.d(TAG, "Outgoing message recipients: " + outgoingMessage.getRecipients().toFullString());
+
     List<OutgoingMediaMessage> messageQueue = new ArrayList<>();
     messageQueue.add(outgoingMessage);
+
     if (distribution.hasMonitors() && !outgoingMessage.isExpirationUpdate()) {
       Recipients monitors = RecipientFactory.getRecipientsFromStrings(context, distribution.getMonitors(context), false);
       OutgoingMediaMessage monitorMessage = new OutgoingMediaMessage(monitors, outgoingMessage.getBody(), outgoingMessage.getAttachments(), System.currentTimeMillis(), 0);
@@ -118,6 +121,7 @@ public class PushMediaSendJob extends PushSendJob {
         }
       } catch (EncapsulatedExceptions e) {
         Log.w(TAG, e);
+
         List<NetworkFailure> failures = new LinkedList<>();
         for (NetworkFailureException nfe : e.getNetworkExceptions()) {
           Recipient recipient = RecipientFactory.getRecipientsFromString(context, nfe.getE164number(), false).getPrimaryRecipient();

@@ -65,7 +65,6 @@ import io.forsta.librelay.util.Util;
 public class MessageDetailsActivity extends AuthenticationRequiredActionBarActivity implements LoaderCallbacks<Cursor>, Recipients.RecipientsModifiedListener {
   private final static String TAG = MessageDetailsActivity.class.getSimpleName();
 
-  public final static String MASTER_SECRET_EXTRA  = "master_secret";
   public final static String MESSAGE_ID_EXTRA     = "message_id";
   public final static String THREAD_ID_EXTRA      = "thread_id";
   public final static String IS_PUSH_GROUP_EXTRA  = "is_push_group";

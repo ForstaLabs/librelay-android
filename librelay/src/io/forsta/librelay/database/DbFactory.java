@@ -16,7 +16,7 @@ public class DbFactory {
   private final Prekeys prekeys;
   private final Sessions sessions;
   private final MessageDatabase messages;
-  private final MessageAddressDatabase receipts;
+  private final MessageReceiptsDatabase receipts;
   private final AttachmentDatabase attachments;
   private final ImageDatabase images;
   private final ThreadDatabase threads;
@@ -43,7 +43,7 @@ public class DbFactory {
     this.prekeys = new Prekeys(context, dbHelper);
     this.sessions = new Sessions(context, dbHelper);
     this.messages = new MessageDatabase(context, dbHelper);
-    this.receipts = new MessageAddressDatabase(context, dbHelper);
+    this.receipts = new MessageReceiptsDatabase(context, dbHelper);
     this.attachments = new AttachmentDatabase(context, dbHelper);
     this.images = new ImageDatabase(context, dbHelper);
     this.threads = new ThreadDatabase(context, dbHelper);
@@ -90,7 +90,7 @@ public class DbFactory {
     return getInstance(context).images;
   }
 
-  public static MessageAddressDatabase getMessageReceiptDatabase(Context context) {
+  public static MessageReceiptsDatabase getMessageReceiptDatabase(Context context) {
     return getInstance(context).receipts;
   }
 
