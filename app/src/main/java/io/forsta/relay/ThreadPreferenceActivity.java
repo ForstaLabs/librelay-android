@@ -107,7 +107,7 @@ public class ThreadPreferenceActivity extends AuthenticationRequiredActionBarAct
     dynamicTheme.onResume(this);
     dynamicLanguage.onResume(this);
 
-    getContentResolver().registerContentObserver(Uri.parse(ThreadDatabase.THREAD_URI + threadId), true, threadObserver);
+    getContentResolver().registerContentObserver(Uri.parse(ThreadDatabase.CONVERSATION_URI + threadId), true, threadObserver);
   }
 
   @Override

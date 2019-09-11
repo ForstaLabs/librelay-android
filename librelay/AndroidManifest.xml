@@ -196,31 +196,6 @@
                 android:resource="@xml/file_provider_paths">
             </meta-data>
         </provider>
-
-        <receiver
-            android:name="io.forsta.librelay.notifications.MarkReadReceiver"
-            android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="io.forsta.librelay.notifications.CLEAR"/>
-            </intent-filter>
-        </receiver>
-
-        <receiver
-            android:name="io.forsta.librelay.service.RegistrationReceiver"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="io.forsta.librelay.REGISTRATION_EVENT"/>
-            </intent-filter>
-        </receiver>
-        <receiver android:name="io.forsta.librelay.service.DirectoryRefreshListener">
-            <intent-filter>
-                <action android:name="io.forsta.librelay.DIRECTORY_REFRESH"/>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
-            </intent-filter>
-        </receiver>
-        <receiver android:name="io.forsta.librelay.notifications.MessageNotifier$DeleteReceiver">
-        </receiver>
         <activity android:name=".WebRtcCallActivity"
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"

@@ -1,0 +1,33 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <permission
+        android:name="io.forsta.librelay.dev.ACCESS_SECRETS"
+        android:label="Access to TextSecure Secrets"
+        android:protectionLevel="signature"/>
+
+        <application>
+			<receiver
+				android:name="io.forsta.librelay.notifications.MarkReadReceiver"
+				android:enabled="true"
+				android:exported="true">
+				<intent-filter>
+					<action android:name="io.forsta.librelay.dev.notifications.CLEAR"/>
+				</intent-filter>
+			</receiver>
+
+			<receiver
+				android:name="io.forsta.librelay.service.RegistrationReceiver"
+				android:exported="false">
+				<intent-filter>
+					<action android:name="io.forsta.librelay.dev.REGISTRATION_EVENT"/>
+				</intent-filter>
+			</receiver>
+			<receiver android:name="io.forsta.librelay.service.DirectoryRefreshListener">
+				<intent-filter>
+					<action android:name="io.forsta.librelay.dev.DIRECTORY_REFRESH"/>
+					<action android:name="android.intent.action.BOOT_COMPLETED"/>
+				</intent-filter>
+			</receiver>
+			<receiver android:name="io.forsta.librelay.notifications.MessageNotifier$DeleteReceiver">
+			</receiver>
+		</application>
+</manifest>

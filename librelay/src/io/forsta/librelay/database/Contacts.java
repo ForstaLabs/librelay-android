@@ -357,7 +357,7 @@ public class Contacts extends DbBase {
     return user;
   }
 
-    public Recipient getRecipient(String address) {
+  public Recipient getRecipient(String address) {
         Recipient user = null;
         Cursor cursor = null;
         try {
