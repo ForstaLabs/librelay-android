@@ -18,10 +18,9 @@ import io.forsta.librelay.BuildConfig;
 public abstract class DbBase {
   protected SQLiteOpenHelper dbHelper;
   protected Context context;
-  protected static final String ID_WHERE              = "_id = ?";
-  public   static final String CONVERSATION_URI      = "content://" + BuildConfig.FORSTA_PROVIDER + ".database/conversation/";
-  private   static final String CONVERSATION_LIST_URI = "content://" + BuildConfig.FORSTA_PROVIDER + ".database/conversation-list";
-  public static final String THREAD_URI = "content://" + BuildConfig.FORSTA_PROVIDER + ".database/thread/";
+  protected static final String ID_WHERE = "_id = ?";
+  public static final String CONVERSATION_URI = "content://" + BuildConfig.FORSTA_PROVIDER + ".database/conversation/";
+  private static final String CONVERSATION_LIST_URI = "content://" + BuildConfig.FORSTA_PROVIDER + ".database/conversation-list";
 
   protected DbBase(Context context, DbHelper dbHelper) {
     this.dbHelper = dbHelper;
@@ -64,10 +63,6 @@ public abstract class DbBase {
 
   protected void notifyConversationListeners(long threadId) {
     context.getContentResolver().notifyChange(Uri.parse(CONVERSATION_URI + threadId), null);
-  }
-
-  protected void notifyThreadListeners(long threadId) {
-    context.getContentResolver().notifyChange(Uri.parse(THREAD_URI + threadId), null);
   }
 
   protected void notifyConversationListListeners() {

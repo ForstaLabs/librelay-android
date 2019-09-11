@@ -622,7 +622,7 @@ public class ThreadDatabase extends DbBase {
       SQLiteDatabase db = dbHelper.getWritableDatabase();
       db.update(TABLE_NAME, values, ID + " = ?", new String[] {threadId + ""});
       notifyConversationListListeners();
-      notifyThreadListeners(threadId);
+      notifyConversationListeners(threadId);
     }
   }
 
@@ -672,7 +672,7 @@ public class ThreadDatabase extends DbBase {
     values.put(TITLE, title);
 
     db.update(TABLE_NAME, values, ID + " = ?", new String[] {threadId + ""});
-    notifyThreadListeners(threadId);
+    notifyConversationListeners(threadId);
   }
 
   private @Nullable Uri getAttachmentUriFor(MessageRecord record) {
