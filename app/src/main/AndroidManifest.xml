@@ -133,29 +133,6 @@
             android:theme="@style/TextSecure.DialogActivity"/>
         <activity android:name="com.soundcloud.android.crop.CropImageActivity"/>
 
-
-        <activity
-            android:name="io.forsta.relay.DashboardActivity"
-            android:parentActivityName="io.forsta.relay.MainActivity"
-            android:label="Dashboard">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="io.forsta.relay.MainActivity"/>
-        </activity>
-        <receiver
-            android:name="io.forsta.relay.receivers.RegistrationReceiver"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="io.forsta.librelay.REGISTRATION_EVENT"/>
-            </intent-filter>
-        </receiver>
-        <receiver
-            android:name="io.forsta.relay.receivers.FirebaseReceiver"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="io.forsta.librelay.FCM_EVENT"/>
-            </intent-filter>
-        </receiver>
     </application>
 
 </manifest>

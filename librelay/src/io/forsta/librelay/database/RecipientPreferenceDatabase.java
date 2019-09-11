@@ -24,7 +24,7 @@ import java.util.Arrays;
 public class RecipientPreferenceDatabase extends DbBase {
 
   private static final String TAG = RecipientPreferenceDatabase.class.getSimpleName();
-  private static final String RECIPIENT_PREFERENCES_URI = "content://io.forsta.librelay.provider.database/recipients/";
+  private static final String RECIPIENT_PREFERENCES_URI = "content://" + BuildConfig.FORSTA_PROVIDER + ".database/recipients/";
 
   private static final String TABLE_NAME = "recipient_preferences";
   private static final String ID = "_id";
