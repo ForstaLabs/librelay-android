@@ -15,7 +15,7 @@ public class DatabaseProvider extends ContentProvider {
 
   @Nullable
   @Override
-  public Cursor query(@NonNull Uri uri, @Nullable String[] strings, @Nullable String s, @Nullable String[] strings1, @Nullable String s1) {
+  public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
     return null;
   }
 
@@ -27,17 +27,17 @@ public class DatabaseProvider extends ContentProvider {
 
   @Nullable
   @Override
-  public Uri insert(@NonNull Uri uri, @Nullable ContentValues contentValues) {
+  public Uri insert(@NonNull Uri uri, @Nullable ContentValues values) {
     return null;
   }
 
   @Override
-  public int delete(@NonNull Uri uri, @Nullable String s, @Nullable String[] strings) {
+  public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
     return 0;
   }
 
   @Override
-  public int update(@NonNull Uri uri, @Nullable ContentValues contentValues, @Nullable String s, @Nullable String[] strings) {
+  public int update(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String selection, @Nullable String[] selectionArgs) {
     return 0;
   }
 }

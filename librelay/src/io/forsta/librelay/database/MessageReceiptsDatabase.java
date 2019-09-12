@@ -104,7 +104,8 @@ public class MessageReceiptsDatabase extends DbBase {
         String address = cursor.getString(cursor.getColumnIndex(ADDRESS));
         int delivered = cursor.getInt(cursor.getColumnIndex(DELIVERED));
         int read = cursor.getInt(cursor.getColumnIndex(READ));
-        MessageReceipt receipt = new MessageReceipt(messageId, address, delivered, read);
+        int failed = cursor.getInt(cursor.getColumnIndex(FAILED));
+        MessageReceipt receipt = new MessageReceipt(messageId, address, delivered, read, failed);
         receipts.add(receipt);
       }
     } finally {

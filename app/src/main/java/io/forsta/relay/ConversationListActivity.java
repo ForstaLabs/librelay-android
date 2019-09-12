@@ -227,7 +227,6 @@ public class ConversationListActivity extends AuthenticationRequiredActionBarAct
     public void onReceive(Context context, Intent intent) {
       Log.d(TAG, "Received broadcast intent: Sync complete. Notifying list adapter of change.");
       syncIndicator.setVisibility(View.GONE);
-      fragment.getListAdapter().notifyDataSetChanged();
     }
   }
 

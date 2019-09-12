@@ -61,7 +61,7 @@ public class RegistrationService extends Service {
   public static final String REGISTER_ACCOUNT = "io.forsta.librelay.RegistrationService.REGISTER_ACCOUNT";
   public static final String NOTIFICATION_TITLE = "io.forsta.librelay.NOTIFICATION_TITLE";
   public static final String NOTIFICATION_TEXT = "io.forsta.librelay.NOTIFICATION_TEXT";
-  public static final String REGISTRATION_EVENT = "io.forsta.librelay.REGISTRATION_EVENT";
+  public static final String REGISTRATION_EVENT = BuildConfig.APPLICATION_ID + "." + BuildConfig.FLAVOR + ".REGISTRATION_EVENT";
 
   private final ExecutorService executor = Executors.newSingleThreadExecutor();
   private final Binder          binder   = new RegistrationServiceBinder();

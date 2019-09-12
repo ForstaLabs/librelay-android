@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import io.forsta.librelay.ApplicationContext;
+import io.forsta.librelay.BuildConfig;
 import io.forsta.librelay.database.DbFactory;
 import io.forsta.librelay.database.MessageDatabase.ExpirationInfo;
 import io.forsta.librelay.database.MessageDatabase.MarkedMessageInfo;
@@ -22,7 +23,7 @@ import java.util.List;
 public class MarkReadReceiver extends BroadcastReceiver {
 
   private static final String TAG              = MarkReadReceiver.class.getSimpleName();
-  public static final  String CLEAR_ACTION     = "io.forsta.librelay.notifications.CLEAR";
+  public static final  String CLEAR_ACTION     = BuildConfig.APPLICATION_ID + "." + BuildConfig.FLAVOR + ".notifications.CLEAR";
   public static final  String THREAD_IDS_EXTRA = "thread_ids";
 
   @Override
