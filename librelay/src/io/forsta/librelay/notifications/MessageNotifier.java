@@ -46,6 +46,7 @@ import io.forsta.librelay.util.ServiceUtil;
 import io.forsta.librelay.util.SpanUtil;
 import io.forsta.librelay.util.TextSecurePreferences;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
@@ -232,13 +233,14 @@ public class MessageNotifier {
     MessageRecord record;
     MessageDatabase.Reader reader = DbFactory.getMessageDatabase(context).readerFor(cursor);
     Set<String> filters = TextSecurePreferences.getNotificationPreferences(context);
-
-    Set<Long> notifyThreadIds = new HashSet<>();
+    boolean previousVibrate = false;
+    List<Long> notifiedThreads = new ArrayList<>();
+    Set<Long> notificationThreads = new HashSet<>();
 
     while ((record = reader.getNext()) != null) {
-      long         threadId         = record.getThreadId();
-      Recipients   threadRecipients = DbFactory.getThreadDatabase(context).getRecipientsForThreadId(threadId);
-      Recipient    sender        = record.getIndividualRecipient();
+      long threadId = record.getThreadId();
+      Recipients threadRecipients = DbFactory.getThreadDatabase(context).getRecipientsForThreadId(threadId);
+      Recipient sender = record.getIndividualRecipient();
       if (threadRecipients == null || threadRecipients.isEmpty()) {
         Log.w(TAG, "Thread has no recipients. Setting to sender");
           threadRecipients = record.getRecipients();
@@ -247,9 +249,9 @@ public class MessageNotifier {
       ThreadPreferenceDatabase.ThreadPreference threadPreferences = DbFactory.getThreadPreferenceDatabase(context).getThreadPreferences(threadId);
 
       CharSequence title = forstaThread != null ? forstaThread.getTitle() : "";
-      CharSequence body             = record.getPlainTextBody();
-      SlideDeck    slideDeck        = null;
-      long         timestamp        = record.getTimestamp();
+      CharSequence body = record.getPlainTextBody();
+      SlideDeck slideDeck = null;
+      long timestamp = record.getTimestamp();
 
       boolean isDirectMessage = threadRecipients != null && threadRecipients.isSingleRecipient();
       boolean isNamed = record.isNamed(context);
@@ -262,25 +264,24 @@ public class MessageNotifier {
         slideDeck = record.getSlideDeck();
       } else if (record.isMediaPending()) {
         String message = context.getString(R.string.MessageNotifier_media_message_with_text, body);
-        int    italicLength = message.length() - body.length();
+        int italicLength = message.length() - body.length();
         body = SpanUtil.italic(message, italicLength);
         slideDeck = record.getSlideDeck();
       }
 
-      notificationState.addNotification(new NotificationItem(sender, threadPreferences, threadRecipients, threadId, body, title, timestamp, slideDeck));
-      if (threadRecipients != null && threadNotification && messageNotification) {
-        if (notifyThreadIds.contains(threadId)) {
-          notificationState.setVibrateState(false);
-        } else {
+      if (threadNotification && messageNotification) {
+        notificationState.addNotification(new NotificationItem(sender, threadPreferences, threadRecipients, threadId, body, title, timestamp, slideDeck));
+        notificationState.setNotify(true);
+
+        if (!previousVibrate || !notificationThreads.contains(threadId)) {
+          previousVibrate = true;
           notificationState.setVibrateState(true);
+        } else {
+          notificationState.setVibrateState(false);
         }
-        notifyThreadIds.add(threadId);
-        notificationState.setNotify(true);
-      } else if (notificationState.getVibrateState()) {
-        notificationState.setNotify(true);
-        notificationState.setVibrateState(false);
+
+        notificationThreads.add(threadId);
       } else {
-        notificationState.setNotify(false);
         notificationState.setVibrateState(false);
       }
     }
@@ -292,6 +293,11 @@ public class MessageNotifier {
     } else {
       // Update badge only
       notificationState.setNotificationChannel(NotificationChannels.MESSAGES_MIN);
+    }
+
+    if (notificationState.getNotifications().size() < 1) {
+      notificationState.setNotify(false);
+      notificationState.setVibrateState(false);
     }
 
     reader.close();
@@ -319,11 +325,11 @@ public class MessageNotifier {
 
   private static boolean showThreadNotification(Context context, long threadId) {
     ThreadPreferenceDatabase.ThreadPreference threadPreference = DbFactory.getThreadPreferenceDatabase(context).getThreadPreferences(threadId);
-    if (TextSecurePreferences.isNotificationsEnabled(context) && (threadPreference != null && !threadPreference.isMuted()))
-    {
-      return true;
+
+    if (threadPreference != null && threadPreference.isMuted()) {
+      return false;
     }
-    return false;
+    return true;
   }
 
   private static boolean showFilteredNotification(Set<String> filters, boolean isDirect, boolean isNamed, boolean isMentioned) {
