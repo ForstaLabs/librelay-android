@@ -73,27 +73,20 @@ public class MessageNotifier {
     visibleThread = threadId;
   }
 
-  public static void notifyMessageDeliveryFailed(Context context, Recipients recipients, long threadId) {
-    if (visibleThread == threadId) {
-      sendInThreadNotification(context, recipients);
-    } else {
-//      Intent intent = new Intent(context, ConversationActivity.class);
-//      intent.putExtra(ConversationActivity.RECIPIENTS_EXTRA, recipients.getIds());
-//      intent.putExtra(ConversationActivity.THREAD_ID_EXTRA, threadId);
-//      intent.setData((Uri.parse("custom://" + System.currentTimeMillis())));
-//
-//      FailedNotificationBuilder builder = new FailedNotificationBuilder(context, TextSecurePreferences.getNotificationPrivacy(context), intent);
-//      ((NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE))
-//        .notify((int)threadId, builder.build());
-    }
+  public static void notifyMessageDeliveryFailed(Context context, long threadId) {
+      FailedNotificationBuilder builder = new FailedNotificationBuilder(context, TextSecurePreferences.getNotificationPrivacy(context));
+      ((NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE))
+        .notify((int)threadId, builder.build());
   }
+
+
 
   // Main entry point for incoming message notifications.
   public static void updateNotification(@NonNull  Context context,
                                         long      threadId)
   {
-    boolean    isVisible  = visibleThread == threadId;
-    ThreadDatabase threads    = DbFactory.getThreadDatabase(context);
+    boolean isVisible = visibleThread == threadId;
+    ThreadDatabase threads = DbFactory.getThreadDatabase(context);
 
     if (isVisible) {
       List<MarkedMessageInfo> messageIds = threads.setRead(threadId);
@@ -105,11 +98,7 @@ public class MessageNotifier {
       return;
     }
 
-    if (isVisible) {
-      sendInThreadNotification(context, threads.getRecipientsForThreadId(threadId));
-    } else {
-      updateNotification(context,true);
-    }
+    updateNotification(context,true);
   }
 
   public static void updateNotification(@NonNull  Context context) {
@@ -118,8 +107,6 @@ public class MessageNotifier {
 
   private static void updateNotification(@NonNull  Context context, boolean signal)
   {
-    Log.w(TAG, "updateNotification: visibleThread: " + visibleThread + "");
-
     if (!TextSecurePreferences.isNotificationsEnabled(context)) {
       return;
     }
@@ -173,7 +160,6 @@ public class MessageNotifier {
     builder.setMessageCount(notificationState.getMessageCount());
     builder.setPrimaryMessageBody(recipients, notifications.get(0).getIndividualRecipient(),
                                   notifications.get(0).getText(), notifications.get(0).getSlideDeck());
-//    builder.setContentIntent(notifications.get(0).getPendingIntent(context));
     builder.setGroup(NOTIFICATION_GROUP);
     builder.setOnlyAlertOnce(!notificationState.getVibrateState());
 
@@ -239,21 +225,6 @@ public class MessageNotifier {
     lastUpdate = System.currentTimeMillis();
   }
 
-  private static void sendInThreadNotification(Context context, Recipients recipients) {
-    if (!TextSecurePreferences.isInThreadNotifications(context) ||
-        ServiceUtil.getAudioManager(context).getRingerMode() != AudioManager.RINGER_MODE_NORMAL)
-    {
-      return;
-    }
-
-    Uri uri = Uri.parse(TextSecurePreferences.getNotificationRingtone(context));
-    Ringtone ringtone = RingtoneManager.getRingtone(context, uri);
-    ringtone.setAudioAttributes(new AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_UNKNOWN)
-        .setUsage(AudioAttributes.USAGE_NOTIFICATION_COMMUNICATION_INSTANT)
-        .build());
-    ringtone.play();
-  }
-
   private static NotificationState constructNotificationState(@NonNull  Context context,
                                                               @NonNull  Cursor cursor)
   {
@@ -279,6 +250,7 @@ public class MessageNotifier {
       CharSequence body             = record.getPlainTextBody();
       SlideDeck    slideDeck        = null;
       long         timestamp        = record.getTimestamp();
+
       boolean isDirectMessage = threadRecipients != null && threadRecipients.isSingleRecipient();
       boolean isNamed = record.isNamed(context);
       boolean isMentioned = record.isMentioned(context);
@@ -294,7 +266,6 @@ public class MessageNotifier {
         body = SpanUtil.italic(message, italicLength);
         slideDeck = record.getSlideDeck();
       }
-
 
       notificationState.addNotification(new NotificationItem(sender, threadPreferences, threadRecipients, threadId, body, title, timestamp, slideDeck));
       if (threadRecipients != null && threadNotification && messageNotification) {
@@ -316,7 +287,7 @@ public class MessageNotifier {
 
     if (notificationState.getVibrateState()) {
       notificationState.setNotificationChannel(NotificationChannels.getMessagesChannel(context));
-    } else if (notificationState.getNotify()) {
+    } else if (notificationState.getNotify() || notificationState.getMessageCount() > 0) {
       notificationState.setNotificationChannel(NotificationChannels.MESSAGES_LOW);
     } else {
       // Update badge only

@@ -11,7 +11,7 @@ import io.forsta.librelay.preferences.NotificationPrivacyPreference;
 
 public class FailedNotificationBuilder extends AbstractNotificationBuilder {
 
-  public FailedNotificationBuilder(Context context, NotificationPrivacyPreference privacy, Intent intent) {
+  public FailedNotificationBuilder(Context context, NotificationPrivacyPreference privacy) {
     super(context, privacy);
 
     setSmallIcon(R.drawable.icon_notification);
@@ -20,7 +20,6 @@ public class FailedNotificationBuilder extends AbstractNotificationBuilder {
     setContentTitle(context.getString(R.string.MessageNotifier_message_delivery_failed));
     setContentText(context.getString(R.string.MessageNotifier_failed_to_deliver_message));
     setTicker(context.getString(R.string.MessageNotifier_error_delivering_message));
-    setContentIntent(PendingIntent.getActivity(context, 0, intent, 0));
     setAutoCancel(true);
     setAlarms(null, RecipientPreferenceDatabase.VibrateState.DEFAULT);
     setChannelId(NotificationChannels.FAILURES);
