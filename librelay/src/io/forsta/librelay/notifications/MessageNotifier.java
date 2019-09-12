@@ -295,11 +295,6 @@ public class MessageNotifier {
       notificationState.setNotificationChannel(NotificationChannels.MESSAGES_MIN);
     }
 
-    if (notificationState.getNotifications().size() < 1) {
-      notificationState.setNotify(false);
-      notificationState.setVibrateState(false);
-    }
-
     reader.close();
     return notificationState;
   }
