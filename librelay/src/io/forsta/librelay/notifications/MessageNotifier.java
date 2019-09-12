@@ -269,8 +269,8 @@ public class MessageNotifier {
         slideDeck = record.getSlideDeck();
       }
 
+      notificationState.addNotification(new NotificationItem(sender, threadPreferences, threadRecipients, threadId, body, title, timestamp, slideDeck));
       if (threadNotification && messageNotification) {
-        notificationState.addNotification(new NotificationItem(sender, threadPreferences, threadRecipients, threadId, body, title, timestamp, slideDeck));
         notificationState.setNotify(true);
 
         if (!previousVibrate || !notificationThreads.contains(threadId)) {
