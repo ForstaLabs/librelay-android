@@ -287,7 +287,7 @@ public class MessageNotifier {
 
     if (notificationState.getVibrateState()) {
       notificationState.setNotificationChannel(NotificationChannels.getMessagesChannel(context));
-    } else if (notificationState.getNotify() || notificationState.getMessageCount() > 0) {
+    } else if (notificationState.getNotify()) {
       notificationState.setNotificationChannel(NotificationChannels.MESSAGES_LOW);
     } else {
       // Update badge only
