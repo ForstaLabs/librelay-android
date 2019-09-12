@@ -167,8 +167,8 @@ public class MessageNotifier {
     long timestamp = notifications.get(0).getTimestamp();
     if (timestamp != 0) builder.setWhen(timestamp);
 
-    builder.addActions(notificationState.getMarkAsReadIntent(context), null);
-                       notificationState.getQuickReplyIntent(context, notifications.get(0).getRecipients());
+    builder.addActions(notificationState.getMarkAsReadIntent(context),
+        notificationState.getQuickReplyIntent(context, notifications.get(0).getThreadId()));
 
     ListIterator<NotificationItem> iterator = notifications.listIterator(notifications.size());
 

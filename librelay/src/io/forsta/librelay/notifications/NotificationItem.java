@@ -71,15 +71,4 @@ public class NotificationItem {
   public @Nullable SlideDeck getSlideDeck() {
     return slideDeck;
   }
-
-//  public PendingIntent getPendingIntent(Context context) {
-//    Intent     intent           = new Intent(context, ConversationActivity.class);
-//    intent.putExtra("recipients", threadRecipients.getIds());
-//    intent.putExtra("thread_id", threadId);
-//    intent.setData((Uri.parse("custom://"+System.currentTimeMillis())));
-//
-//    return TaskStackBuilder.create(context)
-//                           .addNextIntentWithParentStack(intent)
-//                           .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-//  }
 }

@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import io.forsta.librelay.BuildConfig;
 import io.forsta.librelay.database.ThreadPreferenceDatabase;
 import io.forsta.librelay.recipients.Recipients;
 
@@ -19,6 +20,8 @@ import java.util.List;
 import io.forsta.librelay.database.RecipientPreferenceDatabase;
 
 public class NotificationState {
+
+  private static final String REPLY_EVENT = BuildConfig.APPLICATION_ID + "." + BuildConfig.FLAVOR + ".notifications.REPLY_EVENT";
 
   private final LinkedList<NotificationItem> notifications = new LinkedList<>();
   private final LinkedHashSet<Long> threads       = new LinkedHashSet<>();
@@ -123,17 +126,14 @@ public class NotificationState {
     return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
   }
 
-  public PendingIntent getQuickReplyIntent(Context context, Recipients recipients) {
-//    if (threads.size() != 1) throw new AssertionError("We only support replies to single thread notifications!");
-//
-//    // TODO Reference to ConversationPopupActivity needs to be removed
-//    Intent     intent           = new Intent(context, ConversationPopupActivity.class);
-//    intent.putExtra(ConversationActivity.RECIPIENTS_EXTRA, recipients.getIds());
-//    intent.putExtra(ConversationActivity.THREAD_ID_EXTRA, (long)threads.toArray()[0]);
-//    intent.setData((Uri.parse("custom://"+System.currentTimeMillis())));
-//
-//    return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-    return null;
+  public PendingIntent getQuickReplyIntent(Context context, long threadId) {
+    if (threads.size() != 1) return null;
+
+    Intent intent = new Intent(REPLY_EVENT);
+    intent.putExtra("thread_id", threadId);
+    intent.setPackage(context.getPackageName());
+
+    return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
   }
 
   public void setNotify(boolean state) {
