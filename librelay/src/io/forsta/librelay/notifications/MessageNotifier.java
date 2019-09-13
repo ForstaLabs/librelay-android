@@ -92,14 +92,10 @@ public class MessageNotifier {
       return;
     }
 
-    updateNotification(context,true);
+    updateNotification(context);
   }
 
-  public static void updateNotification(@NonNull  Context context) {
-    updateNotification(context,false);
-  }
-
-  private static void updateNotification(@NonNull  Context context, boolean signal)
+  public static void updateNotification(@NonNull  Context context)
   {
     if (!TextSecurePreferences.isNotificationsEnabled(context)) {
       return;
@@ -121,9 +117,9 @@ public class MessageNotifier {
       Log.w(TAG, "notificationState: " + notificationState);
 
       if (notificationState.hasMultipleThreads()) {
-        sendMultipleThreadNotification(context, notificationState, signal);
+        sendMultipleThreadNotification(context, notificationState);
       } else {
-        sendSingleThreadNotification(context, notificationState, signal);
+        sendSingleThreadNotification(context, notificationState);
       }
 
       int unreadMessageCount = messageCursor.getCount();
@@ -135,7 +131,7 @@ public class MessageNotifier {
   }
 
   private static void sendSingleThreadNotification(@NonNull  Context context,
-                                                   @NonNull  NotificationState notificationState, boolean signal)
+                                                   @NonNull  NotificationState notificationState)
   {
 
 
@@ -170,7 +166,7 @@ public class MessageNotifier {
       builder.addMessageBody(item.getRecipients(), item.getIndividualRecipient(), item.getText());
     }
 
-    if (signal) {
+    if (notificationState.getVibrateState()) {
       builder.setAlarms(notificationState.getRingtone(), notificationState.getVibrate());
       builder.setTicker(notifications.get(0).getIndividualRecipient(),
                         notifications.get(0).getText());
@@ -183,8 +179,7 @@ public class MessageNotifier {
   }
 
   private static void sendMultipleThreadNotification(@NonNull  Context context,
-                                                     @NonNull  NotificationState notificationState,
-                                                     boolean signal)
+                                                     @NonNull  NotificationState notificationState)
   {
     MultipleRecipientNotificationBuilder builder       = new MultipleRecipientNotificationBuilder(context, TextSecurePreferences.getNotificationPrivacy(context));
     builder.setNotificationChannel(notificationState.getNotificationChannel(context));
