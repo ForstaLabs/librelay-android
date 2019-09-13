@@ -96,7 +96,7 @@ public class NotificationState {
     return threads.size();
   }
 
-  public int getMessageCount() {
+  public int getNotificationCount() {
     return notificationCount;
   }
 

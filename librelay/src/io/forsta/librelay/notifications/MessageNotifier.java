@@ -21,13 +21,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.media.AudioAttributes;
-import android.media.AudioManager;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -42,7 +36,6 @@ import io.forsta.librelay.database.model.MessageRecord;
 import io.forsta.librelay.media.SlideDeck;
 import io.forsta.librelay.recipients.Recipient;
 import io.forsta.librelay.recipients.Recipients;
-import io.forsta.librelay.util.ServiceUtil;
 import io.forsta.librelay.util.SpanUtil;
 import io.forsta.librelay.util.TextSecurePreferences;
 
@@ -158,7 +151,7 @@ public class MessageNotifier {
     Recipients                         recipients    = notifications.get(0).getRecipients();
 
     builder.setThread(notifications.get(0).getRecipients(), notifications.get(0).getTitle().toString());
-    builder.setMessageCount(notificationState.getMessageCount());
+    builder.setMessageCount(notificationState.getNotificationCount());
     builder.setPrimaryMessageBody(recipients, notifications.get(0).getIndividualRecipient(),
                                   notifications.get(0).getText(), notifications.get(0).getSlideDeck());
     builder.setGroup(NOTIFICATION_GROUP);
@@ -197,7 +190,7 @@ public class MessageNotifier {
     builder.setNotificationChannel(notificationState.getNotificationChannel(context));
     List<NotificationItem>               notifications = notificationState.getNotifications();
 
-    builder.setMessageCount(notificationState.getMessageCount(), notificationState.getThreadCount());
+    builder.setMessageCount(notificationState.getNotificationCount(), notificationState.getThreadCount());
     builder.setMostRecentSender(notifications.get(0).getIndividualRecipient());
     builder.setGroup(NOTIFICATION_GROUP);
     Log.w(TAG, "Vibrate " + notificationState.getVibrateState());
