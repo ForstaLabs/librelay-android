@@ -16,6 +16,14 @@
                 <action android:name="io.forsta.librelay.FCM_EVENT"/>
             </intent-filter>
         </receiver>
+
+        <receiver
+            android:name="io.forsta.relay.receivers.NotificationReplyReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="io.forsta.librelay.notifications.REPLY_EVENT"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
