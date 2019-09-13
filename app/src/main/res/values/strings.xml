@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Librelay-Android</string>
+    <string name="app_name">ForstaLabs</string>
     <string name="relay_main_button">Open Relay</string>
     <string name="relay_dashbboard_button">Open Relay</string>
 </resources>
