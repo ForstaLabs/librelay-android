@@ -90,12 +90,6 @@
                 android:text="@string/ConversationActivity_unblock"
                 android:visibility="gone"/>
 
-        <io.forsta.librelay.components.emoji.EmojiDrawer
-                android:id="@+id/emoji_drawer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone" />
-
     </LinearLayout>
 </io.forsta.librelay.components.camera.QuickAttachmentDrawer>
 </io.forsta.librelay.components.InputAwareLayout>

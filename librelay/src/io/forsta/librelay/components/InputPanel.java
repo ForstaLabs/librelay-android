@@ -6,9 +6,9 @@ import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.AppCompatEditText;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -19,12 +19,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import io.forsta.librelay.R;
-import io.forsta.librelay.components.emoji.EmojiDrawer;
-import io.forsta.librelay.components.emoji.EmojiEditText;
-import io.forsta.librelay.components.emoji.EmojiToggle;
 import io.forsta.librelay.media.SlideDeck;
 import io.forsta.librelay.recipients.Recipient;
-import io.forsta.librelay.util.TextSecurePreferences;
 import io.forsta.librelay.util.ViewUtil;
 import io.forsta.librelay.util.concurrent.AssertedSuccessListener;
 import io.forsta.librelay.util.concurrent.ListenableFuture;
@@ -34,15 +30,14 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class InputPanel extends LinearLayout
-    implements MicrophoneRecorderView.Listener, KeyboardAwareLinearLayout.OnKeyboardShownListener, EmojiDrawer.EmojiEventListener {
+    implements MicrophoneRecorderView.Listener, KeyboardAwareLinearLayout.OnKeyboardShownListener {
 
   private static final String TAG = InputPanel.class.getSimpleName();
 
   private static final int FADE_TIME = 150;
 
   private QuoteView     quoteView;
-  private EmojiToggle   emojiToggle;
-  private EmojiEditText composeText;
+  private AppCompatEditText composeText;
   private View          quickCameraToggle;
   private View          quickAudioToggle;
   private View          buttonToggle;
@@ -75,7 +70,6 @@ public class InputPanel extends LinearLayout
     super.onFinishInflate();
 
     this.quoteView              = findViewById(R.id.quote_view);
-    this.emojiToggle            = ViewUtil.findById(this, R.id.emoji_toggle);
     this.composeText            = ViewUtil.findById(this, R.id.embedded_text_editor);
     this.quickCameraToggle      = ViewUtil.findById(this, R.id.quick_camera_toggle);
     this.quickAudioToggle       = ViewUtil.findById(this, R.id.quick_audio_toggle);
@@ -88,26 +82,6 @@ public class InputPanel extends LinearLayout
     inputText = ViewUtil.findById(this, R.id.embedded_text_editor);
     this.microphoneRecorderView.setVisibility(View.GONE);
     this.microphoneRecorderView.setClickable(false);
-
-    if (TextSecurePreferences.isSystemEmojiPreferred(getContext())) {
-      emojiToggle.setVisibility(View.GONE);
-      emojiVisible = false;
-    } else {
-      emojiToggle.setVisibility(View.VISIBLE);
-      emojiVisible = true;
-    }
-  }
-
-  public void setListener(final @NonNull Listener listener, @NonNull EmojiDrawer emojiDrawer) {
-    this.listener = listener;
-
-    emojiToggle.attach(emojiDrawer);
-    emojiToggle.setOnClickListener(new OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        listener.onEmojiToggle();
-      }
-    });
   }
 
   public void setQuote(long id, @NonNull Recipient author, @NonNull String body, @NonNull SlideDeck attachments) {
@@ -140,7 +114,6 @@ public class InputPanel extends LinearLayout
     recordTime.display();
     slideToCancel.display(startPositionX);
 
-    if (emojiVisible) ViewUtil.fadeOut(emojiToggle, FADE_TIME, View.INVISIBLE);
     ViewUtil.fadeOut(composeText, FADE_TIME, View.INVISIBLE);
     ViewUtil.fadeOut(quickCameraToggle, FADE_TIME, View.INVISIBLE);
     ViewUtil.fadeOut(quickAudioToggle, FADE_TIME, View.INVISIBLE);
@@ -183,7 +156,6 @@ public class InputPanel extends LinearLayout
 
   public void setEnabled(boolean enabled) {
     composeText.setEnabled(enabled);
-    emojiToggle.setEnabled(enabled);
     quickAudioToggle.setEnabled(enabled);
     quickCameraToggle.setEnabled(enabled);
   }
@@ -195,7 +167,6 @@ public class InputPanel extends LinearLayout
     future.addListener(new AssertedSuccessListener<Void>() {
       @Override
       public void onSuccess(Void result) {
-        if (emojiVisible) ViewUtil.fadeIn(emojiToggle, FADE_TIME);
         ViewUtil.fadeIn(composeText, FADE_TIME);
         ViewUtil.fadeIn(quickCameraToggle, FADE_TIME);
         ViewUtil.fadeIn(quickAudioToggle, FADE_TIME);
@@ -208,24 +179,13 @@ public class InputPanel extends LinearLayout
 
   @Override
   public void onKeyboardShown() {
-    emojiToggle.setToEmoji();
-  }
 
-  @Override
-  public void onKeyEvent(KeyEvent keyEvent) {
-    composeText.dispatchKeyEvent(keyEvent);
-  }
-
-  @Override
-  public void onEmojiSelected(String emoji) {
-    composeText.insertEmoji(emoji);
   }
 
   public interface Listener {
     public void onRecorderStarted();
     public void onRecorderFinished();
     public void onRecorderCanceled();
-    public void onEmojiToggle();
   }
 
   private static class SlideToCancel {

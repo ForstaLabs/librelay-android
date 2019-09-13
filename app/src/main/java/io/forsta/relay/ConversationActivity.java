@@ -94,7 +94,6 @@ import io.forsta.librelay.components.KeyboardAwareLinearLayout;
 import io.forsta.librelay.components.MuteDialog;
 import io.forsta.librelay.components.SendButton;
 import io.forsta.librelay.components.camera.QuickAttachmentDrawer;
-import io.forsta.librelay.components.emoji.EmojiDrawer;
 import io.forsta.librelay.components.location.SignalPlace;
 import io.forsta.librelay.contacts.ContactAccessor;
 import io.forsta.librelay.database.DbFactory;
@@ -183,7 +182,6 @@ public class ConversationActivity extends AuthenticationRequiredActionBarActivit
   private   AttachmentManager      attachmentManager;
   private   AudioRecorder          audioRecorder;
   private   BroadcastReceiver      recipientsClearReceiver;
-  private   EmojiDrawer            emojiDrawer;
   protected HidingLinearLayout     quickAttachmentToggle;
   private   QuickAttachmentDrawer  quickAttachmentDrawer;
   private   InputPanel             inputPanel;
@@ -283,7 +281,6 @@ public class ConversationActivity extends AuthenticationRequiredActionBarActivit
     Log.w(TAG, "onConfigurationChanged(" + newConfig.orientation + ")");
     super.onConfigurationChanged(newConfig);
     quickAttachmentDrawer.onConfigurationChanged();
-    if (container.getCurrentInput() == emojiDrawer) container.hideAttachedInput(true);
   }
 
   @Override
@@ -775,7 +772,6 @@ public class ConversationActivity extends AuthenticationRequiredActionBarActivit
     sendButton            = ViewUtil.findById(this, R.id.send_button);
     attachButton          = ViewUtil.findById(this, R.id.attach_button);
     composeText           = ViewUtil.findById(this, R.id.embedded_text_editor);
-    emojiDrawer           = ViewUtil.findById(this, R.id.emoji_drawer);
     unblockButton         = ViewUtil.findById(this, R.id.unblock_button);
     composePanel          = ViewUtil.findById(this, R.id.bottom_panel);
     container             = ViewUtil.findById(this, R.id.layout_container);
@@ -787,7 +783,6 @@ public class ConversationActivity extends AuthenticationRequiredActionBarActivit
     View        composeBubble     = ViewUtil.findById(this, R.id.compose_bubble);
 
     container.addOnKeyboardShownListener(this);
-    inputPanel.setListener(this, emojiDrawer);
 
     int[]      attributes   = new int[]{io.forsta.librelay.R.attr.conversation_item_bubble_background};
     TypedArray colors       = obtainStyledAttributes(attributes);
@@ -802,7 +797,6 @@ public class ConversationActivity extends AuthenticationRequiredActionBarActivit
     SendButtonListener        sendButtonListener        = new SendButtonListener();
     ComposeKeyPressedListener composeKeyPressedListener = new ComposeKeyPressedListener();
 
-    emojiDrawer.setEmojiEventListener(inputPanel);
     attachButton.setOnClickListener(new AttachButtonListener());
     attachButton.setOnLongClickListener(new AttachButtonLongClickListener());
     sendButton.setOnClickListener(sendButtonListener);
@@ -1284,12 +1278,6 @@ public class ConversationActivity extends AuthenticationRequiredActionBarActivit
       @Override
       public void onFailure(ExecutionException e) {}
     });
-  }
-
-  @Override
-  public void onEmojiToggle() {
-    if (container.getCurrentInput() == emojiDrawer) container.showSoftkey(composeText);
-    else                                            container.show(composeText, emojiDrawer);
   }
 
   @Override
