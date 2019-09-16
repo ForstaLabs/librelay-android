@@ -33,8 +33,6 @@ import android.widget.Toast;
 
 import java.io.IOException;
 
-import io.forsta.relay.AuthenticationRequiredActionBarActivity;
-
 import io.forsta.librelay.components.ZoomingImageView;
 import io.forsta.librelay.media.VideoSlide;
 import io.forsta.librelay.recipients.Recipient;

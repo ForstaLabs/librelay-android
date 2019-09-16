@@ -130,7 +130,6 @@ android {
             buildConfigField "String", "FORSTA_SYNC_NUMBER", "\"1e1116aa-31b3-4fb2-a4db-21e8136d4f3a\""
             buildConfigField "String", "FORSTA_PROVIDER", "\"io.forsta.librelay.dev.provider\""
             resValue "string", "forsta_authorities", 'io.forsta.librelay.dev.provider'
-            resValue "string", "forsta_database_provider", 'io.forsta.librelay.dev.provider.database'
             resValue "string", "forsta_account_type", 'io.forsta.librelay.dev'
         }
         prod {
@@ -139,7 +138,6 @@ android {
             buildConfigField "String", "FORSTA_SYNC_NUMBER", "\"cf40fca2-dfa8-4356-8ae7-45f56f7551ca\""
             buildConfigField "String", "FORSTA_PROVIDER", "\"io.forsta.librelay.provider\""
             resValue "string", "forsta_authorities", 'io.forsta.librelay.provider'
-            resValue "string", "forsta_database_provider", 'io.forsta.librelay.provider.database'
             resValue "string", "forsta_account_type", 'io.forsta.librelay'
         }
     }
