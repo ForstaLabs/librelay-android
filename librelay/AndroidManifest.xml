@@ -188,7 +188,7 @@
 
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="@string/forsta_authorities"
+            android:authorities="io.forsta.librelay.provider.external_files"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

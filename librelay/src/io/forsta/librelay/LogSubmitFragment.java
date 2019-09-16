@@ -132,6 +132,7 @@ public class LogSubmitFragment extends Fragment {
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Android App Debug Log");
         emailIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         String out = outFile.getAbsolutePath();
+        Log.w(TAG, out);
         Uri fileUri = FileProvider.getUriForFile(
             getContext(),
             "io.forsta.librelay.provider.external_files",
@@ -140,7 +141,7 @@ public class LogSubmitFragment extends Fragment {
         startActivity(Intent.createChooser(emailIntent, "Send email..."));
         mListener.onSuccess();
       }
-    } catch (IOException e) {
+    } catch (Exception e) {
       Log.e(TAG, "Failed to write log to external storage");
       e.printStackTrace();
       mListener.onFailure();
@@ -184,7 +185,7 @@ public class LogSubmitFragment extends Fragment {
     @Override
     protected void onPreExecute() {
       super.onPreExecute();
-      logPreview.setText(org.whispersystems.libpastelog.R.string.log_submit_activity__loading_logs);
+      logPreview.setText(R.string.log_submit_activity__loading_logs);
       okButton.setEnabled(false);
     }
 
