@@ -60,7 +60,7 @@ dependencies {
     }
 
     compile 'org.whispersystems:curve25519-android:0.3.0'
-    compile 'org.whispersystems:webrtc-android:M63' //M74 contains 64 bit binaries required by Play Store as of 8/1/2019
+    compile 'org.whispersystems:webrtc-android:M74' //M74 contains 64 bit binaries required by Play Store as of 8/1/2019
     compile 'com.squareup.okhttp3:okhttp:3.6.0'
     compile 'me.leolin:ShortcutBadger:1.1.16'
     compile 'se.emilsjolander:stickylistheaders:2.7.0'

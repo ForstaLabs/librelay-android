@@ -52,8 +52,8 @@ public class WebRtcCallScreen extends FrameLayout {
 
   private ImageButton endCallButton;
   private ImageButton callMembersButton;
-  private WebRtcCallControls   controls;
-  private ViewGroup            callHeader;
+  private WebRtcCallControls controls;
+  private ViewGroup callHeader;
 
   private WebRtcAnswerDeclineButton incomingCallButton;
 

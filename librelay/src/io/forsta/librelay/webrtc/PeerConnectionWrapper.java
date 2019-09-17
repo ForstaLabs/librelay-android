@@ -3,9 +3,14 @@ package io.forsta.librelay.webrtc;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import io.forsta.librelay.util.concurrent.SettableFuture;
+
+import org.webrtc.AudioSource;
+import org.webrtc.AudioTrack;
 import org.webrtc.DataChannel;
+import org.webrtc.EglBase;
 import org.webrtc.IceCandidate;
 import org.webrtc.MediaConstraints;
 import org.webrtc.MediaStream;
@@ -13,6 +18,10 @@ import org.webrtc.PeerConnection;
 import org.webrtc.PeerConnectionFactory;
 import org.webrtc.SdpObserver;
 import org.webrtc.SessionDescription;
+import org.webrtc.SurfaceTextureHelper;
+import org.webrtc.VideoSink;
+import org.webrtc.VideoSource;
+import org.webrtc.VideoTrack;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -45,6 +54,7 @@ public class PeerConnectionWrapper {
     audioConstraints.optional.add(new MediaConstraints.KeyValuePair("DtlsSrtpKeyAgreement", "true"));
 
     this.peerConnection = factory.createPeerConnection(configuration, constraints, observer);
+
     this.peerConnection.addStream(localMediaStream);
   }
 

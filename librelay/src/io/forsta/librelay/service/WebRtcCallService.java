@@ -50,6 +50,8 @@ import io.forsta.librelay.util.TextSecurePreferences;
 import io.forsta.librelay.util.Util;
 import io.forsta.librelay.util.concurrent.SettableFuture;
 import io.forsta.librelay.webrtc.CallNotificationBuilder;
+import io.forsta.librelay.webrtc.Camera;
+import io.forsta.librelay.webrtc.CameraState;
 import io.forsta.librelay.webrtc.IncomingPstnCallReceiver;
 import io.forsta.librelay.webrtc.PeerConnectionFactoryOptions;
 import io.forsta.librelay.webrtc.PeerConnectionWrapper;
@@ -68,6 +70,8 @@ import org.webrtc.Camera2Enumerator;
 import org.webrtc.CameraEnumerator;
 import org.webrtc.CameraVideoCapturer;
 import org.webrtc.DataChannel;
+import org.webrtc.DefaultVideoDecoderFactory;
+import org.webrtc.DefaultVideoEncoderFactory;
 import org.webrtc.EglBase;
 import org.webrtc.IceCandidate;
 import org.webrtc.MediaConstraints;
@@ -76,9 +80,12 @@ import org.webrtc.PeerConnection;
 import org.webrtc.PeerConnectionFactory;
 import org.webrtc.RtpReceiver;
 import org.webrtc.SessionDescription;
+import org.webrtc.SurfaceTextureHelper;
 import org.webrtc.SurfaceViewRenderer;
 import org.webrtc.VideoCapturer;
-import org.webrtc.VideoRenderer;
+import org.webrtc.VideoDecoderFactory;
+import org.webrtc.VideoEncoderFactory;
+import org.webrtc.VideoSink;
 import org.webrtc.VideoSource;
 import org.webrtc.VideoTrack;
 import org.whispersystems.libsignal.SignalProtocolAddress;
@@ -191,9 +198,10 @@ public class WebRtcCallService extends Service implements BluetoothStateManager.
 
   private RemoteCallMembers peerCallMembers;
   private List<PeerConnection.IceServer> iceServers;
+  private Camera camera;
+
   @NonNull  private AudioTrack localAudioTrack;
   @NonNull  private AudioSource localAudioSource;
-
   @Nullable private VideoCapturer localVideoCapturer;
   @Nullable private VideoSource localVideoSource;
   @Nullable private VideoTrack localVideoTrack;
@@ -307,7 +315,6 @@ public class WebRtcCallService extends Service implements BluetoothStateManager.
     this.messageSender = ApplicationDependencies.getSignalServiceMessageSender();
     this.callState             = CallState.STATE_IDLE;
     this.lockManager           = new LockManager(this);
-    this.peerConnectionFactory = new PeerConnectionFactory(new PeerConnectionFactoryOptions());
     this.audioManager          = new SignalAudioManager(this);
     this.bluetoothStateManager = new BluetoothStateManager(this, this);
     this.localCallMember = new CallMember(this, TextSecurePreferences.getLocalAddress(this));
@@ -1069,8 +1076,16 @@ public class WebRtcCallService extends Service implements BluetoothStateManager.
         localRenderer.init(eglBase.getEglBaseContext(), null);
         remoteRenderer.init(eglBase.getEglBaseContext(), null);
 
-        peerConnectionFactory.setVideoHwAccelerationOptions(eglBase.getEglBaseContext(),
-                                                            eglBase.getEglBaseContext());
+        VideoEncoderFactory encoderFactory = new DefaultVideoEncoderFactory(eglBase.getEglBaseContext(), true, true);
+        VideoDecoderFactory decoderFactory = new DefaultVideoDecoderFactory(eglBase.getEglBaseContext());
+
+        peerConnectionFactory = PeerConnectionFactory.builder()
+            .setOptions(new PeerConnectionFactoryOptions())
+            .setVideoEncoderFactory(encoderFactory)
+            .setVideoDecoderFactory(decoderFactory)
+            .createPeerConnectionFactory();
+
+
         initializeLocalVideo();
       }
     });
@@ -1083,25 +1098,31 @@ public class WebRtcCallService extends Service implements BluetoothStateManager.
     constraints.optional.add(new MediaConstraints.KeyValuePair("DtlsSrtpKeyAgreement", "true"));
     audioConstraints.optional.add(new MediaConstraints.KeyValuePair("DtlsSrtpKeyAgreement", "true"));
 
-    localVideoCapturer = createVideoCapturer(this);
-
     localMediaStream = peerConnectionFactory.createLocalMediaStream("ARDAMS");
     localAudioSource = peerConnectionFactory.createAudioSource(audioConstraints);
     localAudioTrack  = peerConnectionFactory.createAudioTrack("ARDAMSa0", localAudioSource);
     localAudioTrack.setEnabled(false);
     localMediaStream.addTrack(localAudioTrack);
 
+    this.camera = new Camera(this, new Camera.CameraEventListener() {
+      @Override
+      public void onCameraSwitchCompleted(@NonNull CameraState newCameraState) {
 
-    if (localVideoCapturer != null) {
-      localVideoSource = peerConnectionFactory.createVideoSource(localVideoCapturer);
+      }
+    });
+
+    if (camera.getCapturer() != null) {
+      localVideoSource = peerConnectionFactory.createVideoSource(false);
       localVideoTrack = peerConnectionFactory.createVideoTrack("ARDAMSv0", localVideoSource);
 
-      localVideoTrack.addRenderer(new VideoRenderer(localRenderer));
+      camera.getCapturer().initialize(SurfaceTextureHelper.create("WebRTC-SurfaceTextureHelper", eglBase.getEglBaseContext()), this, localVideoSource.getCapturerObserver());
+
+      localVideoTrack.addSink(localRenderer);
       localVideoTrack.setEnabled(true);
       localMediaStream.addTrack(localVideoTrack);
     } else {
-      localVideoSource = null;
-      localVideoTrack  = null;
+      this.localVideoSource = null;
+      this.localVideoTrack = null;
     }
   }
 
@@ -1734,10 +1755,10 @@ public class WebRtcCallService extends Service implements BluetoothStateManager.
     private int connectionRetryCount = 1;
     @Nullable private PeerConnectionWrapper peerConnection;
     @Nullable private VideoTrack videoTrack;
-    @Nullable private VideoRenderer videoRenderer;
+    @Nullable private VideoSink videoRenderer;
     @Nullable private List<IceCandidate> pendingOutgoingIceUpdates;
     @Nullable private List<IceCandidate> pendingIncomingIceUpdates;
-    @NonNull VideoRenderer.Callbacks renderer;
+    @NonNull VideoSink renderer;
     private boolean videoEnabled = false;
     private boolean audioEnabled = true;
 
@@ -1757,7 +1778,7 @@ public class WebRtcCallService extends Service implements BluetoothStateManager.
       this.callOrder = callOrder;
     }
 
-    private void createPeerConnection(List<PeerConnection.IceServer> result, @NonNull VideoRenderer.Callbacks renderer, @NonNull MediaStream localMediaStream, String peerId, int callOrder) {
+    private void createPeerConnection(List<PeerConnection.IceServer> result, @NonNull VideoSink renderer, @NonNull MediaStream localMediaStream, String peerId, int callOrder) {
       this.peerId = peerId;
       this.renderer = renderer;
       this.callOrder = callOrder;
@@ -1794,11 +1815,7 @@ public class WebRtcCallService extends Service implements BluetoothStateManager.
     public void setVideoEnabled() {
       if (isActiveConnection()) {
         if (videoTrack != null) {
-          if (videoRenderer != null) {
-            videoRenderer.dispose();
-          }
-          videoRenderer = new VideoRenderer(renderer);
-          videoTrack.addRenderer(videoRenderer);
+          videoTrack.addSink(remoteRenderer);
           videoTrack.setEnabled(true);
           this.videoEnabled = true;
         }
@@ -1809,7 +1826,7 @@ public class WebRtcCallService extends Service implements BluetoothStateManager.
       this.videoEnabled = false;
       if (videoTrack != null) {
         videoTrack.setEnabled(false);
-        videoTrack.removeRenderer(videoRenderer);
+        videoTrack.removeSink(videoRenderer);
       }
     }
 
@@ -1823,8 +1840,7 @@ public class WebRtcCallService extends Service implements BluetoothStateManager.
       videoEnabled = false;
       if (videoTrack != null) {
         if (videoRenderer != null) {
-          videoTrack.removeRenderer(videoRenderer);
-          videoRenderer.dispose();
+          videoTrack.removeSink(videoRenderer);
         }
         videoTrack = null;
         videoRenderer = null;
@@ -1915,7 +1931,7 @@ public class WebRtcCallService extends Service implements BluetoothStateManager.
       }
 
       if (stream.videoTracks != null && stream.videoTracks.size() == 1) {
-        videoTrack = stream.videoTracks.getFirst();
+        videoTrack = stream.videoTracks.get(0);
         if (callOrder == 1) {
           setVideoEnabled();
         }
