@@ -19,10 +19,8 @@ package io.forsta.librelay;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -72,20 +70,16 @@ public class ConversationFragment extends Fragment
   public static final String LOCALE_EXTRA = "locale_extra";
   private static final long   PARTIAL_CONVERSATION_LIMIT = 500L;
 
-  private final ActionModeCallback actionModeCallback     = new ActionModeCallback();
+  private final ActionModeCallback actionModeCallback = new ActionModeCallback();
   private final ConversationAdapter.ItemClickListener selectionClickListener = new ConversationFragmentItemClickListener();
-  private ForwardMessageActionListener forwardMessageActionListener;
-  private MessageDetailsActionListener messageDetailsActionListener;
-
   private ConversationFragmentListener listener;
 
-
-  private Recipients   recipients;
-  private long         threadId;
-  private ActionMode   actionMode;
-  private Locale       locale;
+  private Recipients recipients;
+  private long threadId;
+  private ActionMode actionMode;
+  private Locale locale;
   private RecyclerView list;
-  private View         loadMoreView;
+  private View loadMoreView;
 
   @Override
   public void onCreate(Bundle icicle) {
@@ -121,6 +115,7 @@ public class ConversationFragment extends Fragment
     initializeListAdapter();
   }
 
+
   @Override
   public void onAttach(Activity activity) {
     super.onAttach(activity);
@@ -147,14 +142,6 @@ public class ConversationFragment extends Fragment
     if (threadId == -1) {
       getLoaderManager().restartLoader(0, Bundle.EMPTY, this);
     }
-  }
-
-  public void setForwardMessageActionListener(ForwardMessageActionListener listener) {
-    this.forwardMessageActionListener = listener;
-  }
-
-  public void setMessageDetailsActionListener(MessageDetailsActionListener listener) {
-    this.messageDetailsActionListener = listener;
   }
 
   public void reloadList() {
@@ -254,6 +241,9 @@ public class ConversationFragment extends Fragment
   public interface ConversationFragmentListener {
     void setThreadId(long threadId);
     void handleReplyMessage(MessageRecord messageRecord);
+    void handleViewMedia(MessageRecord messageRecord, Slide slide);
+    void handleForwardMessage(MessageRecord messageRecord);
+    void handleMessageDetails(MessageRecord messageRecord);
   }
 
   private void handleCopyMessage(final Set<MessageRecord> messageRecords) {
@@ -325,14 +315,14 @@ public class ConversationFragment extends Fragment
   }
 
   private void handleDisplayDetails(MessageRecord message) {
-    if (messageDetailsActionListener != null) {
-      messageDetailsActionListener.onHandleMessageDetails(message);
+    if (listener != null) {
+      listener.handleMessageDetails(message);
     }
   }
 
   private void handleForwardMessage(MessageRecord mediaMessage) {
-    if (forwardMessageActionListener != null) {
-      forwardMessageActionListener.onHandleForwardMessage(mediaMessage);
+    if (listener != null) {
+      listener.handleForwardMessage(mediaMessage);
     }
   }
 
@@ -390,15 +380,14 @@ public class ConversationFragment extends Fragment
     }
   }
 
-  public interface ForwardMessageActionListener {
-    void onHandleForwardMessage(MessageRecord messageRecord);
-  }
-
-  public interface MessageDetailsActionListener {
-    void onHandleMessageDetails(MessageRecord message);
-  }
-
   private class ConversationFragmentItemClickListener implements ConversationAdapter.ItemClickListener {
+
+    @Override
+    public void onThumbnailClick(MessageRecord messageRecord, Slide slide) {
+      if (listener != null) {
+        listener.handleViewMedia(messageRecord, slide);
+      }
+    }
 
     @Override
     public void onItemClick(MessageRecord messageRecord) {

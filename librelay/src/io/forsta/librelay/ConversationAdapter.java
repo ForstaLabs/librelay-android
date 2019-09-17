@@ -32,10 +32,10 @@ import io.forsta.librelay.database.MessageDatabase;
 import io.forsta.librelay.database.CursorRecyclerViewAdapter;
 import io.forsta.librelay.database.DbFactory;
 import io.forsta.librelay.database.model.MessageRecord;
+import io.forsta.librelay.media.Slide;
 import io.forsta.librelay.recipients.Recipients;
 import io.forsta.librelay.util.LRUCache;
 import io.forsta.librelay.util.ViewUtil;
-import io.forsta.librelay.util.VisibleForTesting;
 
 import java.lang.ref.SoftReference;
 import java.security.MessageDigest;
@@ -59,8 +59,8 @@ public class ConversationAdapter <V extends View & BindableConversationItem>
 {
 
   private static final int MAX_CACHE_SIZE = 40;
-  private final Map<String,SoftReference<MessageRecord>> messageRecordCache =
-      Collections.synchronizedMap(new LRUCache<String, SoftReference<MessageRecord>>(MAX_CACHE_SIZE));
+  private final Map<Long,SoftReference<MessageRecord>> messageRecordCache =
+      Collections.synchronizedMap(new LRUCache<Long, SoftReference<MessageRecord>>(MAX_CACHE_SIZE));
 
   public static final int MESSAGE_TYPE_OUTGOING = 0;
   public static final int MESSAGE_TYPE_INCOMING = 1;
@@ -69,11 +69,11 @@ public class ConversationAdapter <V extends View & BindableConversationItem>
   private final Set<MessageRecord> batchSelected = Collections.synchronizedSet(new HashSet<MessageRecord>());
 
   private final @Nullable ItemClickListener clickListener;
-  private final @NonNull  Locale            locale;
-  private final @NonNull  Recipients        recipients;
-  private final @NonNull  MessageDatabase db;
-  private final @NonNull  LayoutInflater    inflater;
-  private final @NonNull  MessageDigest     digest;
+  private final @NonNull Locale locale;
+  private final @NonNull Recipients recipients;
+  private final @NonNull MessageDatabase db;
+  private final @NonNull LayoutInflater inflater;
+  private final @NonNull MessageDigest digest;
 
   protected static class ViewHolder extends RecyclerView.ViewHolder {
     public <V extends View & BindableConversationItem> ViewHolder(final @NonNull V itemView) {
@@ -87,24 +87,9 @@ public class ConversationAdapter <V extends View & BindableConversationItem>
   }
 
   public interface ItemClickListener {
+    void onThumbnailClick(MessageRecord messageRecord, Slide slide);
     void onItemClick(MessageRecord item);
     void onItemLongClick(MessageRecord item);
-  }
-
-  @SuppressWarnings("ConstantConditions")
-  @VisibleForTesting
-  ConversationAdapter(Context context, Cursor cursor) {
-    super(context, cursor);
-    try {
-      this.locale        = null;
-      this.clickListener = null;
-      this.recipients    = null;
-      this.inflater      = null;
-      this.db            = null;
-      this.digest        = MessageDigest.getInstance("SHA1");
-    } catch (NoSuchAlgorithmException nsae) {
-      throw new AssertionError("SHA1 isn't supported!");
-    }
   }
 
   public ConversationAdapter(@NonNull Context context,
@@ -137,15 +122,23 @@ public class ConversationAdapter <V extends View & BindableConversationItem>
   @Override
   public void onBindItemViewHolder(ViewHolder viewHolder, @NonNull Cursor cursor) {
     long          id            = cursor.getLong(cursor.getColumnIndexOrThrow(MessageDatabase.ID));
-    String        type          = "mms";
-    MessageRecord messageRecord = getMessageRecord(id, cursor, type);
+    MessageRecord messageRecord = getMessageRecord(id, cursor);
 
     viewHolder.getView().bind(messageRecord, locale, batchSelected, recipients);
   }
 
   @Override
   public ViewHolder onCreateItemViewHolder(ViewGroup parent, int viewType) {
-    final V itemView = ViewUtil.inflate(inflater, parent, getLayoutForViewType(viewType));
+    final ConversationItem itemView = ViewUtil.inflate(inflater, parent, getLayoutForViewType(viewType));
+    itemView.setOnThumbnailClickListener(new ConversationItem.ThumbnailClickListener() {
+      @Override
+      public void onThumbnailClicked(MessageRecord messsageRecord, Slide slide) {
+        if (clickListener != null) {
+          clickListener.onThumbnailClick(messsageRecord, slide);
+        }
+      }
+    });
+
     itemView.setOnClickListener(new OnClickListener() {
       @Override
       public void onClick(View view) {
@@ -184,8 +177,7 @@ public class ConversationAdapter <V extends View & BindableConversationItem>
   @Override
   public int getItemViewType(@NonNull Cursor cursor) {
     long          id            = cursor.getLong(cursor.getColumnIndexOrThrow(MessageDatabase.ID));
-    String        type          = "mms";
-    MessageRecord messageRecord = getMessageRecord(id, cursor, type);
+    MessageRecord messageRecord = getMessageRecord(id, cursor);
 
     if (messageRecord.isExpirationTimerUpdate())
    {
@@ -203,8 +195,8 @@ public class ConversationAdapter <V extends View & BindableConversationItem>
     return id;
   }
 
-  private MessageRecord getMessageRecord(long messageId, Cursor cursor, String type) {
-    final SoftReference<MessageRecord> reference = messageRecordCache.get(type + messageId);
+  private MessageRecord getMessageRecord(long messageId, Cursor cursor) {
+    final SoftReference<MessageRecord> reference = messageRecordCache.get(messageId);
     if (reference != null) {
       final MessageRecord record = reference.get();
       if (record != null) return record;
@@ -212,7 +204,7 @@ public class ConversationAdapter <V extends View & BindableConversationItem>
 
     final MessageRecord messageRecord = db.readerFor(cursor).getCurrent();
 
-    messageRecordCache.put(type + messageId, new SoftReference<>(messageRecord));
+    messageRecordCache.put(messageId, new SoftReference<>(messageRecord));
 
     return messageRecord;
   }
