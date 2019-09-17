@@ -515,7 +515,6 @@ public class MessageDatabase extends DbBase {
   }
 
   public List<Pair<Long, Long>> setTimestampRead(SyncMessageId messageId, long expireStarted) {
-    MessageReceiptsDatabase addressDatabase = DbFactory.getMessageReceiptDatabase(context);
     SQLiteDatabase         database        = dbHelper.getWritableDatabase();
     List<Pair<Long, Long>> expiring        = new LinkedList<>();
     Cursor                 cursor          = null;
@@ -524,35 +523,22 @@ public class MessageDatabase extends DbBase {
       cursor = database.query(TABLE_NAME, new String[] {ID, THREAD_ID, MESSAGE_BOX, EXPIRES_IN}, DATE_SENT + " = ?", new String[] {String.valueOf(messageId.getTimetamp())}, null, null, null, null);
 
       while (cursor.moveToNext()) {
-        List<String> addresses = addressDatabase.getAddressesListForId(cursor.getLong(cursor.getColumnIndexOrThrow(ID)));
+        long id        = cursor.getLong(cursor.getColumnIndexOrThrow(ID));
+        long threadId  = cursor.getLong(cursor.getColumnIndexOrThrow(THREAD_ID));
+        long expiresIn = cursor.getLong(cursor.getColumnIndexOrThrow(EXPIRES_IN));
 
-        for (String storedAddress : addresses) {
-          try {
-            String ourAddress   = messageId.getAddress();
-            String theirAddress = storedAddress;
+        ContentValues values = new ContentValues();
+        values.put(READ, 1);
 
-            if (ourAddress.equals(theirAddress)) {
-              long id        = cursor.getLong(cursor.getColumnIndexOrThrow(ID));
-              long threadId  = cursor.getLong(cursor.getColumnIndexOrThrow(THREAD_ID));
-              long expiresIn = cursor.getLong(cursor.getColumnIndexOrThrow(EXPIRES_IN));
-
-              ContentValues values = new ContentValues();
-              values.put(READ, 1);
-
-              if (expiresIn > 0) {
-                values.put(EXPIRE_STARTED, expireStarted);
-                expiring.add(new Pair<>(id, expiresIn));
-              }
-
-              database.update(TABLE_NAME, values, ID_WHERE, new String[]{String.valueOf(id)});
-
-              DbFactory.getThreadDatabase(context).updateReadState(threadId);
-              notifyConversationListeners(threadId);
-            }
-          } catch (Exception e) {
-            Log.w("MessageDatabase", e);
-          }
+        if (expiresIn > 0) {
+          values.put(EXPIRE_STARTED, expireStarted);
+          expiring.add(new Pair<>(id, expiresIn));
         }
+
+        database.update(TABLE_NAME, values, ID_WHERE, new String[]{String.valueOf(id)});
+
+        DbFactory.getThreadDatabase(context).updateReadState(threadId);
+        notifyConversationListeners(threadId);
       }
     } finally {
       if (cursor != null)

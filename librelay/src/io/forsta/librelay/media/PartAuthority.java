@@ -6,6 +6,7 @@ import android.content.UriMatcher;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
+import io.forsta.librelay.BuildConfig;
 import io.forsta.librelay.attachments.AttachmentId;
 import io.forsta.librelay.database.DbFactory;
 import io.forsta.librelay.providers.PersistentBlobProvider;
@@ -17,8 +18,8 @@ import java.io.InputStream;
 
 public class PartAuthority {
 
-  private static final String PART_URI_STRING   = "content://io.forsta.librelay/part";
-  private static final String THUMB_URI_STRING  = "content://io.forsta.librelay/thumb";
+  private static final String PART_URI_STRING   = "content://" + BuildConfig.FORSTA_PROVIDER + "/part";
+  private static final String THUMB_URI_STRING  = "content://" + BuildConfig.FORSTA_PROVIDER + "/thumb";
   private static final Uri    PART_CONTENT_URI  = Uri.parse(PART_URI_STRING);
   private static final Uri    THUMB_CONTENT_URI = Uri.parse(THUMB_URI_STRING);
 
@@ -31,8 +32,8 @@ public class PartAuthority {
 
   static {
     uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-    uriMatcher.addURI("io.forsta.librelay", "part/*/#", PART_ROW);
-    uriMatcher.addURI("io.forsta.librelay", "thumb/*/#", THUMB_ROW);
+    uriMatcher.addURI(BuildConfig.FORSTA_PROVIDER, "part/*/#", PART_ROW);
+    uriMatcher.addURI(BuildConfig.FORSTA_PROVIDER, "thumb/*/#", THUMB_ROW);
     uriMatcher.addURI(PersistentBlobProvider.AUTHORITY, PersistentBlobProvider.EXPECTED_PATH, PERSISTENT_ROW);
     uriMatcher.addURI(SingleUseBlobProvider.AUTHORITY, SingleUseBlobProvider.PATH, SINGLE_USE_ROW);
   }

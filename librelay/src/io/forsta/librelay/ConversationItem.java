@@ -16,10 +16,8 @@
  */
 package io.forsta.librelay;
 
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -56,7 +54,6 @@ import io.forsta.librelay.database.MessageDatabase;
 import io.forsta.librelay.database.documents.IdentityKeyMismatch;
 import io.forsta.librelay.database.model.MessageRecord;
 import io.forsta.librelay.media.DocumentSlide;
-import io.forsta.librelay.media.PartAuthority;
 import io.forsta.librelay.media.Slide;
 import io.forsta.librelay.media.SlideClickListener;
 import io.forsta.librelay.recipients.Recipient;
@@ -87,28 +84,28 @@ public class ConversationItem extends LinearLayout
   private final static String TAG = ConversationItem.class.getSimpleName();
 
   private MessageRecord messageRecord;
-  private Locale        locale;
-  private boolean       groupThread;
-  private Recipient     recipient;
-  private String        messageId;
+  private Locale locale;
+  private boolean groupThread;
+  private Recipient recipient;
+  private String messageId;
 
-  private View               bodyBubble;
-  private ReplyListView      listView;
-  private LinearLayout       replyBox;
-  private TextView           bodyText;
-  private TextView           dateText;
-  private TextView           simInfoText;
-  private TextView           indicatorText;
+  private View bodyBubble;
+  private ReplyListView listView;
+  private LinearLayout replyBox;
+  private TextView bodyText;
+  private TextView dateText;
+  private TextView simInfoText;
+  private TextView indicatorText;
   private TextView recipientText;
-  private ImageView          secureImage;
+  private ImageView secureImage;
   private AvatarImageView contactPhoto;
   private DeliveryStatusView deliveryStatusIndicator;
   private AlertView alertView;
 
-  private @NonNull  Set<MessageRecord>  batchSelected = new HashSet<>();
-  private @Nullable Recipients          conversationRecipients;
-  private @NonNull  ThumbnailView       mediaThumbnail;
-  private @NonNull  AudioView           audioView;
+  private @NonNull Set<MessageRecord>  batchSelected = new HashSet<>();
+  private @Nullable Recipients conversationRecipients;
+  private @NonNull ThumbnailView mediaThumbnail;
+  private @NonNull AudioView audioView;
   private @NonNull DocumentView documentView;
   private @NonNull ExpirationTimerView expirationTimer;
   private VideoView videoView;
@@ -117,9 +114,8 @@ public class ConversationItem extends LinearLayout
   private int defaultBubbleColor;
   private int defaultIncomingBubbleColor;
 
-  private final PassthroughClickListener        passthroughClickListener   = new PassthroughClickListener();
-
-  private final Context                     context;
+  private final PassthroughClickListener passthroughClickListener = new PassthroughClickListener();
+  private final Context context;
 
   public ConversationItem(Context context) {
     this(context, null);
@@ -160,9 +156,8 @@ public class ConversationItem extends LinearLayout
     this.replyBox                = findViewById(R.id.reply_box);
 
     setOnClickListener(new ClickListener(null));
-    AttachmentDownloadClickListener downloadClickListener    = new AttachmentDownloadClickListener();
+    AttachmentDownloadClickListener downloadClickListener = new AttachmentDownloadClickListener();
 
-    mediaThumbnail.setThumbnailClickListener(new ThumbnailClickListener());
     mediaThumbnail.setDownloadClickListener(downloadClickListener);
     mediaThumbnail.setOnLongClickListener(passthroughClickListener);
     mediaThumbnail.setOnClickListener(passthroughClickListener);
@@ -229,8 +224,20 @@ public class ConversationItem extends LinearLayout
     return messageRecord;
   }
 
-  /// MessageRecord Attribute Parsers
+  public void setOnThumbnailClickListener(ThumbnailClickListener listener) {
+    mediaThumbnail.setThumbnailClickListener(new SlideClickListener() {
+      @Override
+      public void onClick(View v, Slide slide) {
+        listener.onThumbnailClicked(messageRecord, slide);
+      }
+    });
+  }
 
+  public interface ThumbnailClickListener {
+    void onThumbnailClicked(MessageRecord messsageRecord, Slide slide);
+  }
+
+  /// MessageRecord Attribute Parsers
   private void setBubbleState(MessageRecord messageRecord, Recipient recipient) {
     if (messageRecord.isOutgoing()) {
       bodyBubble.getBackground().setColorFilter(defaultBubbleColor, PorterDuff.Mode.MULTIPLY);
@@ -550,39 +557,6 @@ public class ConversationItem extends LinearLayout
       DbFactory.getAttachmentDatabase(context).setTransferState(messageRecord.getId(),
                                                                       slide.asAttachment(),
                                                                       AttachmentDatabase.TRANSFER_PROGRESS_STARTED);
-    }
-  }
-
-  private class ThumbnailClickListener implements SlideClickListener {
-    public void onClick(final View v, final Slide slide) {
-//      if (shouldInterceptClicks(messageRecord) || !batchSelected.isEmpty()) {
-//        performClick();
-//      } else if (MediaPreviewActivity.isContentTypeSupported(slide.getContentType()) &&
-//                 slide.getUri() != null)
-//      {
-//        Intent intent = new Intent(context, MediaPreviewActivity.class);
-//        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-//        intent.setDataAndType(slide.getUri(), slide.getContentType());
-//        if (!messageRecord.isOutgoing()) intent.putExtra(MediaPreviewActivity.RECIPIENT_EXTRA, recipient.getRecipientId());
-//        intent.putExtra(MediaPreviewActivity.DATE_EXTRA, messageRecord.getTimestamp());
-//        intent.putExtra(MediaPreviewActivity.SIZE_EXTRA, slide.asAttachment().getSize());
-//
-//        context.startActivity(intent);
-//      } else if (slide.getUri() != null) {
-//        Log.w(TAG, "Clicked: " + slide.getUri() + " , " + slide.getContentType());
-//        Uri publicUri = PartAuthority.getAttachmentPublicUri(slide.getUri());
-//        Log.w(TAG, "Public URI: " + publicUri);
-//        Intent intent = new Intent(Intent.ACTION_VIEW);
-//        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-//        intent.setDataAndType(PartAuthority.getAttachmentPublicUri(slide.getUri()), slide.getContentType());
-//        try {
-//          context.startActivity(intent);
-//        } catch (ActivityNotFoundException anfe) {
-//          Log.w(TAG, "No activity existed to view the media.");
-//          Toast.makeText(context, R.string.ConversationItem_unable_to_open_media, Toast.LENGTH_LONG).show();
-//        }
-//
-//      }
     }
   }
 

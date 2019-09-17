@@ -98,7 +98,7 @@ public class AttachmentDownloadJob extends ContextJob {
     Log.w(TAG, "Downloading push part " + attachmentId);
 
     retrieveAttachment(messageId, attachmentId, attachment);
-    MessageNotifier.updateNotification(context);
+    MessageNotifier.updateNotification(context, false);
   }
 
   @Override

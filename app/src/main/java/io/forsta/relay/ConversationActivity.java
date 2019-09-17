@@ -104,6 +104,7 @@ import io.forsta.librelay.database.ThreadDatabase;
 import io.forsta.librelay.database.ThreadPreferenceDatabase;
 import io.forsta.librelay.database.model.MessageRecord;
 import io.forsta.librelay.database.model.ThreadRecord;
+import io.forsta.librelay.media.PartAuthority;
 import io.forsta.relay.AttachmentManager.MediaType;
 import io.forsta.librelay.media.AttachmentTypeSelectorAdapter;
 import io.forsta.librelay.media.AudioSlide;
@@ -148,7 +149,7 @@ public class ConversationActivity extends AuthenticationRequiredActionBarActivit
                RecipientsModifiedListener,
         KeyboardAwareLinearLayout.OnKeyboardShownListener,
         QuickAttachmentDrawer.AttachmentDrawerListener,
-        InputPanel.Listener, ConversationFragment.ForwardMessageActionListener, ConversationFragment.MessageDetailsActionListener
+        InputPanel.Listener
 {
   private static final String TAG = ConversationActivity.class.getSimpleName();
 
@@ -213,8 +214,6 @@ public class ConversationActivity extends AuthenticationRequiredActionBarActivit
     setContentView(R.layout.conversation_activity);
 
     fragment = initFragment(R.id.fragment_content, new ConversationFragment(), dynamicLanguage.getCurrentLocale());
-    fragment.setMessageDetailsActionListener(this);
-    fragment.setForwardMessageActionListener(this);
 
     initializeReceivers();
     initializeActionBar();
@@ -679,6 +678,56 @@ public class ConversationActivity extends AuthenticationRequiredActionBarActivit
       author = messageRecord.getIndividualRecipient();
     }
     inputPanel.setQuote(messageRecord.getDateSent(), author, messageRecord.getPlainTextBody(), messageRecord.getSlideDeck());
+  }
+
+  @Override
+  public void handleViewMedia(MessageRecord messageRecord, Slide slide) {
+    if (MediaPreviewActivity.isContentTypeSupported(slide.getContentType()) &&
+                 slide.getUri() != null)
+      {
+        Intent intent = new Intent(this, MediaPreviewActivity.class);
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        intent.setDataAndType(slide.getUri(), slide.getContentType());
+        if (!messageRecord.isOutgoing()) {
+          intent.putExtra(MediaPreviewActivity.RECIPIENT_EXTRA, messageRecord.getIndividualRecipient().getRecipientId());
+        }
+        intent.putExtra(MediaPreviewActivity.DATE_EXTRA, messageRecord.getTimestamp());
+        intent.putExtra(MediaPreviewActivity.SIZE_EXTRA, slide.asAttachment().getSize());
+
+        startActivity(intent);
+      } else if (slide.getUri() != null) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        intent.setDataAndType(PartAuthority.getAttachmentPublicUri(slide.getUri()), slide.getContentType());
+        try {
+          startActivity(intent);
+        } catch (ActivityNotFoundException anfe) {
+          Log.w(TAG, "No activity existed to view the media.");
+          Toast.makeText(this, R.string.ConversationItem_unable_to_open_media, Toast.LENGTH_LONG).show();
+        }
+      }
+  }
+
+  @Override
+  public void handleForwardMessage(MessageRecord messageRecord) {
+    Intent composeIntent = new Intent(this, ShareActivity.class);
+    String body = messageRecord.getMessageBody();
+    composeIntent.putExtra(Intent.EXTRA_TEXT, body);
+    if (messageRecord.containsMediaSlide()) {
+      Slide slide = messageRecord.getSlideDeck().getSlides().get(0);
+      composeIntent.putExtra(Intent.EXTRA_STREAM, slide.getUri());
+      composeIntent.setType(slide.getContentType());
+    }
+    startActivity(composeIntent);
+  }
+
+  @Override
+  public void handleMessageDetails(MessageRecord messageRecord) {
+    Intent intent = new Intent(this, MessageDetailsActivity.class);
+    intent.putExtra(MessageDetailsActivity.MESSAGE_ID_EXTRA, messageRecord.getId());
+    intent.putExtra(MessageDetailsActivity.THREAD_ID_EXTRA, threadId);
+    intent.putExtra(MessageDetailsActivity.RECIPIENTS_IDS_EXTRA, recipients.getIds());
+    startActivity(intent);
   }
 
   private void initializeThread() {
@@ -1288,28 +1337,6 @@ public class ConversationActivity extends AuthenticationRequiredActionBarActivit
   @Override
   public void onAttachmentChanged() {
     updateToggleButtonState();
-  }
-
-  @Override
-  public void onHandleForwardMessage(MessageRecord messageRecord) {
-    Intent composeIntent = new Intent(this, ShareActivity.class);
-    String body = messageRecord.getMessageBody();
-    composeIntent.putExtra(Intent.EXTRA_TEXT, body);
-    if (messageRecord.containsMediaSlide()) {
-      Slide slide = messageRecord.getSlideDeck().getSlides().get(0);
-      composeIntent.putExtra(Intent.EXTRA_STREAM, slide.getUri());
-      composeIntent.setType(slide.getContentType());
-    }
-    startActivity(composeIntent);
-  }
-
-  @Override
-  public void onHandleMessageDetails(MessageRecord message) {
-    Intent intent = new Intent(this, MessageDetailsActivity.class);
-    intent.putExtra(MessageDetailsActivity.MESSAGE_ID_EXTRA, message.getId());
-    intent.putExtra(MessageDetailsActivity.THREAD_ID_EXTRA, threadId);
-    intent.putExtra(MessageDetailsActivity.RECIPIENTS_IDS_EXTRA, recipients.getIds());
-    startActivity(intent);
   }
 
   // Listeners

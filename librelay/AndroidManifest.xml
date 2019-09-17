@@ -166,36 +166,6 @@
             android:name="io.forsta.librelay.gcm.FcmJobService"
             android:permission="android.permission.BIND_JOB_SERVICE"
             tools:targetApi="26" />
-
-        <provider
-            android:name="io.forsta.librelay.providers.PartProvider"
-            android:authorities="@string/forsta_authorities"
-            android:exported="false"
-            android:grantUriPermissions="true"/>
-        <provider
-            android:name="io.forsta.librelay.providers.DatabaseProvider"
-            android:authorities="@string/forsta_database_provider"
-            android:exported="false"
-            android:grantUriPermissions="true"
-            android:label="Forsta Empty Database Provider"/>
-
-        <provider
-            android:name="io.forsta.librelay.atlas.AtlasProvider"
-            android:authorities="@string/forsta_authorities"
-            android:exported="false"
-            android:grantUriPermissions="true"
-            android:label="Atlas Contacts"/>
-
-        <provider
-            android:name="android.support.v4.content.FileProvider"
-            android:authorities="@string/forsta_authorities"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_provider_paths">
-            </meta-data>
-        </provider>
         <activity android:name=".WebRtcCallActivity"
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
