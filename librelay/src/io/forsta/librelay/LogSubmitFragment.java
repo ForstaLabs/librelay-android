@@ -135,7 +135,7 @@ public class LogSubmitFragment extends Fragment {
         Log.w(TAG, out);
         Uri fileUri = FileProvider.getUriForFile(
             getContext(),
-            "io.forsta.librelay.provider.external_files",
+            BuildConfig.FORSTA_PROVIDER + ".external_files",
             outFile);
         emailIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
         startActivity(Intent.createChooser(emailIntent, "Send email..."));
