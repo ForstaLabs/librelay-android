@@ -41,7 +41,6 @@ import io.forsta.librelay.jobmanager.JobManager;
 import io.forsta.librelay.jobs.CreateSignedPreKeyJob;
 import io.forsta.librelay.jobs.FcmRefreshJob;
 import io.forsta.librelay.jobs.PushNotificationReceiveJob;
-import io.forsta.librelay.jobs.requirements.MediaNetworkRequirementProvider;
 import io.forsta.librelay.notifications.NotificationChannels;
 import io.forsta.librelay.service.ExpiringMessageManager;
 import io.forsta.librelay.util.TextSecurePreferences;
@@ -63,8 +62,6 @@ public class ApplicationContext extends MultiDexApplication implements DefaultLi
   private JobManager jobManager;
   private boolean                initialized;
   private volatile boolean       isAppVisible;
-
-  private MediaNetworkRequirementProvider mediaNetworkRequirementProvider = new MediaNetworkRequirementProvider();
 
   public static ApplicationContext getInstance(Context context) {
     return (ApplicationContext)context.getApplicationContext();
@@ -136,10 +133,6 @@ public class ApplicationContext extends MultiDexApplication implements DefaultLi
 
   private void initializeJobManager() {
     this.jobManager = new JobManager(this, WorkManager.getInstance());
-  }
-
-  public void notifyMediaControlEvent() {
-    mediaNetworkRequirementProvider.notifyMediaControlEvent();
   }
 
   private void initializeDependencies() {

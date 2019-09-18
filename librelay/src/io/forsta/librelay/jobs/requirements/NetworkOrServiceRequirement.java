@@ -6,8 +6,6 @@ import io.forsta.librelay.jobmanager.dependencies.ContextDependent;
 import io.forsta.librelay.jobmanager.requirements.NetworkRequirement;
 import io.forsta.librelay.jobmanager.requirements.SimpleRequirement;
 
-import io.forsta.librelay.jobmanager.requirements.SimpleRequirement;
-
 public class NetworkOrServiceRequirement extends SimpleRequirement implements ContextDependent {
 
   private transient Context context;

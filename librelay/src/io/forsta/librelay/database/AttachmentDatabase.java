@@ -339,7 +339,6 @@ public class AttachmentDatabase extends DbBase {
     values.put(TRANSFER_STATE, transferState);
     database.update(TABLE_NAME, values, PART_ID_WHERE, attachmentId.toStrings());
     notifyConversationListeners(DbFactory.getMessageDatabase(context).getThreadIdForMessage(messageId));
-    ApplicationContext.getInstance(context).notifyMediaControlEvent();
   }
 
   @VisibleForTesting
