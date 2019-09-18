@@ -16,7 +16,6 @@ import io.forsta.relay.LoginActivity;
 import io.forsta.relay.RegistrationActivity;
 
 import io.forsta.librelay.atlas.AtlasPreferences;
-import io.forsta.librelay.service.MessageRetrievalService;
 import io.forsta.librelay.util.TextSecurePreferences;
 
 public abstract class AuthenticationRequiredActionBarActivity extends BaseActionBarActivity {
@@ -45,8 +44,6 @@ public abstract class AuthenticationRequiredActionBarActivity extends BaseAction
   protected void onResume() {
     Log.w(TAG, "onResume()");
     super.onResume();
-
-    MessageRetrievalService.registerActivityStarted(this);
     isVisible = true;
   }
 
@@ -54,7 +51,6 @@ public abstract class AuthenticationRequiredActionBarActivity extends BaseAction
   protected void onPause() {
     Log.w(TAG, "onPause()");
     super.onPause();
-    MessageRetrievalService.registerActivityStopped(this);
     isVisible = false;
   }
 

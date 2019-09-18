@@ -43,6 +43,7 @@ import io.forsta.librelay.jobs.FcmRefreshJob;
 import io.forsta.librelay.jobs.PushNotificationReceiveJob;
 import io.forsta.librelay.notifications.NotificationChannels;
 import io.forsta.librelay.service.ExpiringMessageManager;
+import io.forsta.librelay.service.IncomingMessageObserver;
 import io.forsta.librelay.util.TextSecurePreferences;
 import io.forsta.librelay.util.Util;
 
@@ -62,6 +63,7 @@ public class ApplicationContext extends MultiDexApplication implements DefaultLi
   private JobManager jobManager;
   private boolean                initialized;
   private volatile boolean       isAppVisible;
+  private IncomingMessageObserver  incomingMessageObserver;
 
   public static ApplicationContext getInstance(Context context) {
     return (ApplicationContext)context.getApplicationContext();
@@ -74,6 +76,7 @@ public class ApplicationContext extends MultiDexApplication implements DefaultLi
       initializeLogging();
       initializeDependencies();
       initializeJobManager();
+      initializeMessageRetrieval();
       initializeExpiringMessageManager();
       initializeGcmCheck();
       initializeSignedPreKeyCheck();
@@ -116,6 +119,10 @@ public class ApplicationContext extends MultiDexApplication implements DefaultLi
 
   public boolean isAppVisible() {
     return isAppVisible;
+  }
+
+  public void initializeMessageRetrieval() {
+    this.incomingMessageObserver = new IncomingMessageObserver(this);
   }
 
   private void initializePendingMessages() {
