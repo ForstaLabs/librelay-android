@@ -1,10 +1,8 @@
-package io.forsta.librelay.jobs.requirements;
+package io.forsta.librelay.jobmanager.requirements;
 
 import android.content.Context;
 
 import io.forsta.librelay.jobmanager.dependencies.ContextDependent;
-import io.forsta.librelay.jobmanager.requirements.NetworkRequirement;
-import io.forsta.librelay.jobmanager.requirements.SimpleRequirement;
 
 public class NetworkOrServiceRequirement extends SimpleRequirement implements ContextDependent {
 

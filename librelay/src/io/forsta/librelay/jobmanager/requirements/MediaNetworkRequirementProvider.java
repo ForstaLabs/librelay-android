@@ -1,4 +1,4 @@
-package io.forsta.librelay.jobs.requirements;
+package io.forsta.librelay.jobmanager.requirements;
 
 import io.forsta.librelay.jobmanager.requirements.RequirementListener;
 import io.forsta.librelay.jobmanager.requirements.RequirementProvider;

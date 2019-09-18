@@ -19,7 +19,7 @@ package io.forsta.librelay.jobmanager;
 import io.forsta.librelay.jobmanager.requirements.NetworkBackoffRequirement;
 import io.forsta.librelay.jobmanager.requirements.NetworkRequirement;
 import io.forsta.librelay.jobmanager.requirements.Requirement;
-import io.forsta.librelay.jobs.requirements.NetworkOrServiceRequirement;
+import io.forsta.librelay.jobmanager.requirements.NetworkOrServiceRequirement;
 
 import java.io.Serializable;
 import java.util.Collections;

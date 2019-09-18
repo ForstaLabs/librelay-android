@@ -1,4 +1,4 @@
-package io.forsta.librelay.jobs.requirements;
+package io.forsta.librelay.jobmanager.requirements;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -14,7 +14,6 @@ import io.forsta.librelay.util.MediaUtil;
 import io.forsta.librelay.util.ServiceUtil;
 import io.forsta.librelay.util.TextSecurePreferences;
 import io.forsta.librelay.jobmanager.dependencies.ContextDependent;
-import io.forsta.librelay.jobmanager.requirements.SimpleRequirement;
 
 import java.util.Collections;
 import java.util.Set;
