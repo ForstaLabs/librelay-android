@@ -65,10 +65,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.webrtc.AudioSource;
 import org.webrtc.AudioTrack;
-import org.webrtc.Camera1Enumerator;
-import org.webrtc.Camera2Enumerator;
-import org.webrtc.CameraEnumerator;
-import org.webrtc.CameraVideoCapturer;
 import org.webrtc.DataChannel;
 import org.webrtc.DefaultVideoDecoderFactory;
 import org.webrtc.DefaultVideoEncoderFactory;
@@ -1034,6 +1030,14 @@ public class WebRtcCallService extends Service implements BluetoothStateManager.
     }
   }
 
+  private void handleSetCameraFlip(Intent intent) {
+    Log.i(TAG, "handleSetCameraFlip()...");
+
+    if (camera != null) {
+      camera.flip();
+    }
+  }
+
   /// Helper Methods
 
   private CallMember getCallMember(Intent intent) {
@@ -1107,7 +1111,7 @@ public class WebRtcCallService extends Service implements BluetoothStateManager.
     this.camera = new Camera(this, new Camera.CameraEventListener() {
       @Override
       public void onCameraSwitchCompleted(@NonNull CameraState newCameraState) {
-
+        Log.w(TAG, "onCameraSwitchCompleted. Camera state: " + newCameraState.toString());
       }
     });
 
@@ -1120,6 +1124,7 @@ public class WebRtcCallService extends Service implements BluetoothStateManager.
       localVideoTrack.addSink(localRenderer);
       localVideoTrack.setEnabled(true);
       localMediaStream.addTrack(localVideoTrack);
+      camera.setEnabled(true);
     } else {
       this.localVideoSource = null;
       this.localVideoTrack = null;
@@ -1680,54 +1685,9 @@ public class WebRtcCallService extends Service implements BluetoothStateManager.
     context.startService(intent);
   }
 
-  private @Nullable
-  CameraVideoCapturer createVideoCapturer(@NonNull Context context) {
-    boolean camera2EnumeratorIsSupported = false;
-    try {
-      camera2EnumeratorIsSupported = Camera2Enumerator.isSupported(context);
-    } catch (final Throwable throwable) {
-      Log.w(TAG, "Camera2Enumator.isSupport() threw.", throwable);
-    }
-
-    Log.w(TAG, "Camera2 enumerator supported: " + camera2EnumeratorIsSupported);
-    CameraEnumerator enumerator;
-
-    if (camera2EnumeratorIsSupported) enumerator = new Camera2Enumerator(context);
-    else                              enumerator = new Camera1Enumerator(true);
-
-    String[] deviceNames = enumerator.getDeviceNames();
-
-    for (String deviceName : deviceNames) {
-      if (enumerator.isFrontFacing(deviceName)) {
-        Log.w(TAG, "Creating front facing camera capturer.");
-        final CameraVideoCapturer videoCapturer = enumerator.createCapturer(deviceName, null);
-
-        if (videoCapturer != null) {
-          Log.w(TAG, "Found front facing capturer: " + deviceName);
-
-          return videoCapturer;
-        }
-      }
-    }
-
-    for (String deviceName : deviceNames) {
-      if (!enumerator.isFrontFacing(deviceName)) {
-        Log.w(TAG, "Creating other camera capturer.");
-        final CameraVideoCapturer videoCapturer = enumerator.createCapturer(deviceName, null);
-
-        if (videoCapturer != null) {
-          Log.w(TAG, "Found other facing capturer: " + deviceName);
-          return videoCapturer;
-        }
-      }
-    }
-
-    Log.w(TAG, "Video capture not supported!");
-    return null;
-  }
-
   public void setLocalVideoEnabled(boolean enabled) {
     if (localVideoTrack != null) {
+      Log.w(TAG, "setLocalVideoEnabled: " + enabled);
       localVideoTrack.setEnabled(enabled);
     }
 

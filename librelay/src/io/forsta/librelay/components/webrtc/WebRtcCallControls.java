@@ -56,6 +56,7 @@ public class WebRtcCallControls extends LinearLayout {
     this.bluetoothButton = ViewUtil.findById(this, R.id.bluetoothButton);
     this.audioMuteButton = ViewUtil.findById(this, R.id.muteButton);
     this.videoMuteButton = ViewUtil.findById(this, R.id.video_mute_button);
+
   }
 
   public void setAudioMuteButtonListener(final MuteButtonListener listener) {
@@ -164,9 +165,4 @@ public class WebRtcCallControls extends LinearLayout {
   public interface BluetoothButtonListener {
     public void onBluetoothChange(boolean isBluetooth);
   }
-
-
-
-
-
 }

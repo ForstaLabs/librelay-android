@@ -46,7 +46,7 @@ public class Camera implements CameraVideoCapturer.CameraSwitchHandler {
     capturer = capturerCandidate;
   }
 
-  void flip() {
+  public void flip() {
     if (capturer == null || cameraCount < 2) {
       Log.w(TAG, "Tried to flip the camera, but we only have " + cameraCount + " of them.");
       return;
@@ -55,7 +55,7 @@ public class Camera implements CameraVideoCapturer.CameraSwitchHandler {
     capturer.switchCamera(this);
   }
 
-  void setEnabled(boolean enabled) {
+  public void setEnabled(boolean enabled) {
     this.enabled = enabled;
 
     if (capturer == null) {
@@ -73,17 +73,17 @@ public class Camera implements CameraVideoCapturer.CameraSwitchHandler {
     }
   }
 
-  void dispose() {
+  public void dispose() {
     if (capturer != null) {
       capturer.dispose();
     }
   }
 
-  int getCount() {
+  private int getCount() {
     return cameraCount;
   }
 
-  @NonNull CameraState.Direction getActiveDirection() {
+  public @NonNull CameraState.Direction getActiveDirection() {
     return enabled ? activeDirection : NONE;
   }
 
@@ -99,6 +99,7 @@ public class Camera implements CameraVideoCapturer.CameraSwitchHandler {
       if ((direction == FRONT && enumerator.isFrontFacing(deviceName)) ||
           (direction == BACK  && enumerator.isBackFacing(deviceName)))
       {
+        Log.w(TAG, "creating video capturer for: " + deviceName);
         return enumerator.createCapturer(deviceName, null);
       }
     }
