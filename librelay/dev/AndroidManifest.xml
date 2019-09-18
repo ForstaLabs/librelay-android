@@ -1,0 +1,62 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <permission
+        android:name="io.forsta.librelay.dev.ACCESS_SECRETS"
+        android:label="Access to TextSecure Secrets"
+        android:protectionLevel="signature"/>
+
+        <application>
+			<provider
+				android:name="io.forsta.librelay.providers.PartProvider"
+				android:authorities="io.forsta.librelay.dev.provider"
+				android:exported="false"
+				android:grantUriPermissions="true"/>
+			<provider
+				android:name="io.forsta.librelay.providers.DatabaseProvider"
+				android:authorities="io.forsta.librelay.dev.provider.database"
+				android:exported="false"
+				android:grantUriPermissions="true"
+				android:label="Forsta Empty Database Provider"/>
+
+			<provider
+				android:name="io.forsta.librelay.atlas.AtlasProvider"
+				android:authorities="io.forsta.librelay.dev.provider.atlas"
+				android:exported="false"
+				android:grantUriPermissions="true"
+				android:label="Atlas Contacts"/>
+
+			<provider
+				android:name="android.support.v4.content.FileProvider"
+				android:authorities="io.forsta.librelay.dev.provider.external_files"
+				android:exported="false"
+				android:grantUriPermissions="true">
+				<meta-data
+					android:name="android.support.FILE_PROVIDER_PATHS"
+					android:resource="@xml/file_provider_paths">
+				</meta-data>
+			</provider>
+			<receiver
+				android:name="io.forsta.librelay.notifications.MarkReadReceiver"
+				android:enabled="true"
+				android:exported="true">
+				<intent-filter>
+					<action android:name="io.forsta.librelay.dev.notifications.CLEAR"/>
+				</intent-filter>
+			</receiver>
+
+			<receiver
+				android:name="io.forsta.librelay.service.RegistrationReceiver"
+				android:exported="false">
+				<intent-filter>
+					<action android:name="io.forsta.librelay.dev.REGISTRATION_EVENT"/>
+				</intent-filter>
+			</receiver>
+			<receiver android:name="io.forsta.librelay.service.DirectoryRefreshListener">
+				<intent-filter>
+					<action android:name="io.forsta.librelay.dev.DIRECTORY_REFRESH"/>
+					<action android:name="android.intent.action.BOOT_COMPLETED"/>
+				</intent-filter>
+			</receiver>
+			<receiver android:name="io.forsta.librelay.notifications.MessageNotifier$DeleteReceiver">
+			</receiver>
+		</application>
+</manifest>

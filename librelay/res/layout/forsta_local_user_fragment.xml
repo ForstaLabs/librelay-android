@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_marginBottom="10dp"
+    android:layout_marginTop="10dp"
+    android:orientation="horizontal">
+
+    <io.forsta.librelay.components.AvatarImageView
+        android:id="@+id/local_photo_image"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="3dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="3dp"
+        android:contentDescription="@string/conversation_list_item_view__contact_photo_image"
+        android:cropToPadding="true"
+        android:foreground="@drawable/contact_photo_background"
+        tools:src="@drawable/ic_contact_picture"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:orientation="vertical">
+            <TextView android:id="@+id/local_user"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                style="@style/TextAppearance.AppCompat.Subhead"/>
+            <TextView android:id="@+id/local_org_tag"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"/>
+        </LinearLayout>
+</LinearLayout>
+
+

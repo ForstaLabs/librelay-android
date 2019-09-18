@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="google_app_id" translatable="false">1:862312862420:android:f38bd51d5e4497d5</string>
+    <string name="gcm_defaultSenderId" translatable="false">862312862420</string>
+    <string name="default_web_client_id" translatable="false">862312862420-thpjchkoqkrdn7hqiubljeqd53lt4p2u.apps.googleusercontent.com</string>
+    <string name="firebase_database_url" translatable="false">https://forsta-notifications.firebaseio.com</string>
+    <string name="google_api_key" translatable="false">AIzaSyCb1Gcu3EIS-JfOZXbmZ60YBEB9w4a9OEA</string>
+    <string name="project_id" translatable="false">forsta-notifications</string>
+</resources>

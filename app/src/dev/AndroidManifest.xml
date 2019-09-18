@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application>
+         <receiver
+            android:name="io.forsta.relay.receivers.RegistrationReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="io.forsta.librelay.dev.REGISTRATION_EVENT"/>
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="io.forsta.relay.receivers.FirebaseReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="io.forsta.librelay.dev.FCM_EVENT"/>
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="io.forsta.relay.receivers.NotificationReplyReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="io.forsta.librelay.dev.notifications.REPLY_EVENT"/>
+            </intent-filter>
+        </receiver>
+    </application>
+
+</manifest>

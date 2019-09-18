@@ -1,0 +1,49 @@
+package io.forsta.librelay.database.viewmodels;
+
+import android.app.Application;
+import android.arch.lifecycle.AndroidViewModel;
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
+import android.database.Cursor;
+import android.support.annotation.NonNull;
+import android.util.Log;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import io.forsta.librelay.database.DbFactory;
+import io.forsta.librelay.database.MessageDatabase;
+import io.forsta.librelay.database.model.MessageRecord;
+
+public class ConversationViewModel extends AndroidViewModel {
+  private static final String TAG = ConversationViewModel.class.getSimpleName();
+
+  private MutableLiveData<List<MessageRecord>> conversationItems;
+
+  public ConversationViewModel(@NonNull Application application) {
+    super(application);
+  }
+
+  public LiveData<List<MessageRecord>> getConversation(long threadId, long limit) {
+    if (conversationItems == null) {
+      conversationItems = new MutableLiveData<>();
+      MessageRecord record;
+      List<MessageRecord> items = new ArrayList<>();
+      Cursor cursor = DbFactory.getMessageDatabase(getApplication()).getConversation(threadId, 0);
+      MessageDatabase.Reader reader = DbFactory.getMessageDatabase(getApplication()).readerFor(cursor);
+      while (reader != null && (record = reader.getNext()) != null) {
+        items.add(record);
+      }
+      conversationItems.setValue(items);
+
+    }
+    return conversationItems;
+  }
+
+
+  @Override
+  protected void onCleared() {
+    super.onCleared();
+    Log.i(TAG, "onCleared");
+  }
+}
