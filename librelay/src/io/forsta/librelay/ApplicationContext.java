@@ -186,7 +186,6 @@ public class ApplicationContext extends MultiDexApplication implements DefaultLi
       }
 
       PeerConnectionFactory.initialize(PeerConnectionFactory.InitializationOptions.builder(this)
-          .setEnableVideoHwAcceleration(true)
           .createInitializationOptions());
 
     } catch (UnsatisfiedLinkError e) {

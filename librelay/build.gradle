@@ -60,7 +60,7 @@ dependencies {
     }
 
     compile 'org.whispersystems:curve25519-android:0.3.0'
-    compile 'org.whispersystems:webrtc-android:M74' //M74 contains 64 bit binaries required by Play Store as of 8/1/2019
+    compile 'org.whispersystems:webrtc-android:M74'
     compile 'com.squareup.okhttp3:okhttp:3.6.0'
     compile 'me.leolin:ShortcutBadger:1.1.16'
     compile 'se.emilsjolander:stickylistheaders:2.7.0'
@@ -121,6 +121,9 @@ android {
         buildConfigField "long", "BUILD_TIMESTAMP", getLastCommitTimestamp() + "L"
         buildConfigField "String", "RECAPTCHA_KEY", "\"6LetY10UAAAAAKugwBLDP31SVLcl1iem9K1fqJlA\""
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        ndk {
+            abiFilters 'armeabi-v7a','arm64-v8a','x86','x86_64'
+        }
     }
     flavorDimensions "forsta"
     productFlavors {

@@ -94,7 +94,6 @@ public class ConversationItem extends LinearLayout
   private LinearLayout replyBox;
   private TextView bodyText;
   private TextView dateText;
-  private TextView simInfoText;
   private TextView indicatorText;
   private TextView recipientText;
   private ImageView secureImage;
@@ -139,7 +138,6 @@ public class ConversationItem extends LinearLayout
 
     this.bodyText                = findViewById(R.id.conversation_item_body);
     this.dateText                = findViewById(R.id.conversation_item_date);
-    this.simInfoText             = findViewById(R.id.sim_info);
     this.indicatorText           = findViewById(R.id.indicator_text);
     this.recipientText         = findViewById(R.id.group_message_status);
     this.secureImage             = findViewById(R.id.secure_indicator);

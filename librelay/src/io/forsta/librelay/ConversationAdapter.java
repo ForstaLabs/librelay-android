@@ -129,15 +129,17 @@ public class ConversationAdapter <V extends View & BindableConversationItem>
 
   @Override
   public ViewHolder onCreateItemViewHolder(ViewGroup parent, int viewType) {
-    final ConversationItem itemView = ViewUtil.inflate(inflater, parent, getLayoutForViewType(viewType));
-    itemView.setOnThumbnailClickListener(new ConversationItem.ThumbnailClickListener() {
-      @Override
-      public void onThumbnailClicked(MessageRecord messsageRecord, Slide slide) {
-        if (clickListener != null) {
-          clickListener.onThumbnailClick(messsageRecord, slide);
+    final V itemView = ViewUtil.inflate(inflater, parent, getLayoutForViewType(viewType));
+    if (itemView instanceof ConversationItem) {
+      ((ConversationItem)itemView).setOnThumbnailClickListener(new ConversationItem.ThumbnailClickListener() {
+        @Override
+        public void onThumbnailClicked(MessageRecord messsageRecord, Slide slide) {
+          if (clickListener != null) {
+            clickListener.onThumbnailClick(messsageRecord, slide);
+          }
         }
-      }
-    });
+      });
+    }
 
     itemView.setOnClickListener(new OnClickListener() {
       @Override
