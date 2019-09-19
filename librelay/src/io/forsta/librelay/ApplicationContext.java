@@ -64,7 +64,6 @@ public class ApplicationContext extends MultiDexApplication implements DefaultLi
   private boolean                initialized;
   private volatile boolean       isAppVisible;
 
-  private MediaNetworkRequirementProvider mediaNetworkRequirementProvider = new MediaNetworkRequirementProvider();
 
   public static ApplicationContext getInstance(Context context) {
     return (ApplicationContext)context.getApplicationContext();
@@ -136,10 +135,6 @@ public class ApplicationContext extends MultiDexApplication implements DefaultLi
 
   private void initializeJobManager() {
     this.jobManager = new JobManager(this, WorkManager.getInstance());
-  }
-
-  public void notifyMediaControlEvent() {
-    mediaNetworkRequirementProvider.notifyMediaControlEvent();
   }
 
   private void initializeDependencies() {
