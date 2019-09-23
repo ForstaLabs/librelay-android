@@ -258,7 +258,7 @@ public class DashboardActivity extends AuthenticationRequiredActionBarActivity {
     sb.append("API Host:");
     sb.append(BuildConfig.FORSTA_API_URL);
     sb.append("\n");
-    sb.append("SIgnal Host:");
+    sb.append("Signal Host:");
     sb.append(TextSecurePreferences.getServer(DashboardActivity.this));
     sb.append("\n");
     Date tokenExpire = jwt.getExpireDate();

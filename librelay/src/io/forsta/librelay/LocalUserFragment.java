@@ -12,6 +12,7 @@ import io.forsta.librelay.atlas.model.AtlasUser;
 import io.forsta.librelay.components.AvatarImageView;
 import io.forsta.librelay.recipients.Recipient;
 import io.forsta.librelay.recipients.RecipientFactory;
+import io.forsta.librelay.util.TextSecurePreferences;
 
 /**
  * Created by jlewis on 5/19/17.
@@ -36,6 +37,7 @@ public class LocalUserFragment extends Fragment {
     userName = (TextView) view.findViewById(R.id.local_user);
     orgTag = (TextView) view.findViewById(R.id.local_org_tag);
     contactPhotoImage = (AvatarImageView) view.findViewById(R.id.local_photo_image);
+    String tsServer = TextSecurePreferences.getServer(getContext());
 
     final AtlasUser user = AtlasUser.getLocalUser(getActivity());
     if (user != null) {

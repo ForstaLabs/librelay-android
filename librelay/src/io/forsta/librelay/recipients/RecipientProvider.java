@@ -109,8 +109,9 @@ public class RecipientProvider {
     MaterialColor color = preferences.isPresent() ? preferences.get().getColor() : null;
 
     Contacts db = DbFactory.getContacts(context);
-    Cursor cursor  = db.getContactByAddress(address);
+    Cursor cursor = null;
     try {
+      cursor  = db.getContactByAddress(address);
       if (cursor != null && cursor.moveToFirst()) {
         return new Recipient(cursor);
       }
