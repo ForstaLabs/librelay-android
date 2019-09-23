@@ -37,6 +37,7 @@ import java.util.Set;
 import androidx.work.WorkManager;
 import io.forsta.librelay.dependencies.ApplicationDependencies;
 import io.forsta.librelay.dependencies.ApplicationDependencyProvider;
+import io.forsta.librelay.gcm.FcmJobService;
 import io.forsta.librelay.jobmanager.JobManager;
 import io.forsta.librelay.jobs.CreateSignedPreKeyJob;
 import io.forsta.librelay.jobs.FcmRefreshJob;
@@ -73,7 +74,6 @@ public class ApplicationContext extends MultiDexApplication implements DefaultLi
   public void onCreate() {
     synchronized(this) {
       super.onCreate();
-      initializeLogging();
       initializeDependencies();
       initializeJobManager();
       initializeMessageRetrieval();
@@ -128,14 +128,13 @@ public class ApplicationContext extends MultiDexApplication implements DefaultLi
   private void initializePendingMessages() {
     if (TextSecurePreferences.getNeedsMessagePull(this)) {
       Log.i(TAG, "Scheduling a message fetch.");
-      ApplicationContext.getInstance(this).getJobManager().add(new PushNotificationReceiveJob(this));
+      if (Build.VERSION.SDK_INT >= 26) {
+        FcmJobService.schedule(this);
+      } else {
+        ApplicationContext.getInstance(this).getJobManager().add(new PushNotificationReceiveJob(this));
+      }
       TextSecurePreferences.setNeedsMessagePull(this, false);
     }
-  }
-
-  private void initializeLogging() {
-    System.out.println("XXX: Too lazy to port logging provider stuff from android build of libsignal-protocol");
-    //SignalProtocolLoggerProvider.setProvider(new AndroidSignalProtocolLogger());
   }
 
   private void initializeJobManager() {
@@ -195,10 +194,5 @@ public class ApplicationContext extends MultiDexApplication implements DefaultLi
 
   private void initializeExpiringMessageManager() {
     this.expiringMessageManager = new ExpiringMessageManager(this);
-  }
-
-  public void clearApplicationData() {
-    ((ActivityManager) getSystemService(ACTIVITY_SERVICE))
-        .clearApplicationUserData();
   }
 }
