@@ -37,7 +37,6 @@ public class LocalUserFragment extends Fragment {
     userName = (TextView) view.findViewById(R.id.local_user);
     orgTag = (TextView) view.findViewById(R.id.local_org_tag);
     contactPhotoImage = (AvatarImageView) view.findViewById(R.id.local_photo_image);
-    String tsServer = TextSecurePreferences.getServer(getContext());
 
     final AtlasUser user = AtlasUser.getLocalUser(getActivity());
     if (user != null) {

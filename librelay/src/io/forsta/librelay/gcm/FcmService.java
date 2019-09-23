@@ -20,6 +20,7 @@ import io.forsta.librelay.jobs.PushNotificationReceiveJob;
 import io.forsta.librelay.util.PowerManagerCompat;
 import io.forsta.librelay.util.ServiceUtil;
 import io.forsta.librelay.util.TextSecurePreferences;
+import io.forsta.librelay.util.WakeLockUtil;
 
 public class FcmService extends FirebaseMessagingService {
 
@@ -31,10 +32,9 @@ public class FcmService extends FirebaseMessagingService {
   @Override
   public void onMessageReceived(RemoteMessage remoteMessage) {
     Log.d(TAG, "Received FCM message");
-    handleReceivedNotification(getApplicationContext());
-//    WakeLockUtil.runWithLock(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK, 60000, WAKE_LOCK_TAG, () -> {
-//      handleReceivedNotification(getApplicationContext());
-//    });
+    WakeLockUtil.runWithLock(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK, 60000, WAKE_LOCK_TAG, () -> {
+      handleReceivedNotification(getApplicationContext());
+    });
   }
 
   @Override

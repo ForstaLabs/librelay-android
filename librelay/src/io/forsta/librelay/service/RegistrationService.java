@@ -121,8 +121,6 @@ public class RegistrationService extends Service {
     final String addr = AtlasPreferences.getUserId(context);
     setState(new RegistrationState(RegistrationState.STATE_CONNECTING));
 
-    // Can I get this from the login, instead of just the createAccount function below?
-    TextSecurePreferences.setServer(context, BuildConfig.SIGNAL_API_URL);
     IdentityKeyUtil.generateIdentityKeys(context);
     try {
       final ForstaServiceAccountManager accountManager = TextSecureCommunicationFactory.createManager(this);

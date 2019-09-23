@@ -242,15 +242,6 @@ public class ConversationListActivity extends AuthenticationRequiredActionBarAct
       if (AtlasApi.isErrorResponse(response)) {
         if (AtlasApi.isUnauthorizedResponse(response)) {
           handleLogout();
-        } else {
-          Toast.makeText(ConversationListActivity.this, "Error response from server.", Toast.LENGTH_LONG).show();
-        }
-      } else {
-        ApplicationContext.getInstance(getApplicationContext()).getJobManager().add(new DirectoryRefreshJob(getApplicationContext()));
-        AtlasOrg atlasOrg = AtlasOrg.getLocalForstaOrg(ConversationListActivity.this);
-        if (atlasOrg != null) {
-          TextView title = (TextView) getSupportActionBar().getCustomView().findViewById(io.forsta.librelay.R.id.conversation_list_title);
-          title.setText(atlasOrg.getName().toLowerCase());
         }
       }
     }

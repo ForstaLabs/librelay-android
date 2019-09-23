@@ -642,7 +642,7 @@ public class MessageDatabase extends DbBase {
       contentValues.put(DATE_SENT, contentValues.getAsLong(DATE_RECEIVED));
     }
 
-    List<String> fromAddresses = new ArrayList<>(); //noop
+    List<String> fromAddresses = new ArrayList<>(); //For Inbox don't populate receipts table
     long messageId = insertMediaMessage(fromAddresses,
                                         retrieved.getBody(), retrieved.getAttachments(),
                                         contentValues);

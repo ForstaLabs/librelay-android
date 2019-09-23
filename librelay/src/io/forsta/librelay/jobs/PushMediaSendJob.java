@@ -12,6 +12,7 @@ import io.forsta.librelay.atlas.model.RelayDistribution;
 import io.forsta.librelay.atlas.model.RelayContent;
 import io.forsta.librelay.database.DbFactory;
 import io.forsta.librelay.database.MessageDatabase;
+import io.forsta.librelay.database.MessageReceiptsDatabase;
 import io.forsta.librelay.dependencies.ApplicationDependencies;
 import io.forsta.librelay.messaging.MessageManager;
 import io.forsta.librelay.util.InvalidMessagePayloadException;
@@ -92,6 +93,7 @@ public class PushMediaSendJob extends PushSendJob {
 
     ExpiringMessageManager expirationManager = ApplicationContext.getInstance(context).getExpiringMessageManager();
     MessageDatabase database = DbFactory.getMessageDatabase(context);
+    MessageReceiptsDatabase receiptsDatabase = DbFactory.getMessageReceiptDatabase(context);
     OutgoingMediaMessage outgoingMessage = database.getOutgoingMessage(messageId);
     RelayContent relayContent = MessageManager.fromMessagBodyString(outgoingMessage.getBody());
     RelayDistribution distribution = AtlasApi.getMessageDistribution(context, relayContent.getUniversalExpression());
@@ -126,6 +128,7 @@ public class PushMediaSendJob extends PushSendJob {
         for (NetworkFailureException nfe : e.getNetworkExceptions()) {
           Recipient recipient = RecipientFactory.getRecipientsFromString(context, nfe.getE164number(), false).getPrimaryRecipient();
           failures.add(new NetworkFailure(recipient.getRecipientId()));
+          receiptsDatabase.updateFailed(message.getSentTimeMillis(), recipient.getAddress());
         }
 
         List<String> untrustedRecipients = new ArrayList<>();
