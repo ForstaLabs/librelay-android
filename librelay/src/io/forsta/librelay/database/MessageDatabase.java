@@ -573,9 +573,9 @@ public class MessageDatabase extends DbBase {
   public OutgoingMediaMessage getOutgoingMessage(long messageId)
       throws MmsException, NoSuchMessageException
   {
-    MessageReceiptsDatabase addr               = DbFactory.getMessageReceiptDatabase(context);
+    MessageReceiptsDatabase addr = DbFactory.getMessageReceiptDatabase(context);
     AttachmentDatabase attachmentDatabase = DbFactory.getAttachmentDatabase(context);
-    Cursor             cursor             = null;
+    Cursor cursor = null;
 
     try {
       cursor = rawQuery(RAW_ID_WHERE, new String[] {String.valueOf(messageId)});

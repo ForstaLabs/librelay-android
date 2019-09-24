@@ -220,7 +220,7 @@ public class NewConversationActivity extends ContactSelectionActivity {
           final Recipients recipients = RecipientFactory.getRecipientsFromStrings(NewConversationActivity.this, distribution.getRecipients(NewConversationActivity.this), false);
           final ThreadRecord forstaThread = DbFactory.getThreadDatabase(NewConversationActivity.this).getThreadForDistribution(distribution.universal, type);
           if (forstaThread == null) {
-            createConversation(DbFactory.getThreadDatabase(NewConversationActivity.this).allocateThread(recipients, distribution, type), recipients);
+            createConversation(DbFactory.getThreadDatabase(NewConversationActivity.this).allocateThread(recipients, distribution, type));
           } else {
             AlertDialog.Builder builder = new AlertDialog.Builder(NewConversationActivity.this);
             builder.setTitle("New Conversation")
@@ -228,13 +228,13 @@ public class NewConversationActivity extends ContactSelectionActivity {
                 .setPositiveButton("New", new DialogInterface.OnClickListener() {
                   @Override
                   public void onClick(DialogInterface dialogInterface, int i) {
-                    createConversation(DbFactory.getThreadDatabase(NewConversationActivity.this).allocateThread(recipients, distribution, type), recipients);
+                    createConversation(DbFactory.getThreadDatabase(NewConversationActivity.this).allocateThread(recipients, distribution, type));
                   }
                 })
                 .setNegativeButton("Existing", new DialogInterface.OnClickListener() {
                   @Override
                   public void onClick(DialogInterface dialogInterface, int i) {
-                    createConversation(forstaThread, recipients);
+                    createConversation(forstaThread);
                   }
                 })
                 .setCancelable(true)
@@ -256,10 +256,9 @@ public class NewConversationActivity extends ContactSelectionActivity {
     }.execute(expression.toString());
   }
 
-  private void createConversation(ThreadRecord forstaThread, Recipients recipients) {
+  private void createConversation(ThreadRecord forstaThread) {
     long threadId = forstaThread.getThreadId();
     Intent intent = new Intent(NewConversationActivity.this, ConversationActivity.class);
-    intent.putExtra(ConversationActivity.RECIPIENTS_EXTRA, recipients.getIds());
     intent.putExtra(ConversationActivity.TEXT_EXTRA, getIntent().getStringExtra(ConversationActivity.TEXT_EXTRA));
     intent.setDataAndType(getIntent().getData(), getIntent().getType());
     intent.putExtra(ConversationActivity.THREAD_ID_EXTRA, threadId);

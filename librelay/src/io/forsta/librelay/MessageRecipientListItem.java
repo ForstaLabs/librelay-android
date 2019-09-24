@@ -98,7 +98,7 @@ public class MessageRecipientListItem extends RelativeLayout
         } else if (receipt.isDelivered()) {
           receiptStatus.setText("Delivered");
         } else {
-          receiptStatus.setText("Sent");
+          receiptStatus.setText("Sending");
         }
       }
     }

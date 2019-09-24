@@ -66,9 +66,7 @@ public class MessageReceiptsDatabase extends DbBase {
 
   public void insertAddressesForId(long messageId, @NonNull List<String> addresses) {
     for (String address : addresses) {
-      if (!TextSecurePreferences.getLocalAddress(context).equals(address)) {
-        insertAddress(messageId, address);
-      }
+      insertAddress(messageId, address);
     }
   }
 

@@ -153,7 +153,6 @@ public class ConversationActivity extends AuthenticationRequiredActionBarActivit
 {
   private static final String TAG = ConversationActivity.class.getSimpleName();
 
-  public static final String RECIPIENTS_EXTRA        = "recipients";
   public static final String THREAD_ID_EXTRA         = "thread_id";
   public static final String IS_ARCHIVED_EXTRA       = "is_archived";
   public static final String TEXT_EXTRA              = "draft_text";
@@ -188,11 +187,12 @@ public class ConversationActivity extends AuthenticationRequiredActionBarActivit
   private   InputPanel             inputPanel;
 
   private Recipients recipients;
-  private long       threadId;
+  private long threadId;
   private String messageRef;
   private ThreadRecord forstaThread;
-  private int        distributionType;
-  private boolean    archived;
+  private int distributionType;
+  private boolean archived;
+
   private Handler handler = new Handler();
   private ContentObserver threadObserver;
 
@@ -1128,7 +1128,7 @@ public class ConversationActivity extends AuthenticationRequiredActionBarActivit
       if (recipients == null) {
         Toast.makeText(ConversationActivity.this, io.forsta.librelay.R.string.ConversationActivity_recipient_is_not_valid, Toast.LENGTH_LONG).show();
       } else if(inputPanel.hasQuoteVisible()){
-        sendReplyMessage(forceSms, expiresIn, subscriptionId, messageRef);
+        sendReplyMessage(expiresIn, messageRef);
       } else {
         sendMediaMessage(forceSms, expiresIn, subscriptionId);
       }
@@ -1142,16 +1142,16 @@ public class ConversationActivity extends AuthenticationRequiredActionBarActivit
   private void sendMediaMessage(final boolean forceSms, final long expiresIn, final int subscriptionId)
       throws InvalidMessageException
   {
-    sendMediaMessage(forceSms, getMessage(), attachmentManager.buildSlideDeck(), expiresIn, subscriptionId);
+    sendMediaMessage(getMessage(), attachmentManager.buildSlideDeck(), expiresIn);
   }
 
-  private void sendReplyMessage(final boolean forceSms, final long expiresIn, final int subscriptionId, final String messageRef)
+  private void sendReplyMessage(final long expiresIn, final String messageRef)
           throws InvalidMessageException
   {
-    sendReplyMessage(forceSms, getMessage(), attachmentManager.buildSlideDeck(), expiresIn, subscriptionId, messageRef);
+    sendReplyMessage(getMessage(), attachmentManager.buildSlideDeck(), expiresIn, messageRef);
   }
 
-  private ListenableFuture<Void> sendMediaMessage(final boolean forceSms, String body, final SlideDeck slideDeck, final long expiresIn, final int subscriptionId)
+  private ListenableFuture<Void> sendMediaMessage(String body, final SlideDeck slideDeck, final long expiresIn)
       throws InvalidMessageException
   {
     final SettableFuture<Void> future          = new SettableFuture<>();
@@ -1179,7 +1179,7 @@ public class ConversationActivity extends AuthenticationRequiredActionBarActivit
     return future;
   }
 
-  private ListenableFuture<Void> sendReplyMessage(final boolean forceSms, String body, final SlideDeck slideDeck, final long expiresIn, final int subscriptionId, final String messageRef)
+  private ListenableFuture<Void> sendReplyMessage(String body, final SlideDeck slideDeck, final long expiresIn, final String messageRef)
           throws InvalidMessageException
   {
     final SettableFuture<Void> future          = new SettableFuture<>();
@@ -1215,17 +1215,6 @@ public class ConversationActivity extends AuthenticationRequiredActionBarActivit
       buttonToggle.display(sendButton);
       quickAttachmentToggle.hide();
     }
-  }
-
-  private void recordSubscriptionIdPreference(final Optional<Integer> subscriptionId) {
-    new AsyncTask<Void, Void, Void>() {
-      @Override
-      protected Void doInBackground(Void... params) {
-//        DbFactory.getRecipientPreferenceDatabase(ConversationActivity.this)
-//                       .setDefaultSubscriptionId(recipients, subscriptionId.or(-1));
-        return null;
-      }
-    }.execute();
   }
 
   @Override
@@ -1264,30 +1253,22 @@ public class ConversationActivity extends AuthenticationRequiredActionBarActivit
 
   @Override
   public void onRecorderStarted() {
-    Vibrator vibrator = (Vibrator)getSystemService(VIBRATOR_SERVICE);
-    vibrator.vibrate(20);
-
     audioRecorder.startRecording();
   }
 
   @Override
   public void onRecorderFinished() {
-    Vibrator vibrator = (Vibrator)getSystemService(VIBRATOR_SERVICE);
-    vibrator.vibrate(20);
-
     ListenableFuture<Pair<Uri, Long>> future = audioRecorder.stopRecording();
     future.addListener(new ListenableFuture.Listener<Pair<Uri, Long>>() {
       @Override
       public void onSuccess(final @NonNull Pair<Uri, Long> result) {
         try {
-          boolean    forceSms       = false;
-          int        subscriptionId = -1;
-          long       expiresIn      = DbFactory.getThreadPreferenceDatabase(ConversationActivity.this).getExpireMessages(threadId) * 1000;
-          AudioSlide audioSlide     = new AudioSlide(ConversationActivity.this, result.first, result.second, ContentType.AUDIO_AAC);
-          SlideDeck  slideDeck      = new SlideDeck();
+          long expiresIn = DbFactory.getThreadPreferenceDatabase(ConversationActivity.this).getExpireMessages(threadId) * 1000;
+          AudioSlide audioSlide = new AudioSlide(ConversationActivity.this, result.first, result.second, ContentType.AUDIO_AAC);
+          SlideDeck slideDeck = new SlideDeck();
           slideDeck.addSlide(audioSlide);
 
-          sendMediaMessage(forceSms, "", slideDeck, expiresIn, subscriptionId).addListener(new AssertedSuccessListener<Void>() {
+          sendMediaMessage("", slideDeck, expiresIn).addListener(new AssertedSuccessListener<Void>() {
             @Override
             public void onSuccess(Void nothing) {
               new AsyncTask<Void, Void, Void>() {
@@ -1314,9 +1295,6 @@ public class ConversationActivity extends AuthenticationRequiredActionBarActivit
 
   @Override
   public void onRecorderCanceled() {
-    Vibrator vibrator = (Vibrator)getSystemService(VIBRATOR_SERVICE);
-    vibrator.vibrate(50);
-
     ListenableFuture<Pair<Uri, Long>> future = audioRecorder.stopRecording();
     future.addListener(new ListenableFuture.Listener<Pair<Uri, Long>>() {
       @Override
