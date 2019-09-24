@@ -827,10 +827,10 @@ public class ConversationActivity extends AuthenticationRequiredActionBarActivit
     quickAttachmentDrawer = ViewUtil.findById(this, R.id.quick_attachment_drawer);
     quickAttachmentToggle = ViewUtil.findById(this, R.id.quick_attachment_toggle);
     inputPanel            = ViewUtil.findById(this, R.id.bottom_panel);
-
     ImageButton quickCameraToggle = ViewUtil.findById(this, R.id.quick_camera_toggle);
     View        composeBubble     = ViewUtil.findById(this, R.id.compose_bubble);
 
+    inputPanel.setListener(this);
     container.addOnKeyboardShownListener(this);
 
     int[]      attributes   = new int[]{io.forsta.librelay.R.attr.conversation_item_bubble_background};
@@ -1330,6 +1330,11 @@ public class ConversationActivity extends AuthenticationRequiredActionBarActivit
   }
 
   @Override
+  public void onGiphySelect(Uri uri) {
+    setMedia(uri, MediaType.VIDEO);
+  }
+
+  @Override
   public void setThreadId(long threadId) {
     this.threadId = threadId;
   }
@@ -1437,23 +1442,4 @@ public class ConversationActivity extends AuthenticationRequiredActionBarActivit
     public void onFocusChange(View v, boolean hasFocus) {}
   }
 
-  private ListenableFuture<Boolean> initializeDirectory()
-  {
-    final SettableFuture<Boolean> future = new SettableFuture<>();
-
-    new AsyncTask<Recipients, Void, Boolean>() {
-      @Override
-      protected Boolean doInBackground(Recipients... params) {
-        try {
-          Context           context      = ConversationActivity.this;
-          DirectoryHelper.refreshDirectoryFor(context, recipients);
-        } catch (Exception e) {
-          e.printStackTrace();
-        }
-        return true;
-      }
-    }.execute(recipients);
-
-    return future;
-  }
   }
