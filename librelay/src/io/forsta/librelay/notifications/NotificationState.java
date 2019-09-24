@@ -24,7 +24,7 @@ public class NotificationState {
   private static final String REPLY_EVENT = BuildConfig.APPLICATION_ID + "." + BuildConfig.FLAVOR + ".notifications.REPLY_EVENT";
 
   private final LinkedList<NotificationItem> notifications = new LinkedList<>();
-  private final LinkedHashSet<Long> threads       = new LinkedHashSet<>();
+  private final LinkedHashSet<Long> threads = new LinkedHashSet<>();
   private boolean notify = false;
   private boolean vibrate = false;
   private String notificationChannel;

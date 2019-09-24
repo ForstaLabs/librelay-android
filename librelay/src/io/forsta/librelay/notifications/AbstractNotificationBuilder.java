@@ -47,7 +47,10 @@ public abstract class AbstractNotificationBuilder extends NotificationCompat.Bui
 
   public void setAlarms(@Nullable Uri ringtone, RecipientPreferenceDatabase.VibrateState vibrate) {
     Uri     defaultRingtone = NotificationChannels.supported() ? NotificationChannels.getMessageRingtone(context) : Uri.parse(TextSecurePreferences.getNotificationRingtone(context));
-    boolean defaultVibrate  = NotificationChannels.supported() ? NotificationChannels.getMessageVibrate(context)  : TextSecurePreferences.isNotificationVibrateEnabled(context);
+    boolean defaultVibrate = TextSecurePreferences.isNotificationVibrateEnabled(context);
+    if (defaultVibrate && NotificationChannels.supported()) {
+      defaultVibrate =  NotificationChannels.getMessageVibrate(context);
+    }
 
     if      (ringtone == null && !TextUtils.isEmpty(defaultRingtone.toString())) setSound(defaultRingtone);
     else if (ringtone != null && !ringtone.toString().isEmpty())                 setSound(ringtone);

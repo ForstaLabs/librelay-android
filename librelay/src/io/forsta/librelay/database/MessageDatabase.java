@@ -386,6 +386,20 @@ public class MessageDatabase extends DbBase {
     return cursor;
   }
 
+  public boolean isKnownReply(String messageRef) {
+    Cursor cursor = null;
+    try {
+      cursor = rawQuery(MESSAGE_ID + " = ?", new String[] {messageRef});
+      if (cursor != null && cursor.moveToFirst()) {
+        return true;
+      }
+    } finally {
+      if (cursor != null)
+        cursor.close();
+    }
+    return false;
+  }
+
   public Reader getExpireStartedMessages() {
     String where = EXPIRE_STARTED + " > 0";
     return readerFor(rawQuery(where, null));
@@ -631,9 +645,11 @@ public class MessageDatabase extends DbBase {
     contentValues.put(EXPIRES_IN, retrieved.getExpiresIn());
     contentValues.put(READ, retrieved.isExpirationUpdate() ? 1 : 0);
     if (!TextUtils.isEmpty(retrieved.getMessageRef())) {
-      contentValues.put(MESSAGE_REF, retrieved.getMessageRef());
-      if (retrieved.getVoteCount() > 0) {
-        contentValues.put(UP_VOTE, retrieved.getVoteCount());
+      if (isKnownReply(retrieved.getMessageRef())) {
+        contentValues.put(MESSAGE_REF, retrieved.getMessageRef());
+        if (retrieved.getVoteCount() > 0) {
+          contentValues.put(UP_VOTE, retrieved.getVoteCount());
+        }
       }
     }
     contentValues.put(MESSAGE_ID, retrieved.getMessageId());

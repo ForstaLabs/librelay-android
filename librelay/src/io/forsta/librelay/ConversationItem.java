@@ -85,7 +85,6 @@ public class ConversationItem extends LinearLayout
 
   private MessageRecord messageRecord;
   private Locale locale;
-  private boolean groupThread;
   private Recipient recipient;
   private String messageId;
 
@@ -177,7 +176,6 @@ public class ConversationItem extends LinearLayout
     this.locale                 = locale;
     this.batchSelected          = batchSelected;
     this.conversationRecipients = conversationRecipients;
-    this.groupThread            = !conversationRecipients.isSingleRecipient();
     this.recipient              = messageRecord.getIndividualRecipient();
     this.messageId              = messageRecord.getMessageId();
 
