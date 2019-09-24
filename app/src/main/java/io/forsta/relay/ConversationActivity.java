@@ -924,9 +924,15 @@ public class ConversationActivity extends AuthenticationRequiredActionBarActivit
       @Override
       public void onChange(boolean selfChange) {
         Log.w(TAG, "Thread Observer onChange");
-        supportInvalidateOptionsMenu();
-        initializeThread();
-        markThreadAsRead();
+        forstaThread = DbFactory.getThreadDatabase(ConversationActivity.this).getThread(threadId);
+        if (forstaThread == null) {
+          recipients.removeListener(ConversationActivity.this);
+          finish();
+        } else {
+          supportInvalidateOptionsMenu();
+          initializeThread();
+          markThreadAsRead();
+        }
       }
     };
   }
