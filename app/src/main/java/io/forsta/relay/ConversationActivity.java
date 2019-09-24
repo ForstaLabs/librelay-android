@@ -1337,7 +1337,7 @@ public class ConversationActivity extends AuthenticationRequiredActionBarActivit
 
   @Override
   public void onGiphySelect(Uri uri) {
-    setMedia(uri, MediaType.VIDEO);
+    setMedia(uri, MediaType.GIF);
   }
 
   @Override
