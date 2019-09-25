@@ -372,6 +372,18 @@ public class MessageManager {
     return createBaseMessageBody(user, threadRecord, RelayContent.MessageTypes.CONTROL, data);
   }
 
+  public static String createReadMarkMessage(AtlasUser user, ThreadRecord threadRecord, long timestamp) {
+    JSONObject data = new JSONObject();
+    try {
+      JSONArray jsonUpdates = new JSONArray();
+      data.put("control", "readMark");
+      data.put("readMark", timestamp);
+    } catch (JSONException e) {
+      e.printStackTrace();
+    }
+    return createBaseMessageBody(user, threadRecord, RelayContent.MessageTypes.CONTROL, data);
+  }
+
   private static String createBaseMessageBody(AtlasUser user, ThreadRecord threadRecord, String type, JSONObject data) {
     return createBaseMessageBody(user, threadRecord, type, data, null, null);
   }
