@@ -31,7 +31,6 @@ public abstract class AuthenticationRequiredActionBarActivity extends BaseAction
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
-    Log.w(TAG, "onCreate(" + savedInstanceState + ")");
     onPreCreate();
     routeApplicationState();
 
@@ -42,21 +41,18 @@ public abstract class AuthenticationRequiredActionBarActivity extends BaseAction
 
   @Override
   protected void onResume() {
-    Log.w(TAG, "onResume()");
     super.onResume();
     isVisible = true;
   }
 
   @Override
   protected void onPause() {
-    Log.w(TAG, "onPause()");
     super.onPause();
     isVisible = false;
   }
 
   @Override
   protected void onDestroy() {
-    Log.w(TAG, "onDestroy()");
     super.onDestroy();
   }
 
@@ -101,8 +97,6 @@ public abstract class AuthenticationRequiredActionBarActivity extends BaseAction
   }
 
   private Intent getIntentForState(int state) {
-    Log.w(TAG, "routeApplicationState(), state: " + state);
-
     switch (state) {
       case STATE_PROMPT_PUSH_REGISTRATION: return getPushRegistrationIntent();
       case STATE_FORSTA_LOGIN:             return getAtlasLoginIntent();

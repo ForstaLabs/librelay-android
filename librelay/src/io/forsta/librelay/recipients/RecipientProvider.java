@@ -104,7 +104,7 @@ public class RecipientProvider {
   }
 
   private @NonNull Recipient getIndividualRecipientDetails(Context context, long recipientId, @NonNull String address) {
-    Log.w(TAG, "Getting recipient details:" + recipientId + " address: " + address);
+    Log.w(TAG, "Getting recipient details from db:" + recipientId + " address: " + address);
     Optional<RecipientPreferenceDatabase.RecipientPreferences> preferences = DbFactory.getRecipientPreferenceDatabase(context).getRecipientsPreferences(new long[]{recipientId});
     MaterialColor color = preferences.isPresent() ? preferences.get().getColor() : null;
 

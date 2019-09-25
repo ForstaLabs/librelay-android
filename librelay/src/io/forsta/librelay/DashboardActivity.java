@@ -1,12 +1,12 @@
-package io.forsta.relay;
+package io.forsta.librelay;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import io.forsta.librelay.BuildConfig;
 import io.forsta.librelay.atlas.AtlasApi;
 import io.forsta.librelay.atlas.AtlasPreferences;
 import io.forsta.librelay.atlas.model.AtlasJWT;
@@ -55,7 +54,7 @@ import io.forsta.librelay.util.InvalidMessagePayloadException;
 import io.forsta.librelay.util.TextSecurePreferences;
 
 // TODO Remove all of this code for production release. This is for discovery and debug use.
-public class DashboardActivity extends AuthenticationRequiredActionBarActivity {
+public class DashboardActivity extends AppCompatActivity {
   private static final String TAG = DashboardActivity.class.getSimpleName();
   private TextView mDebugText;
   private TextView mLoginInfo;
@@ -86,10 +85,7 @@ public class DashboardActivity extends AuthenticationRequiredActionBarActivity {
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     int i = item.getItemId();
-    if (i == R.id.menu_dashboard_logout) {
-      AtlasPreferences.clearLogin(DashboardActivity.this);
-      startLoginIntent();
-    } else if (i == R.id.menu_dashboard_clear_directory) {
+    if (i == R.id.menu_dashboard_clear_directory) {
       handleClearDirectory();
     } else if (i == R.id.menu_dashboard_clear_threads) {
       handleClearThreads();
@@ -242,12 +238,6 @@ public class DashboardActivity extends AuthenticationRequiredActionBarActivity {
             Toast.makeText(DashboardActivity.this, "All contacts and groups deleted", Toast.LENGTH_LONG).show();
           }
         }).show();
-  }
-
-  private void startLoginIntent() {
-    Intent intent = new Intent(DashboardActivity.this, LoginActivity.class);
-    startActivity(intent);
-    finish();
   }
 
   private void printLoginInformation() {

@@ -464,7 +464,6 @@ public class PushDecryptJob extends ContextJob {
   }
 
   private void handleReadMark(RelayContent relayContent) {
-    Log.w(TAG, "Read Mark. Sender: " + relayContent.getSenderId() + " Timestamp:" + relayContent.getReadMark());
     DbFactory.getMessageReceiptDatabase(context).updateRead(relayContent.getReadMark(), relayContent.getSenderId());
   }
 

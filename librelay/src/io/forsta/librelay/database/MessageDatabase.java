@@ -302,9 +302,6 @@ public class MessageDatabase extends DbBase {
           long messageId = cursor.getLong(cursor.getColumnIndex(ID));
           addressDatabase.updateDelivered(messageId, syncMessageId.getAddress(), syncMessageId.getTimetamp());
 
-          Log.d(TAG, "Delivery receipt id: " + messageId + " ts: " + syncMessageId.getTimetamp() + " address: " + syncMessageId.getAddress());
-          Log.d(TAG, "Addresses for message: " + addresses);
-
           for (String storedAddress : addresses) {
             try {
               String ourAddress   = syncMessageId.getAddress();

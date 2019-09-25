@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import io.forsta.relay.ConversationListActivity;
+import io.forsta.librelay.DashboardActivity;
 
 import io.forsta.librelay.atlas.AtlasPreferences;
 import io.forsta.librelay.atlas.model.AtlasUser;

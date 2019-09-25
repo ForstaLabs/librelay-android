@@ -153,7 +153,6 @@ public class MessageManager {
             case RelayContent.ControlTypes.READ_MARK:
               try {
                 long timeStamp = data.getLong("readMark");
-                Log.w(TAG, "Read Mark: " + timeStamp);
                 relayContent.setReadMark(timeStamp);
               } catch (Exception e) {
                 Log.w(TAG, e.getMessage());

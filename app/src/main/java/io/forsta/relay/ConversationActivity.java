@@ -208,7 +208,6 @@ public class ConversationActivity extends AuthenticationRequiredActionBarActivit
   @Override
   protected void onCreate(Bundle state) {
     super.onCreate(state);
-    Log.w(TAG, "onCreate()");
 
     supportRequestWindowFeature(WindowCompat.FEATURE_ACTION_BAR_OVERLAY);
     setContentView(R.layout.conversation_activity);
@@ -225,10 +224,7 @@ public class ConversationActivity extends AuthenticationRequiredActionBarActivit
 
   @Override
   protected void onNewIntent(Intent intent) {
-    Log.w(TAG, "onNewIntent()");
-
     if (isFinishing()) {
-      Log.w(TAG, "Activity is finishing...");
       return;
     }
 
@@ -277,7 +273,6 @@ public class ConversationActivity extends AuthenticationRequiredActionBarActivit
 
   @Override
   public void onConfigurationChanged(Configuration newConfig) {
-    Log.w(TAG, "onConfigurationChanged(" + newConfig.orientation + ")");
     super.onConfigurationChanged(newConfig);
     quickAttachmentDrawer.onConfigurationChanged();
   }
@@ -431,7 +426,6 @@ public class ConversationActivity extends AuthenticationRequiredActionBarActivit
 
   @Override
   public void onBackPressed() {
-    Log.w(TAG, "onBackPressed()");
     if (container.isInputOpen()) container.hideCurrentInput(composeText);
     else                         super.onBackPressed();
   }

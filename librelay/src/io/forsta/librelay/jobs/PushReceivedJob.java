@@ -31,10 +31,10 @@ public abstract class PushReceivedJob extends ContextJob {
   public void handle(SignalServiceEnvelope envelope) {
     synchronized (RECEIVE_LOCK) {
       if (envelope.isReceipt()) {
-        Log.w(TAG, "Received delivery receipt" + envelope.getSource() + ":" + envelope.getSourceDevice());
+        Log.w(TAG, "Received delivery receipt: " + envelope.getSource() + ":" + envelope.getSourceDevice());
         handleReceipt(envelope);
       } else if (envelope.isPreKeySignalMessage() || envelope.isSignalMessage()) {
-        Log.w(TAG, "Received message from " + envelope.getSource() + ":" + envelope.getSourceDevice());
+        Log.w(TAG, "Received message from: " + envelope.getSource() + ":" + envelope.getSourceDevice());
         if (envelope.isPreKeySignalMessage()) {
           Log.w(TAG, "PreKeySignalMessage");
         }
