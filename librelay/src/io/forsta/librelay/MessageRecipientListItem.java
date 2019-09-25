@@ -96,8 +96,12 @@ public class MessageRecipientListItem extends RelativeLayout
           receiptStatus.setText("Read");
         } else if (receipt.isDelivered()) {
           receiptStatus.setText("Delivered");
+        } else if (receipt.isUnregisteredUser()) {
+          receiptStatus.setText("Unregistered User");
+        } else if (receipt.isFailed()) {
+          receiptStatus.setText("Failed");
         } else {
-          receiptStatus.setText("Sending");
+          receiptStatus.setText("Sent");
         }
       }
     }
@@ -132,7 +136,7 @@ public class MessageRecipientListItem extends RelativeLayout
         @Override
         public void onClick(View v) {
           resendButton.setEnabled(false);
-          new ResendAsyncTask(record, networkFailure).execute();
+          new ResendAsyncTask(getContext(), record, networkFailure).execute();
         }
       });
     } else {
@@ -184,18 +188,20 @@ public class MessageRecipientListItem extends RelativeLayout
   private class ResendAsyncTask extends AsyncTask<Void,Void,Void> {
     private final MessageRecord  record;
     private final NetworkFailure failure;
+    private final Context context;
 
-    public ResendAsyncTask(MessageRecord record, NetworkFailure failure) {
+    public ResendAsyncTask(Context context, MessageRecord record, NetworkFailure failure) {
       this.record       = record;
       this.failure      = failure;
+      this.context = context;
     }
 
     @Override
     protected Void doInBackground(Void... params) {
-      MessageDatabase messageDatabase = DbFactory.getMessageDatabase(getContext());
+      MessageDatabase messageDatabase = DbFactory.getMessageDatabase(context);
       messageDatabase.removeFailure(record.getId(), failure);
 
-      MessageSender.resend(getContext(), record);
+      MessageSender.resend(context, record);
 
       return null;
     }

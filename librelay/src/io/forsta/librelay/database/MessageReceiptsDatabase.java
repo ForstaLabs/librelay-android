@@ -103,6 +103,7 @@ public class MessageReceiptsDatabase extends DbBase {
         int delivered = cursor.getInt(cursor.getColumnIndex(DELIVERED));
         int read = cursor.getInt(cursor.getColumnIndex(READ));
         int failed = cursor.getInt(cursor.getColumnIndex(FAILED));
+        long timeStamp = cursor.getLong(cursor.getColumnIndex(TIMESTAMP));
         MessageReceipt receipt = new MessageReceipt(messageId, address, delivered, read, failed);
         receipts.add(receipt);
       }
@@ -132,18 +133,25 @@ public class MessageReceiptsDatabase extends DbBase {
     database.update(TABLE_NAME, contentValues, MESSAGE_ID + " = ? AND " + ADDRESS + " = ?", new String[] {messageId+"", address});
   }
 
-  public void updateRead(long timestamp, String address) {
+  public void updateRead(long messageId, String address) {
     SQLiteDatabase database = dbHelper.getWritableDatabase();
     ContentValues contentValues = new ContentValues();
     contentValues.put(READ, 1);
-    database.update(TABLE_NAME, contentValues, TIMESTAMP + " = ? AND " + ADDRESS + " = ?", new String[] {timestamp+"", address});
+    database.update(TABLE_NAME, contentValues, MESSAGE_ID + " = ? AND " + ADDRESS + " = ?", new String[] {messageId+"", address});
   }
 
-  public void updateFailed(long timestamp, String address) {
+  public void updateFailed(long messageId, String address) {
     SQLiteDatabase database = dbHelper.getWritableDatabase();
     ContentValues contentValues = new ContentValues();
     contentValues.put(FAILED, 1);
-    database.update(TABLE_NAME, contentValues, TIMESTAMP + " = ? AND " + ADDRESS + " = ?", new String[] {timestamp+"", address});
+    database.update(TABLE_NAME, contentValues, MESSAGE_ID + " = ? AND " + ADDRESS + " = ?", new String[] {messageId+"", address});
+  }
+
+  public void updateUnregisteredUser(long messageId, String address) {
+    SQLiteDatabase database = dbHelper.getWritableDatabase();
+    ContentValues contentValues = new ContentValues();
+    contentValues.put(FAILED, 2);
+    database.update(TABLE_NAME, contentValues, MESSAGE_ID + " = ? AND " + ADDRESS + " = ?", new String[] {messageId+"", address});
   }
 
   public void deleteAddressesForId(long messageId) {

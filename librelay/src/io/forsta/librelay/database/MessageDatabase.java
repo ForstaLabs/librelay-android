@@ -383,6 +383,14 @@ public class MessageDatabase extends DbBase {
     return cursor;
   }
 
+  public @Nullable MessageRecord getMessage(String messageUid) {
+    Cursor cursor = rawQuery(MESSAGE_ID + " = ?", new String[] {messageUid});
+    if (cursor != null) {
+      return readerFor(cursor).getCurrent();
+    }
+   return null;
+  }
+
   public boolean isKnownReply(String messageRef) {
     Cursor cursor = null;
     try {

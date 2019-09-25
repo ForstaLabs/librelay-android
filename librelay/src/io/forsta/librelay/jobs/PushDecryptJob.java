@@ -15,6 +15,7 @@ import io.forsta.librelay.atlas.model.RelayDistribution;
 import io.forsta.librelay.atlas.model.RelayContent;
 import io.forsta.librelay.database.DbFactory;
 import io.forsta.librelay.database.MessageDatabase;
+import io.forsta.librelay.database.model.MessageRecord;
 import io.forsta.librelay.messaging.MessageManager;
 import io.forsta.librelay.recipients.Recipient;
 import io.forsta.librelay.service.ForstaServiceAccountManager;
@@ -464,7 +465,13 @@ public class PushDecryptJob extends ContextJob {
   }
 
   private void handleReadMark(RelayContent relayContent) {
-    DbFactory.getMessageReceiptDatabase(context).updateRead(relayContent.getReadMark(), relayContent.getSenderId());
+    MessageRecord message = DbFactory.getMessageDatabase(context).getMessage(relayContent.getMessageId());
+    if (message != null) {
+      DbFactory.getMessageReceiptDatabase(context).updateRead(messageId, relayContent.getSenderId());
+    } else {
+      Log.w(TAG, "ReadMark for unknown message");
+    }
+
   }
 
   private void handleProvisionRequest(RelayContent relayContent) throws Exception {
