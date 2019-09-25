@@ -333,7 +333,6 @@ public class PushDecryptJob extends ContextJob {
     MessageDatabase database     = DbFactory.getMessageDatabase(context);
 
     RelayContent relayContent = MessageManager.fromMessagBodyString(message.getMessage().getBody().get());
-    relayContent.setTimeStamp(message.getTimestamp());
     relayContent.setSenderId(envelope.getSource());
     relayContent.setDeviceId(envelope.getSourceDevice());
     relayContent.setTimeStamp(envelope.getTimestamp());
@@ -461,17 +460,16 @@ public class PushDecryptJob extends ContextJob {
       }
     } catch (Exception e) {
       Log.e(TAG, "Control message exception: " + e.getMessage());
+      e.printStackTrace();
     }
   }
 
   private void handleReadMark(RelayContent relayContent) {
-    MessageRecord message = DbFactory.getMessageDatabase(context).getMessage(relayContent.getMessageId());
-    if (message != null) {
-      DbFactory.getMessageReceiptDatabase(context).updateRead(messageId, relayContent.getSenderId());
-    } else {
-      Log.w(TAG, "ReadMark for unknown message");
+    if (!relayContent.getSenderId().equals(TextSecurePreferences.getLocalAddress(context))) {
+      // Message receipits are for outgoing messages. ReadMark can come from reading incoming
+      Log.w(TAG, "handleReadMark: " + relayContent.getSenderId() + ":" + relayContent.getDeviceId());
+      DbFactory.getMessageReceiptDatabase(context).updateRead(relayContent.getReadMark(), relayContent.getSenderId());
     }
-
   }
 
   private void handleProvisionRequest(RelayContent relayContent) throws Exception {

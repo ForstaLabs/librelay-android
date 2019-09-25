@@ -37,6 +37,7 @@ import io.forsta.librelay.database.model.MessageReceipt;
 import io.forsta.librelay.database.model.MessageRecord;
 import io.forsta.librelay.recipients.Recipient;
 import io.forsta.librelay.messaging.MessageSender;
+import io.forsta.librelay.util.TextSecurePreferences;
 
 /**
  * A simple view to show the recipients of a message
@@ -101,7 +102,11 @@ public class MessageRecipientListItem extends RelativeLayout
         } else if (receipt.isFailed()) {
           receiptStatus.setText("Failed");
         } else {
-          receiptStatus.setText("Sent");
+          if (TextSecurePreferences.getLocalAddress(getContext()).equals(recipient.getAddress())) {
+            receiptStatus.setText("You");
+          } else {
+            receiptStatus.setText("Sent");
+          }
         }
       }
     }

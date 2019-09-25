@@ -394,7 +394,11 @@ public class RelayContent {
 
     @Override
     public String toString() {
-      return "Call: " + callId + " originator: " + originator + " peerId:" + peerId;
+      if (isControlMessage()) {
+        return "Control Type: " + getControlType() + "Call: " + callId + " originator: " + originator + " peerId:" + peerId;
+      } else {
+        return "Message UID: " + messageId + " sender: " + senderId + "thread: " + threadUid;
+      }
     }
   }
 }

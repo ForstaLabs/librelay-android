@@ -133,11 +133,11 @@ public class MessageReceiptsDatabase extends DbBase {
     database.update(TABLE_NAME, contentValues, MESSAGE_ID + " = ? AND " + ADDRESS + " = ?", new String[] {messageId+"", address});
   }
 
-  public void updateRead(long messageId, String address) {
+  public void updateRead(long timestamp, String address) {
     SQLiteDatabase database = dbHelper.getWritableDatabase();
     ContentValues contentValues = new ContentValues();
     contentValues.put(READ, 1);
-    database.update(TABLE_NAME, contentValues, MESSAGE_ID + " = ? AND " + ADDRESS + " = ?", new String[] {messageId+"", address});
+    database.update(TABLE_NAME, contentValues, TIMESTAMP + " = ? AND " + ADDRESS + " = ?", new String[] {timestamp+"", address});
   }
 
   public void updateFailed(long messageId, String address) {
