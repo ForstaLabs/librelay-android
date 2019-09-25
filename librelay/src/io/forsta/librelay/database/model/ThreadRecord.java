@@ -106,7 +106,7 @@ public class ThreadRecord extends DisplayRecord {
         body = forstaBody.getTextBody();
       }
     } catch (InvalidMessagePayloadException e) {
-      Log.w(TAG, "Invalid message payload: " + body);
+      Log.w(TAG, "Invalid message payload: threadId: " + getThreadId() + " body: " + body);
     }
     if (MessageDatabase.Types.isEndSessionType(type)) {
       return emphasisAdded(context.getString(R.string.ThreadRecord_secure_session_reset));

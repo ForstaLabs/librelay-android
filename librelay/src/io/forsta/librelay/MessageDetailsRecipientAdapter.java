@@ -16,16 +16,13 @@ public class MessageDetailsRecipientAdapter extends BaseAdapter implements AbsLi
   private final Context       context;
   private final MessageRecord record;
   private final Recipients    recipients;
-  private final boolean       isPushGroup;
 
   public MessageDetailsRecipientAdapter(Context context,
-                                        MessageRecord record, Recipients recipients,
-                                        boolean isPushGroup)
+                                        MessageRecord record, Recipients recipients)
   {
     this.context      = context;
     this.record       = record;
     this.recipients   = recipients;
-    this.isPushGroup  = isPushGroup;
   }
 
   @Override
@@ -50,7 +47,7 @@ public class MessageDetailsRecipientAdapter extends BaseAdapter implements AbsLi
     }
 
     Recipient recipient = recipients.getRecipientsList().get(position);
-    ((MessageRecipientListItem)convertView).set(record, recipient, isPushGroup);
+    ((MessageRecipientListItem)convertView).set(record, recipient);
     return convertView;
   }
 

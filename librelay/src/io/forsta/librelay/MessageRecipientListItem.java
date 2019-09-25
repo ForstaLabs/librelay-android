@@ -79,15 +79,14 @@ public class MessageRecipientListItem extends RelativeLayout
   }
 
   public void set(final MessageRecord record,
-                  final Recipient recipient,
-                  final boolean isPushGroup)
+                  final Recipient recipient)
   {
     this.recipient = recipient;
 
     recipient.addListener(this);
     fromView.setText(recipient);
     contactPhotoImage.setAvatar(recipient, false);
-    setIssueIndicators(record, isPushGroup);
+    setIssueIndicators(record);
 
     if (record.isOutgoing()) {
       MessageReceipt receipt = record.getMessageReceipt(recipient.getAddress());
@@ -104,8 +103,7 @@ public class MessageRecipientListItem extends RelativeLayout
     }
   }
 
-  private void setIssueIndicators(final MessageRecord record,
-                                  final boolean isPushGroup)
+  private void setIssueIndicators(final MessageRecord record)
   {
     final NetworkFailure      networkFailure = getNetworkFailure(record);
     final IdentityKeyMismatch keyMismatch    = networkFailure == null ? getKeyMismatch(record) : null;

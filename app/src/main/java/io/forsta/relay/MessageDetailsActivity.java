@@ -228,7 +228,7 @@ public class MessageDetailsActivity extends AuthenticationRequiredActionBarActiv
     conversationItem.bind(messageRecord, dynamicLanguage.getCurrentLocale(),
                          new HashSet<>(), recipients);
     recipientsList.setAdapter(new MessageDetailsRecipientAdapter(this, messageRecord,
-                                                                 recipients, isPushGroup));
+                                                                 recipients));
   }
 
   private void inflateMessageViewIfAbsent(MessageRecord messageRecord) {

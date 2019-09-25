@@ -149,6 +149,7 @@ public class PushMediaSendJob extends PushSendJob {
         if (e.getUnregisteredUserExceptions().size() > 0) {
           for (UnregisteredUserException uue : e.getUnregisteredUserExceptions()) {
             Log.w(TAG, "Unregistered User: " + uue.getE164Number());
+            receiptsDatabase.updateFailed(message.getSentTimeMillis(), uue.getE164Number());
           }
         }
 
