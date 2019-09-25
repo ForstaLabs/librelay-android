@@ -274,11 +274,8 @@ public class AttachmentDatabase extends DbBase {
                                    @NonNull List<Attachment> attachments)
       throws MmsException
   {
-    Log.w(TAG, "insertParts(" + attachments.size() + ")");
-
     for (Attachment attachment : attachments) {
       AttachmentId attachmentId = insertAttachment(messageId, attachment);
-      Log.w(TAG, "Inserted attachment at ID: " + attachmentId);
     }
   }
 
