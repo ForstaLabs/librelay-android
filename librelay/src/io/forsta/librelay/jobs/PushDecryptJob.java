@@ -466,9 +466,8 @@ public class PushDecryptJob extends ContextJob {
   }
 
   private void handleReadMark(RelayContent relayContent) {
+    // Ignore readMark from self. See handleSyncReadMessage
     if (!relayContent.getSenderId().equals(TextSecurePreferences.getLocalAddress(context))) {
-      // Message receipits are for outgoing messages. ReadMark can come from reading incoming
-      Log.w(TAG, "handleReadMark: " + relayContent.getSenderId() + ":" + relayContent.getDeviceId());
       DbFactory.getMessageReceiptDatabase(context).updateRead(relayContent.getReadMark(), relayContent.getSenderId());
     }
   }

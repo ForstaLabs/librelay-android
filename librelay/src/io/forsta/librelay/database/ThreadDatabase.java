@@ -131,22 +131,10 @@ public class ThreadDatabase extends DbBase {
                             long date, int status, int receiptCount, long type, boolean unarchive,
                             long expiresIn, String senderAddress)
   {
-    String textBody = "";
-    try {
-      RelayContent content = MessageManager.fromMessagBodyString(body);
-      textBody = content.getTextBody();
-    } catch (InvalidMessagePayloadException e) {
-      Log.w(TAG, "Error parsing message body");
-      e.printStackTrace();
-      if (!TextUtils.isEmpty(body)) {
-         textBody = body;
-      }
-    }
-
     ContentValues contentValues = new ContentValues(7);
     contentValues.put(DATE, date - date % 1000);
     contentValues.put(MESSAGE_COUNT, count);
-    contentValues.put(SNIPPET, textBody);
+    contentValues.put(SNIPPET, body);
     contentValues.put(SNIPPET_URI, attachment == null ? null : attachment.toString());
     contentValues.put(SNIPPET_TYPE, type);
     contentValues.put(STATUS, status);
