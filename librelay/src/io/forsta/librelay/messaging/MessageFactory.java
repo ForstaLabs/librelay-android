@@ -34,8 +34,8 @@ import io.forsta.librelay.util.MediaUtil;
  * Created by jlewis on 10/25/17.
  */
 
-public class MessageManager {
-  private static final String TAG = MessageManager.class.getSimpleName();
+public class MessageFactory {
+  private static final String TAG = MessageFactory.class.getSimpleName();
 
   public static JSONObject getMessageVersion(int version, String body)
       throws InvalidMessagePayloadException {
@@ -74,7 +74,7 @@ public class MessageManager {
         relayContent.setMessageType(jsonBody.getString("messageType"));
       }
 
-      // Get sender from Signal envelope and mmsdatabase address field.
+      // Get sender from Signal envelope and messagedatabase address field.
       if (!relayContent.isControlMessage()) {
         JSONObject sender = jsonBody.getJSONObject("sender");
         relayContent.setSenderId(sender.getString("userId"));
@@ -334,7 +334,7 @@ public class MessageManager {
     return createBaseMessageBody(user, threadRecord, RelayContent.MessageTypes.CONTROL, data);
   }
 
-  public static String createThreadUpdateMessage(Context context, AtlasUser user, ThreadRecord threadRecord) {
+  public static String createThreadUpdateMessage(AtlasUser user, ThreadRecord threadRecord) {
     JSONObject data = new JSONObject();
     try {
       data.put("control", "threadUpdate");

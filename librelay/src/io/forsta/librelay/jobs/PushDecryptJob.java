@@ -15,8 +15,7 @@ import io.forsta.librelay.atlas.model.RelayDistribution;
 import io.forsta.librelay.atlas.model.RelayContent;
 import io.forsta.librelay.database.DbFactory;
 import io.forsta.librelay.database.MessageDatabase;
-import io.forsta.librelay.database.model.MessageRecord;
-import io.forsta.librelay.messaging.MessageManager;
+import io.forsta.librelay.messaging.MessageFactory;
 import io.forsta.librelay.recipients.Recipient;
 import io.forsta.librelay.service.ForstaServiceAccountManager;
 import io.forsta.librelay.util.InvalidMessagePayloadException;
@@ -219,7 +218,7 @@ public class PushDecryptJob extends ContextJob {
                                                                  message.getBody(),
                                                                  Optional.<List<SignalServiceAttachment>>absent());
 
-    RelayContent relayContent = MessageManager.fromMessagBodyString(body);
+    RelayContent relayContent = MessageFactory.fromMessagBodyString(body);
     long threadId = updateThreadDistribution(relayContent);
 
     database.insertSecureDecryptedMessageInbox(mediaMessage, threadId);
@@ -293,7 +292,7 @@ public class PushDecryptJob extends ContextJob {
                                   @NonNull SignalServiceDataMessage message)
       throws MmsException, InvalidMessagePayloadException {
     String                body       = message.getBody().isPresent() ? message.getBody().get() : "";
-    RelayContent relayContent = MessageManager.fromMessagBodyString(body);
+    RelayContent relayContent = MessageFactory.fromMessagBodyString(body);
     relayContent.setSenderId(envelope.getSource());
     relayContent.setDeviceId(envelope.getSourceDevice());
     relayContent.setTimeStamp(envelope.getTimestamp());
@@ -309,7 +308,7 @@ public class PushDecryptJob extends ContextJob {
       throws MmsException, InvalidMessagePayloadException {
     MessageDatabase database   = DbFactory.getMessageDatabase(context);
 
-    RelayContent relayContent = MessageManager.fromMessagBodyString(message.getMessage().getBody().get());
+    RelayContent relayContent = MessageFactory.fromMessagBodyString(message.getMessage().getBody().get());
     RelayDistribution distribution = AtlasApi.getMessageDistribution(context, relayContent.getUniversalExpression());
     Recipients recipients = getDistributionRecipients(distribution);
     long threadId = DbFactory.getThreadDatabase(context).getOrAllocateThreadId(relayContent, distribution);
@@ -333,7 +332,7 @@ public class PushDecryptJob extends ContextJob {
       throws MmsException, InvalidMessagePayloadException {
     MessageDatabase database     = DbFactory.getMessageDatabase(context);
 
-    RelayContent relayContent = MessageManager.fromMessagBodyString(message.getMessage().getBody().get());
+    RelayContent relayContent = MessageFactory.fromMessagBodyString(message.getMessage().getBody().get());
     relayContent.setSenderId(envelope.getSource());
     relayContent.setDeviceId(envelope.getSourceDevice());
     relayContent.setTimeStamp(envelope.getTimestamp());
@@ -466,10 +465,7 @@ public class PushDecryptJob extends ContextJob {
   }
 
   private void handleReadMark(RelayContent relayContent) {
-    // Ignore readMark from self. See handleSyncReadMessage
-    if (!relayContent.getSenderId().equals(TextSecurePreferences.getLocalAddress(context))) {
-      DbFactory.getMessageReceiptDatabase(context).updateRead(relayContent.getReadMark(), relayContent.getSenderId());
-    }
+    DbFactory.getMessageReceiptDatabase(context).updateRead(relayContent.getReadMark(), relayContent.getSenderId());
   }
 
   private void handleProvisionRequest(RelayContent relayContent) throws Exception {
@@ -577,6 +573,9 @@ public class PushDecryptJob extends ContextJob {
   }
 
   private void handleSyncControlMessage(RelayContent relayContent) {
-    handleControlMessage(relayContent);
+    // Ignore readMark from self. See handleSyncReadMessage
+    if (!relayContent.getControlType().equals(RelayContent.ControlTypes.READ_MARK)) {
+      handleControlMessage(relayContent);
+    }
   }
 }

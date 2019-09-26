@@ -14,7 +14,7 @@ import io.forsta.librelay.database.DbFactory;
 import io.forsta.librelay.database.MessageDatabase;
 import io.forsta.librelay.database.MessageReceiptsDatabase;
 import io.forsta.librelay.dependencies.ApplicationDependencies;
-import io.forsta.librelay.messaging.MessageManager;
+import io.forsta.librelay.messaging.MessageFactory;
 import io.forsta.librelay.util.InvalidMessagePayloadException;
 import io.forsta.librelay.attachments.Attachment;
 import io.forsta.librelay.crypto.storage.TextSecureSessionStore;
@@ -95,7 +95,7 @@ public class PushMediaSendJob extends PushSendJob {
     MessageDatabase database = DbFactory.getMessageDatabase(context);
     MessageReceiptsDatabase receiptsDatabase = DbFactory.getMessageReceiptDatabase(context);
     OutgoingMediaMessage outgoingMessage = database.getOutgoingMessage(messageId);
-    RelayContent relayContent = MessageManager.fromMessagBodyString(outgoingMessage.getBody());
+    RelayContent relayContent = MessageFactory.fromMessagBodyString(outgoingMessage.getBody());
     RelayDistribution distribution = AtlasApi.getMessageDistribution(context, relayContent.getUniversalExpression());
 
     Log.d(TAG, "Outgoing message recipients: " + outgoingMessage.getRecipients().toFullString());

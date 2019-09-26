@@ -35,7 +35,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Vibrator;
 import android.provider.Browser;
 import android.support.annotation.NonNull;
 import android.support.v4.view.MenuItemCompat;
@@ -64,7 +63,6 @@ import android.widget.Toast;
 import com.google.android.gms.location.places.ui.PlacePicker;
 
 import org.whispersystems.libsignal.InvalidMessageException;
-import org.whispersystems.libsignal.util.guava.Optional;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
@@ -112,13 +110,12 @@ import io.forsta.librelay.media.LocationSlide;
 import io.forsta.librelay.media.MediaConstraints;
 import io.forsta.librelay.media.Slide;
 import io.forsta.librelay.media.SlideDeck;
-import io.forsta.librelay.messaging.MessageManager;
+import io.forsta.librelay.messaging.MessageFactory;
 import io.forsta.librelay.messaging.MessageSender;
 import io.forsta.librelay.notifications.MarkReadReceiver;
 import io.forsta.librelay.notifications.MessageNotifier;
 import io.forsta.librelay.permissions.Permissions;
 import io.forsta.librelay.providers.PersistentBlobProvider;
-import io.forsta.librelay.recipients.DirectoryHelper;
 import io.forsta.librelay.recipients.Recipient;
 import io.forsta.librelay.recipients.RecipientFactory;
 import io.forsta.librelay.recipients.Recipients;
@@ -1030,7 +1027,7 @@ public class ConversationActivity extends AuthenticationRequiredActionBarActivit
 
           draftDatabase.insertDrafts(threadId, drafts);
           ThreadRecord threadData = DbFactory.getThreadDatabase(ConversationActivity.this).getThread(threadId);
-          String snippet = MessageManager.createForstaMessageBody(ConversationActivity.this, drafts.getSnippet(ConversationActivity.this), attachmentManager.buildSlideDeck().asAttachments(), threadData);
+          String snippet = MessageFactory.createForstaMessageBody(ConversationActivity.this, drafts.getSnippet(ConversationActivity.this), attachmentManager.buildSlideDeck().asAttachments(), threadData);
           threadDatabase.updateDraftSnippet(threadId, snippet,
                                        drafts.getUriSnippet(ConversationActivity.this),
                                        System.currentTimeMillis(), Types.BASE_DRAFT_TYPE, true);

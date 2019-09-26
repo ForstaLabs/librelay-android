@@ -145,17 +145,17 @@ public class MessageSender {
   }
 
   public static long sendContentMessage(Context context, String body, SlideDeck slideDeck, long threadId, long expiresIn) {
-    OutgoingMediaMessage message = MessageManager.createOutgoingContentMessage(context, body, slideDeck.asAttachments(), threadId, expiresIn);
+    OutgoingMediaMessage message = MessageFactory.createOutgoingContentMessage(context, body, slideDeck.asAttachments(), threadId, expiresIn);
     return send(context, message, threadId);
   }
 
   public static long sendContentReplyMesage(Context context, String body, SlideDeck slideDeck, long threadId, long expiresIn, String messageRef, int vote) {
-    OutgoingMediaMessage message = MessageManager.createOutgoingContentReplyMessage(context, body, slideDeck.asAttachments(), threadId, expiresIn, messageRef, vote);
+    OutgoingMediaMessage message = MessageFactory.createOutgoingContentReplyMessage(context, body, slideDeck.asAttachments(), threadId, expiresIn, messageRef, vote);
     return send(context, message, threadId);
   }
 
   public static void sendExpirationUpdate(Context context, long threadId, int expirationTime) {
-    OutgoingExpirationUpdateMessage message = MessageManager.createOutgoingExpirationUpdateMessage(context, threadId, expirationTime * 1000);
+    OutgoingExpirationUpdateMessage message = MessageFactory.createOutgoingExpirationUpdateMessage(context, threadId, expirationTime * 1000);
     send(context, message, threadId);
   }
 
@@ -164,7 +164,7 @@ public class MessageSender {
       ThreadRecord thread = DbFactory.getThreadDatabase(context).getThread(threadId);
       Recipients recipients = thread.getRecipients();
       AtlasUser user = AtlasUser.getLocalUser(context);
-      String payload = MessageManager.createThreadUpdateMessage(context, user, thread);
+      String payload = MessageFactory.createThreadUpdateMessage(user, thread);
       OutgoingMediaMessage message = new OutgoingMediaMessage(recipients, payload, new LinkedList<Attachment>(), System.currentTimeMillis(), 0);
       sendControlMessage(context, message);
     } catch (Exception e) {
@@ -173,7 +173,7 @@ public class MessageSender {
   }
 
   public static void sendEndSessionMessage(Context context, long threadId) {
-    OutgoingEndSessionMediaMessage message = MessageManager.createOutgoingEndSessionMessage(context, threadId);
+    OutgoingEndSessionMediaMessage message = MessageFactory.createOutgoingEndSessionMessage(context, threadId);
     send(context, message, threadId);
   }
 }

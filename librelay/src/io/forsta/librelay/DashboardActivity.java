@@ -46,7 +46,7 @@ import io.forsta.librelay.database.MessageDatabase;
 import io.forsta.librelay.database.ThreadDatabase;
 import io.forsta.librelay.database.model.MessageRecord;
 import io.forsta.librelay.database.model.ThreadRecord;
-import io.forsta.librelay.messaging.MessageManager;
+import io.forsta.librelay.messaging.MessageFactory;
 import io.forsta.librelay.recipients.DirectoryHelper;
 import io.forsta.librelay.recipients.Recipient;
 import io.forsta.librelay.recipients.Recipients;
@@ -545,20 +545,20 @@ public class DashboardActivity extends AppCompatActivity {
     protected Void doInBackground(Void... params) {
       publishProgress("Bad JSON blob test.");
       try {
-        RelayContent relayContent = MessageManager.fromMessagBodyString("");
+        RelayContent relayContent = MessageFactory.fromMessagBodyString("");
         publishProgress("Failed: empty string.");
       } catch (InvalidMessagePayloadException e) {
         publishProgress("Caught Exception. Body: " + e.getMessage());
       }
       try {
-        RelayContent relayContent = MessageManager.fromMessagBodyString("{}");
+        RelayContent relayContent = MessageFactory.fromMessagBodyString("{}");
         publishProgress("Failed: empty object.");
       } catch (InvalidMessagePayloadException e) {
         publishProgress("Caught Exception. Body: " + e.getMessage());
       }
 
       try {
-        RelayContent relayContent = MessageManager.fromMessagBodyString("[]");
+        RelayContent relayContent = MessageFactory.fromMessagBodyString("[]");
         publishProgress("Failed: empty array");
       } catch (InvalidMessagePayloadException e) {
         publishProgress("Caught Exception. Body: " + e.getMessage());
@@ -566,20 +566,20 @@ public class DashboardActivity extends AppCompatActivity {
       // No version object
       publishProgress("Bad version object test");
       try {
-        RelayContent relayContent = MessageManager.fromMessagBodyString("[{virgin: 1}]");
+        RelayContent relayContent = MessageFactory.fromMessagBodyString("[{virgin: 1}]");
         publishProgress("Failed: empty array");
       } catch (InvalidMessagePayloadException e) {
         publishProgress("Caught Exception. Body: " + e.getMessage());
       }
       publishProgress("Bad messageType object test");
       try {
-        RelayContent relayContent = MessageManager.fromMessagBodyString("[{version: 1, threadId: 1]}");
+        RelayContent relayContent = MessageFactory.fromMessagBodyString("[{version: 1, threadId: 1]}");
         publishProgress("Failed: invalid content type");
       } catch (InvalidMessagePayloadException e) {
         publishProgress("Caught Exception. Body: " + e.getMessage());
       }
       try {
-        RelayContent relayContent = MessageManager.fromMessagBodyString("[{version: 1, threadId: 1, messageType: blank}]");
+        RelayContent relayContent = MessageFactory.fromMessagBodyString("[{version: 1, threadId: 1, messageType: blank}]");
         publishProgress("Failed: invalid content type");
       } catch (InvalidMessagePayloadException e) {
         publishProgress("Caught Exception: " + e.getMessage());
@@ -587,13 +587,13 @@ public class DashboardActivity extends AppCompatActivity {
       // No distribution
       publishProgress("Bad distribution object");
       try {
-        RelayContent relayContent = MessageManager.fromMessagBodyString("[{version: 1, threadId: 1, messageType: content}]");
+        RelayContent relayContent = MessageFactory.fromMessagBodyString("[{version: 1, threadId: 1, messageType: content}]");
         publishProgress("Failed: no distribution object");
       } catch (InvalidMessagePayloadException e) {
         publishProgress("Caught Exception. Body: " + e.getMessage());
       }
       try {
-        RelayContent relayContent = MessageManager.fromMessagBodyString("[{version: 1, threadId: 1, messageType: content, distribution: {}}]");
+        RelayContent relayContent = MessageFactory.fromMessagBodyString("[{version: 1, threadId: 1, messageType: content, distribution: {}}]");
         publishProgress("Failed: empty distribution object");
       } catch (InvalidMessagePayloadException e) {
         publishProgress("Caught Exception. Body: " + e.getMessage());
@@ -601,7 +601,7 @@ public class DashboardActivity extends AppCompatActivity {
 
       publishProgress("Bad distribution expression object");
       try {
-        RelayContent relayContent = MessageManager.fromMessagBodyString("[{version: 1, threadId: 1, messageType: content, distribution: {expression: ''}}]");
+        RelayContent relayContent = MessageFactory.fromMessagBodyString("[{version: 1, threadId: 1, messageType: content, distribution: {expression: ''}}]");
         publishProgress("Failed: empty distribution expression");
       } catch (InvalidMessagePayloadException e) {
         publishProgress("Caught Exception. Body: " + e.getMessage());
@@ -626,7 +626,7 @@ public class DashboardActivity extends AppCompatActivity {
         while ((mrecord = mreader.getNext()) != null) {
           count++;
           try {
-            RelayContent relayContent = MessageManager.fromMessagBodyString(mrecord.getBody());
+            RelayContent relayContent = MessageFactory.fromMessagBodyString(mrecord.getBody());
             passCount++;
           } catch (InvalidMessagePayloadException e) {
             failCount++;

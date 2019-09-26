@@ -36,10 +36,8 @@ import io.forsta.librelay.database.model.MessageRecord;
 import io.forsta.librelay.database.model.ThreadRecord;
 import io.forsta.librelay.media.Slide;
 import io.forsta.librelay.media.SlideDeck;
-import io.forsta.librelay.messaging.MessageManager;
 import io.forsta.librelay.recipients.RecipientFactory;
 import io.forsta.librelay.recipients.Recipients;
-import io.forsta.librelay.util.InvalidMessagePayloadException;
 import io.forsta.librelay.util.TextSecurePreferences;
 
 import java.util.ArrayList;
