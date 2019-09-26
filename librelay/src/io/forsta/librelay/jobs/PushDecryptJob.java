@@ -275,6 +275,7 @@ public class PushDecryptJob extends ContextJob {
   private void handleSynchronizeReadMessage(@NonNull List<ReadMessage> readMessages,
                                             long envelopeTimestamp)
   {
+    Log.w(TAG, "handleSynchronizeReadMessages. ts: " + envelopeTimestamp + " size: " + readMessages.size());
     for (ReadMessage readMessage : readMessages) {
       List<Pair<Long, Long>> expiringMedia = DbFactory.getMessageDatabase(context).setTimestampRead(new SyncMessageId(readMessage.getSender(), readMessage.getTimestamp()), envelopeTimestamp);
 
