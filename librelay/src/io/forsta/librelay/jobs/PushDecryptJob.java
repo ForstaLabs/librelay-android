@@ -195,10 +195,8 @@ public class PushDecryptJob extends ContextJob {
   }
 
   private SignalServiceCipher autoHandleUntrustedIdentity(SignalServiceEnvelope envelope, SignalServiceAddress localAddress, SignalProtocolStore axolotlStore) throws InvalidVersionException, InvalidMessageException {
-    Log.w(TAG, "Auto handling untrusted identity");
+    Log.w(TAG, "Auto handling untrusted identity for " + envelope.getSource() + ":" + envelope.getSourceDevice());
     Recipient recipient = RecipientFactory.getRecipient(context, envelope.getSource(), false);
-    long recipientId = recipient.getRecipientId();
-    Log.w(TAG, "From recipient: " + recipient.getAddress() + " " + recipient.getName());
     byte[] encryptedContent = (!envelope.hasLegacyMessage() && envelope.hasContent()) ? envelope.getContent() : envelope.getLegacyMessage();
     PreKeySignalMessage whisperMessage = new PreKeySignalMessage(encryptedContent);
     IdentityKey identityKey = whisperMessage.getIdentityKey();
@@ -274,7 +272,6 @@ public class PushDecryptJob extends ContextJob {
   private void handleSynchronizeReadMessage(@NonNull List<ReadMessage> readMessages,
                                             long envelopeTimestamp)
   {
-    Log.w(TAG, "handleSynchronizeReadMessages. ts: " + envelopeTimestamp + " size: " + readMessages.size());
     for (ReadMessage readMessage : readMessages) {
       List<Pair<Long, Long>> expiringMedia = DbFactory.getMessageDatabase(context).setTimestampRead(new SyncMessageId(readMessage.getSender(), readMessage.getTimestamp()), envelopeTimestamp);
 
@@ -373,7 +370,6 @@ public class PushDecryptJob extends ContextJob {
 
       return threadId;
     } else {
-      Log.w(TAG, "handleSynchronizeSentMediaMessage Type: " + relayContent.getControlType());
       handleSyncControlMessage(relayContent);
       return -1;
     }

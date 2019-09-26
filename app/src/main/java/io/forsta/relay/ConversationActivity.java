@@ -922,7 +922,6 @@ public class ConversationActivity extends AuthenticationRequiredActionBarActivit
         } else {
           supportInvalidateOptionsMenu();
           initializeThread();
-          markThreadAsRead();
         }
       }
     };

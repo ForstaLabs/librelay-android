@@ -554,6 +554,15 @@ public class MessageFactory {
     return new OutgoingEndSessionMediaMessage(recipients, jsonPayload, System.currentTimeMillis());
   }
 
+  public static OutgoingMediaMessage createOutgoingReadMarkMessage(final Context context, final long threadId, long timestamp) {
+    ThreadRecord thread = DbFactory.getThreadDatabase(context).getThread(threadId);
+    Recipients recipients = thread.getRecipients();
+    AtlasUser user = AtlasUser.getLocalUser(context);
+    String uid = UUID.randomUUID().toString();
+    String jsonPayload = createReadMarkMessage(user, thread, timestamp);
+    return new OutgoingMediaMessage(recipients, jsonPayload, new LinkedList<Attachment>(), System.currentTimeMillis(), 0, uid, null, 0);
+  }
+
   public static IncomingMediaMessage createLocalInformationalMessage(Context context, String message, long threadId, long expiresIn) {
     ThreadRecord thread = DbFactory.getThreadDatabase(context).getThread(threadId);
     AtlasUser user = AtlasUser.getLocalUser(context);
