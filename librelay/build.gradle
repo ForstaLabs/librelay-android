@@ -52,7 +52,7 @@ dependencies {
        exclude group: 'com.android.support', module: 'support-v4'
     }
 
-    api('com.github.ForstaLabs:libsignal-service-java:forsta-v2.3.1.20') {
+    api('com.github.ForstaLabs:libsignal-service-java:forsta-v2.3.1.22') {
         exclude group: 'org.whispersystems', module: 'curve25519-java'
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
     }
