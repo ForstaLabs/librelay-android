@@ -196,7 +196,6 @@ public class PushDecryptJob extends ContextJob {
 
   private SignalServiceCipher autoHandleUntrustedIdentity(SignalServiceEnvelope envelope, SignalServiceAddress localAddress, SignalProtocolStore axolotlStore) throws InvalidVersionException, InvalidMessageException {
     Log.w(TAG, "Auto handling untrusted identity for " + envelope.getSource() + ":" + envelope.getSourceDevice());
-    Recipient recipient = RecipientFactory.getRecipient(context, envelope.getSource(), false);
     byte[] encryptedContent = (!envelope.hasLegacyMessage() && envelope.hasContent()) ? envelope.getContent() : envelope.getLegacyMessage();
     PreKeySignalMessage whisperMessage = new PreKeySignalMessage(encryptedContent);
     IdentityKey identityKey = whisperMessage.getIdentityKey();

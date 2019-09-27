@@ -84,7 +84,6 @@ public class FcmService extends FirebaseMessagingService {
     }
 
     decrementActiveGcmCount();
-    Log.i(TAG, "Processing complete.");
   }
 
   private static synchronized boolean incrementActiveGcmCount() {

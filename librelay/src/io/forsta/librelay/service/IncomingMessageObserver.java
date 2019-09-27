@@ -133,16 +133,14 @@ public class IncomingMessageObserver implements ConstraintObserver.Notifier {
       while (true) {
         Log.i(TAG, "Waiting for websocket state change....");
         waitForConnectionNecessary();
-
         Log.i(TAG, "Making websocket connection....");
-        pipe             = receiver.createMessagePipe();
 
-        SignalServiceMessagePipe localPipe             = pipe;
+        pipe = receiver.createMessagePipe();
+        SignalServiceMessagePipe localPipe = pipe;
 
         try {
           while (isConnectionNecessary()) {
             try {
-              Log.i(TAG, "Reading message...");
               localPipe.read(REQUEST_TIMEOUT_MINUTES, TimeUnit.MINUTES,
                   envelope -> {
                     Log.i(TAG, "Retrieved envelope! " + String.valueOf(envelope.getSource()));
@@ -160,8 +158,6 @@ public class IncomingMessageObserver implements ConstraintObserver.Notifier {
           Log.w(TAG, "Shutting down pipe...");
           shutdown(localPipe);
         }
-
-        Log.i(TAG, "Looping...");
       }
     }
 
