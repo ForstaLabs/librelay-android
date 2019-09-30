@@ -9,10 +9,12 @@ import android.provider.Settings;
 import android.support.annotation.ArrayRes;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.h6ah4i.android.compat.content.SharedPreferenceCompat;
 
+import io.forsta.librelay.BuildConfig;
 import io.forsta.librelay.R;
 import io.forsta.librelay.preferences.NotificationPrivacyPreference;
 
@@ -284,7 +286,7 @@ public class TextSecurePreferences {
   }
 
   public static String getServer(Context context) {
-    return getStringPreference(context, SERVER_PREF, null);
+    return getStringPreference(context, SERVER_PREF, BuildConfig.SIGNAL_API_URL);
   }
 
   public static void setServer(Context context, String url) {

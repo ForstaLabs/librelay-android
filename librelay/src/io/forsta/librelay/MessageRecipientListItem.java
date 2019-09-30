@@ -37,6 +37,7 @@ import io.forsta.librelay.database.model.MessageReceipt;
 import io.forsta.librelay.database.model.MessageRecord;
 import io.forsta.librelay.recipients.Recipient;
 import io.forsta.librelay.messaging.MessageSender;
+import io.forsta.librelay.util.TextSecurePreferences;
 
 /**
  * A simple view to show the recipients of a message
@@ -79,15 +80,14 @@ public class MessageRecipientListItem extends RelativeLayout
   }
 
   public void set(final MessageRecord record,
-                  final Recipient recipient,
-                  final boolean isPushGroup)
+                  final Recipient recipient)
   {
     this.recipient = recipient;
 
     recipient.addListener(this);
     fromView.setText(recipient);
     contactPhotoImage.setAvatar(recipient, false);
-    setIssueIndicators(record, isPushGroup);
+    setIssueIndicators(record);
 
     if (record.isOutgoing()) {
       MessageReceipt receipt = record.getMessageReceipt(recipient.getAddress());
@@ -97,15 +97,22 @@ public class MessageRecipientListItem extends RelativeLayout
           receiptStatus.setText("Read");
         } else if (receipt.isDelivered()) {
           receiptStatus.setText("Delivered");
+        } else if (receipt.isUnregisteredUser()) {
+          receiptStatus.setText("Unregistered User");
+        } else if (receipt.isFailed()) {
+          receiptStatus.setText("Failed");
         } else {
-          receiptStatus.setText("Sent");
+          if (TextSecurePreferences.getLocalAddress(getContext()).equals(recipient.getAddress())) {
+            receiptStatus.setText("You");
+          } else {
+            receiptStatus.setText("Sent");
+          }
         }
       }
     }
   }
 
-  private void setIssueIndicators(final MessageRecord record,
-                                  final boolean isPushGroup)
+  private void setIssueIndicators(final MessageRecord record)
   {
     final NetworkFailure      networkFailure = getNetworkFailure(record);
     final IdentityKeyMismatch keyMismatch    = networkFailure == null ? getKeyMismatch(record) : null;
@@ -134,7 +141,7 @@ public class MessageRecipientListItem extends RelativeLayout
         @Override
         public void onClick(View v) {
           resendButton.setEnabled(false);
-          new ResendAsyncTask(record, networkFailure).execute();
+          new ResendAsyncTask(getContext(), record, networkFailure).execute();
         }
       });
     } else {
@@ -186,18 +193,20 @@ public class MessageRecipientListItem extends RelativeLayout
   private class ResendAsyncTask extends AsyncTask<Void,Void,Void> {
     private final MessageRecord  record;
     private final NetworkFailure failure;
+    private final Context context;
 
-    public ResendAsyncTask(MessageRecord record, NetworkFailure failure) {
+    public ResendAsyncTask(Context context, MessageRecord record, NetworkFailure failure) {
       this.record       = record;
       this.failure      = failure;
+      this.context = context;
     }
 
     @Override
     protected Void doInBackground(Void... params) {
-      MessageDatabase messageDatabase = DbFactory.getMessageDatabase(getContext());
+      MessageDatabase messageDatabase = DbFactory.getMessageDatabase(context);
       messageDatabase.removeFailure(record.getId(), failure);
 
-      MessageSender.resend(getContext(), record);
+      MessageSender.resend(context, record);
 
       return null;
     }

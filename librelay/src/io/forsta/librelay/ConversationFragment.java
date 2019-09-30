@@ -296,12 +296,7 @@ public class ConversationFragment extends Fragment
           @Override
           protected Void doInBackground(MessageRecord... messageRecords) {
             for (MessageRecord messageRecord : messageRecords) {
-              boolean threadDeleted;
-              threadDeleted = DbFactory.getMessageDatabase(getActivity()).delete(messageRecord.getId());
-//              if (threadDeleted) {
-//                threadId = -1;
-//                listener.setThreadId(threadId);
-//              }
+              DbFactory.getMessageDatabase(getActivity()).delete(messageRecord.getId());
             }
 
             return null;

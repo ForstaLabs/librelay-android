@@ -5,14 +5,14 @@ public class MessageReceipt {
   private long messageId;
   private boolean delivered;
   private boolean read;
-  private boolean failed;
+  private int failed;
 
   public MessageReceipt(long messageId, String address, int delivered, int read, int failed) {
     this.messageId = messageId;
     this.address = address;
     this.delivered = delivered != 0 ? true : false;
     this.read = read != 0 ? true : false;
-    this.failed = failed != 0 ? true : false;
+    this.failed = failed;
   }
 
   public long getMessageId() {
@@ -32,7 +32,11 @@ public class MessageReceipt {
   }
 
   public boolean isFailed() {
-    return failed;
+    return (failed == 1 ? true : false);
+  }
+
+  public boolean isUnregisteredUser() {
+    return (failed == 2) ? true : false;
   }
 
   @Override

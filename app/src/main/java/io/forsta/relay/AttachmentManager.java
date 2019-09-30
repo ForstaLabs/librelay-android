@@ -199,7 +199,6 @@ public class AttachmentManager {
         try {
           final long  mediaSize = MediaUtil.getMediaSize(context, uri);
           final Slide slide     = mediaType.createSlide(context, uri, mediaSize);
-          Log.w(TAG, "slide with size " + mediaSize + " took " + (System.currentTimeMillis() - start) + "ms");
           return slide;
         } catch (IOException ioe) {
           Log.w(TAG, ioe);
@@ -337,9 +336,8 @@ public class AttachmentManager {
               }
               Uri imageUri = FileProvider.getUriForFile(
                   this.context,
-                  BuildConfig.APPLICATION_ID + ".provider.external_files",
+                  "io.forsta.librelay." + BuildConfig.FLAVOR + ".provider.external_files",
                   new File(captureUri.getPath()));
-              Log.w(TAG, "captureUri path is " + captureUri.getPath());
               captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
               activity.startActivityForResult(captureIntent, requestCode);
             }

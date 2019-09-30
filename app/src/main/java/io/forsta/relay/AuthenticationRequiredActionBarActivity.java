@@ -16,7 +16,6 @@ import io.forsta.relay.LoginActivity;
 import io.forsta.relay.RegistrationActivity;
 
 import io.forsta.librelay.atlas.AtlasPreferences;
-import io.forsta.librelay.service.MessageRetrievalService;
 import io.forsta.librelay.util.TextSecurePreferences;
 
 public abstract class AuthenticationRequiredActionBarActivity extends BaseActionBarActivity {
@@ -32,7 +31,6 @@ public abstract class AuthenticationRequiredActionBarActivity extends BaseAction
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
-    Log.w(TAG, "onCreate(" + savedInstanceState + ")");
     onPreCreate();
     routeApplicationState();
 
@@ -43,24 +41,18 @@ public abstract class AuthenticationRequiredActionBarActivity extends BaseAction
 
   @Override
   protected void onResume() {
-    Log.w(TAG, "onResume()");
     super.onResume();
-
-    MessageRetrievalService.registerActivityStarted(this);
     isVisible = true;
   }
 
   @Override
   protected void onPause() {
-    Log.w(TAG, "onPause()");
     super.onPause();
-    MessageRetrievalService.registerActivityStopped(this);
     isVisible = false;
   }
 
   @Override
   protected void onDestroy() {
-    Log.w(TAG, "onDestroy()");
     super.onDestroy();
   }
 
@@ -105,8 +97,6 @@ public abstract class AuthenticationRequiredActionBarActivity extends BaseAction
   }
 
   private Intent getIntentForState(int state) {
-    Log.w(TAG, "routeApplicationState(), state: " + state);
-
     switch (state) {
       case STATE_PROMPT_PUSH_REGISTRATION: return getPushRegistrationIntent();
       case STATE_FORSTA_LOGIN:             return getAtlasLoginIntent();

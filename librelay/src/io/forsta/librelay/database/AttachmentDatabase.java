@@ -116,7 +116,6 @@ public class AttachmentDatabase extends DbBase {
   public @NonNull InputStream getThumbnailStream(@NonNull AttachmentId attachmentId)
       throws IOException
   {
-    Log.w(TAG, "getThumbnailStream(" + attachmentId + ")");
     InputStream dataStream = getDataStream(attachmentId, THUMBNAIL);
 
     if (dataStream != null) {
@@ -275,11 +274,8 @@ public class AttachmentDatabase extends DbBase {
                                    @NonNull List<Attachment> attachments)
       throws MmsException
   {
-    Log.w(TAG, "insertParts(" + attachments.size() + ")");
-
     for (Attachment attachment : attachments) {
       AttachmentId attachmentId = insertAttachment(messageId, attachment);
-      Log.w(TAG, "Inserted attachment at ID: " + attachmentId);
     }
   }
 
@@ -339,7 +335,6 @@ public class AttachmentDatabase extends DbBase {
     values.put(TRANSFER_STATE, transferState);
     database.update(TABLE_NAME, values, PART_ID_WHERE, attachmentId.toStrings());
     notifyConversationListeners(DbFactory.getMessageDatabase(context).getThreadIdForMessage(messageId));
-    ApplicationContext.getInstance(context).notifyMediaControlEvent();
   }
 
   @VisibleForTesting
@@ -434,15 +429,12 @@ public class AttachmentDatabase extends DbBase {
   private AttachmentId insertAttachment(long messageId, Attachment attachment)
       throws MmsException
   {
-    Log.w(TAG, "Inserting attachment for message id: " + messageId);
-
     SQLiteDatabase   database = dbHelper.getWritableDatabase();
     Pair<File, Long> partData = null;
     long             uniqueId = System.currentTimeMillis();
 
     if (attachment.getDataUri() != null) {
       partData = setAttachmentData(attachment.getDataUri());
-      Log.w(TAG, "Wrote part to file: " + partData.first.getAbsolutePath());
     }
 
     ContentValues contentValues = new ContentValues();
@@ -463,7 +455,6 @@ public class AttachmentDatabase extends DbBase {
     AttachmentId attachmentId = new AttachmentId(rowId, uniqueId);
 
     if (attachment.getThumbnail() != null) {
-      Log.w(TAG, "inserting pre-generated thumbnail");
       MediaUtil.ThumbnailData data = new MediaUtil.ThumbnailData(attachment.getThumbnail());
       updateAttachmentThumbnail(attachmentId, data.toDataStream(), data.getAspectRatio());
     } else if (!attachment.isInProgress()) {
@@ -477,8 +468,6 @@ public class AttachmentDatabase extends DbBase {
   void updateAttachmentThumbnail(AttachmentId attachmentId, InputStream in, float aspectRatio)
       throws MmsException
   {
-    Log.w(TAG, "updating part thumbnail for #" + attachmentId);
-
     Pair<File, Long> thumbnailFile = setAttachmentData(in);
 
     SQLiteDatabase database = dbHelper.getWritableDatabase();

@@ -1,9 +1,15 @@
 package io.forsta.librelay.components;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.Uri;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v13.view.inputmethod.EditorInfoCompat;
+import android.support.v13.view.inputmethod.InputConnectionCompat;
+import android.support.v13.view.inputmethod.InputContentInfoCompat;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.InputType;
 import android.text.Spannable;
@@ -13,7 +19,9 @@ import android.text.TextUtils;
 import android.text.TextUtils.TruncateAt;
 import android.text.style.RelativeSizeSpan;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputConnection;
 
 import io.forsta.librelay.R;
 import io.forsta.librelay.util.TextSecurePreferences;
@@ -22,6 +30,7 @@ public class ComposeText extends AppCompatEditText {
 
   private SpannableString hint;
   private SpannableString subHint;
+  private GiphySelectListener giphyListener;
 
   public ComposeText(Context context) {
     super(context);
@@ -34,6 +43,28 @@ public class ComposeText extends AppCompatEditText {
 
   public ComposeText(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
+  }
+
+  public void setGiphySelectListener(GiphySelectListener listener) {
+    this.giphyListener = listener;
+  }
+
+  @Override
+  public InputConnection onCreateInputConnection(EditorInfo outAttrs) {
+    final InputConnection ic = super.onCreateInputConnection(outAttrs);
+    EditorInfoCompat.setContentMimeTypes(outAttrs,
+        new String[] {"image/gif"});
+    return InputConnectionCompat.createWrapper(ic, outAttrs, new InputConnectionCompat.OnCommitContentListener() {
+      @Override
+      public boolean onCommitContent(InputContentInfoCompat inputContentInfoCompat, int i, Bundle bundle) {
+        Log.w("ComposeText", "Giphy: " + inputContentInfoCompat.getContentUri());
+        if (giphyListener != null) {
+          giphyListener.onSelect(inputContentInfoCompat.getContentUri());
+          return true;
+        }
+        return false;
+      }
+    });
   }
 
   @Override
@@ -116,5 +147,9 @@ public class ComposeText extends AppCompatEditText {
     setInputType(inputType);
     setImeOptions(imeOptions);
     setHint(getContext().getString(R.string.conversation_activity__type_message_push), null);
+  }
+
+  public interface GiphySelectListener {
+    void onSelect(Uri uri);
   }
 }

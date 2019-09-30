@@ -1,12 +1,12 @@
-package io.forsta.relay;
+package io.forsta.librelay;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import io.forsta.librelay.BuildConfig;
 import io.forsta.librelay.atlas.AtlasApi;
 import io.forsta.librelay.atlas.AtlasPreferences;
 import io.forsta.librelay.atlas.model.AtlasJWT;
@@ -47,7 +46,7 @@ import io.forsta.librelay.database.MessageDatabase;
 import io.forsta.librelay.database.ThreadDatabase;
 import io.forsta.librelay.database.model.MessageRecord;
 import io.forsta.librelay.database.model.ThreadRecord;
-import io.forsta.librelay.messaging.MessageManager;
+import io.forsta.librelay.messaging.MessageFactory;
 import io.forsta.librelay.recipients.DirectoryHelper;
 import io.forsta.librelay.recipients.Recipient;
 import io.forsta.librelay.recipients.Recipients;
@@ -55,7 +54,7 @@ import io.forsta.librelay.util.InvalidMessagePayloadException;
 import io.forsta.librelay.util.TextSecurePreferences;
 
 // TODO Remove all of this code for production release. This is for discovery and debug use.
-public class DashboardActivity extends AuthenticationRequiredActionBarActivity {
+public class DashboardActivity extends AppCompatActivity {
   private static final String TAG = DashboardActivity.class.getSimpleName();
   private TextView mDebugText;
   private TextView mLoginInfo;
@@ -86,10 +85,7 @@ public class DashboardActivity extends AuthenticationRequiredActionBarActivity {
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     int i = item.getItemId();
-    if (i == R.id.menu_dashboard_logout) {
-      AtlasPreferences.clearLogin(DashboardActivity.this);
-      startLoginIntent();
-    } else if (i == R.id.menu_dashboard_clear_directory) {
+    if (i == R.id.menu_dashboard_clear_directory) {
       handleClearDirectory();
     } else if (i == R.id.menu_dashboard_clear_threads) {
       handleClearThreads();
@@ -244,12 +240,6 @@ public class DashboardActivity extends AuthenticationRequiredActionBarActivity {
         }).show();
   }
 
-  private void startLoginIntent() {
-    Intent intent = new Intent(DashboardActivity.this, LoginActivity.class);
-    startActivity(intent);
-    finish();
-  }
-
   private void printLoginInformation() {
     StringBuilder sb = new StringBuilder();
     String token = AtlasPreferences.getRegisteredKey(getApplicationContext());
@@ -258,8 +248,8 @@ public class DashboardActivity extends AuthenticationRequiredActionBarActivity {
     sb.append("API Host:");
     sb.append(BuildConfig.FORSTA_API_URL);
     sb.append("\n");
-    sb.append("SIgnal Host:");
-    sb.append(TextSecurePreferences.getServer(DashboardActivity.this));
+    sb.append("Signal Host:");
+    sb.append(BuildConfig.SIGNAL_API_URL);
     sb.append("\n");
     Date tokenExpire = jwt.getExpireDate();
     sb.append("Token Expires: ");
@@ -555,20 +545,20 @@ public class DashboardActivity extends AuthenticationRequiredActionBarActivity {
     protected Void doInBackground(Void... params) {
       publishProgress("Bad JSON blob test.");
       try {
-        RelayContent relayContent = MessageManager.fromMessagBodyString("");
+        RelayContent relayContent = MessageFactory.fromMessagBodyString("");
         publishProgress("Failed: empty string.");
       } catch (InvalidMessagePayloadException e) {
         publishProgress("Caught Exception. Body: " + e.getMessage());
       }
       try {
-        RelayContent relayContent = MessageManager.fromMessagBodyString("{}");
+        RelayContent relayContent = MessageFactory.fromMessagBodyString("{}");
         publishProgress("Failed: empty object.");
       } catch (InvalidMessagePayloadException e) {
         publishProgress("Caught Exception. Body: " + e.getMessage());
       }
 
       try {
-        RelayContent relayContent = MessageManager.fromMessagBodyString("[]");
+        RelayContent relayContent = MessageFactory.fromMessagBodyString("[]");
         publishProgress("Failed: empty array");
       } catch (InvalidMessagePayloadException e) {
         publishProgress("Caught Exception. Body: " + e.getMessage());
@@ -576,20 +566,20 @@ public class DashboardActivity extends AuthenticationRequiredActionBarActivity {
       // No version object
       publishProgress("Bad version object test");
       try {
-        RelayContent relayContent = MessageManager.fromMessagBodyString("[{virgin: 1}]");
+        RelayContent relayContent = MessageFactory.fromMessagBodyString("[{virgin: 1}]");
         publishProgress("Failed: empty array");
       } catch (InvalidMessagePayloadException e) {
         publishProgress("Caught Exception. Body: " + e.getMessage());
       }
       publishProgress("Bad messageType object test");
       try {
-        RelayContent relayContent = MessageManager.fromMessagBodyString("[{version: 1, threadId: 1]}");
+        RelayContent relayContent = MessageFactory.fromMessagBodyString("[{version: 1, threadId: 1]}");
         publishProgress("Failed: invalid content type");
       } catch (InvalidMessagePayloadException e) {
         publishProgress("Caught Exception. Body: " + e.getMessage());
       }
       try {
-        RelayContent relayContent = MessageManager.fromMessagBodyString("[{version: 1, threadId: 1, messageType: blank}]");
+        RelayContent relayContent = MessageFactory.fromMessagBodyString("[{version: 1, threadId: 1, messageType: blank}]");
         publishProgress("Failed: invalid content type");
       } catch (InvalidMessagePayloadException e) {
         publishProgress("Caught Exception: " + e.getMessage());
@@ -597,13 +587,13 @@ public class DashboardActivity extends AuthenticationRequiredActionBarActivity {
       // No distribution
       publishProgress("Bad distribution object");
       try {
-        RelayContent relayContent = MessageManager.fromMessagBodyString("[{version: 1, threadId: 1, messageType: content}]");
+        RelayContent relayContent = MessageFactory.fromMessagBodyString("[{version: 1, threadId: 1, messageType: content}]");
         publishProgress("Failed: no distribution object");
       } catch (InvalidMessagePayloadException e) {
         publishProgress("Caught Exception. Body: " + e.getMessage());
       }
       try {
-        RelayContent relayContent = MessageManager.fromMessagBodyString("[{version: 1, threadId: 1, messageType: content, distribution: {}}]");
+        RelayContent relayContent = MessageFactory.fromMessagBodyString("[{version: 1, threadId: 1, messageType: content, distribution: {}}]");
         publishProgress("Failed: empty distribution object");
       } catch (InvalidMessagePayloadException e) {
         publishProgress("Caught Exception. Body: " + e.getMessage());
@@ -611,7 +601,7 @@ public class DashboardActivity extends AuthenticationRequiredActionBarActivity {
 
       publishProgress("Bad distribution expression object");
       try {
-        RelayContent relayContent = MessageManager.fromMessagBodyString("[{version: 1, threadId: 1, messageType: content, distribution: {expression: ''}}]");
+        RelayContent relayContent = MessageFactory.fromMessagBodyString("[{version: 1, threadId: 1, messageType: content, distribution: {expression: ''}}]");
         publishProgress("Failed: empty distribution expression");
       } catch (InvalidMessagePayloadException e) {
         publishProgress("Caught Exception. Body: " + e.getMessage());
@@ -636,7 +626,7 @@ public class DashboardActivity extends AuthenticationRequiredActionBarActivity {
         while ((mrecord = mreader.getNext()) != null) {
           count++;
           try {
-            RelayContent relayContent = MessageManager.fromMessagBodyString(mrecord.getBody());
+            RelayContent relayContent = MessageFactory.fromMessagBodyString(mrecord.getBody());
             passCount++;
           } catch (InvalidMessagePayloadException e) {
             failCount++;

@@ -109,17 +109,12 @@ public class ThumbnailView extends FrameLayout {
     }
 
     if (Util.equals(slide, this.slide)) {
-      Log.w(TAG, "Not re-loading slide " + slide.asAttachment().getDataUri());
       return;
     }
 
     if (!isContextValid()) {
-      Log.w(TAG, "Not loading slide, context is invalid");
       return;
     }
-
-    Log.w(TAG, "loading part with id " + slide.asAttachment().getDataUri()
-               + ", progress " + slide.getTransferState());
 
     this.slide = slide;
 

@@ -30,7 +30,7 @@ import io.forsta.librelay.atlas.model.AtlasUser;
 import io.forsta.librelay.database.model.ThreadRecord;
 import io.forsta.librelay.dependencies.ApplicationDependencies;
 import io.forsta.librelay.messaging.IncomingMediaMessage;
-import io.forsta.librelay.messaging.MessageManager;
+import io.forsta.librelay.messaging.MessageFactory;
 import io.forsta.librelay.messaging.OutgoingMediaMessage;
 import io.forsta.librelay.webrtc.CallRecipient;
 import io.forsta.librelay.R;
@@ -1266,7 +1266,7 @@ public class WebRtcCallService extends Service implements BluetoothStateManager.
           ThreadRecord thread = DbFactory.getThreadDatabase(context).getThread(threadUID);
           AtlasUser user = AtlasUser.getLocalUser(context);
           Recipients recipients = RecipientFactory.getRecipientsFor(getApplicationContext(), recipient, false);
-          String payload = MessageManager.createIceCandidateMessage(user, thread, callId, peerId, updates);
+          String payload = MessageFactory.createIceCandidateMessage(user, thread, callId, peerId, updates);
           OutgoingMediaMessage message = new OutgoingMediaMessage(recipients, payload, new LinkedList<Attachment>(), System.currentTimeMillis(), 0);
           SignalServiceDataMessage mediaMessage = createSignalServiceDataMessage(message);
           List<SignalServiceAddress> addresses = getSignalAddresses(context, recipients);
@@ -1300,7 +1300,7 @@ public class WebRtcCallService extends Service implements BluetoothStateManager.
           ThreadRecord thread = DbFactory.getThreadDatabase(context).getThread(threadUID);
           AtlasUser user = AtlasUser.getLocalUser(context);
           Recipients recipients = RecipientFactory.getRecipientsFor(getApplicationContext(), recipient, false);
-          String payload = MessageManager.createAcceptCallOfferMessage(user, thread, callId, sdp.description, peerId);
+          String payload = MessageFactory.createAcceptCallOfferMessage(user, thread, callId, sdp.description, peerId);
           OutgoingMediaMessage message = new OutgoingMediaMessage(recipients, payload, new LinkedList<Attachment>(), System.currentTimeMillis(), 0);
           SignalServiceDataMessage mediaMessage = createSignalServiceDataMessage(message);
           SignalServiceAddress address = new SignalServiceAddress(recipient.getAddress(), Optional.fromNullable(null));
@@ -1334,7 +1334,7 @@ public class WebRtcCallService extends Service implements BluetoothStateManager.
           ThreadRecord thread = DbFactory.getThreadDatabase(context).getThread(threadUID);
           AtlasUser user = AtlasUser.getLocalUser(context);
           Recipients recipients = RecipientFactory.getRecipientsFor(getApplicationContext(), recipient, false);
-          String payload = MessageManager.createCallOfferMessage(user, thread, callId, sdp.description, peerId);
+          String payload = MessageFactory.createCallOfferMessage(user, thread, callId, sdp.description, peerId);
           OutgoingMediaMessage message = new OutgoingMediaMessage(recipients, payload, new LinkedList<Attachment>(), System.currentTimeMillis(), 0);
 
           SignalServiceDataMessage mediaMessage = createSignalServiceDataMessage(message);
@@ -1371,7 +1371,7 @@ public class WebRtcCallService extends Service implements BluetoothStateManager.
           if (!members.contains(user.getUid())) {
             members.add(user.getUid());
           }
-          String payload = MessageManager.createCallJoinMessage(user, members, thread, callId, peerId);
+          String payload = MessageFactory.createCallJoinMessage(user, members, thread, callId, peerId);
           OutgoingMediaMessage message = new OutgoingMediaMessage(recipients, payload, new LinkedList<Attachment>(), System.currentTimeMillis(), 0);
 
           SignalServiceDataMessage mediaMessage = createSignalServiceDataMessage(message);
@@ -1403,7 +1403,7 @@ public class WebRtcCallService extends Service implements BluetoothStateManager.
           Context context = getApplicationContext();
           ThreadRecord thread = DbFactory.getThreadDatabase(context).getThread(threadUID);
           AtlasUser user = AtlasUser.getLocalUser(context);
-          String payload = MessageManager.createCallLeaveMessage(user, thread, callId);
+          String payload = MessageFactory.createCallLeaveMessage(user, thread, callId);
           OutgoingMediaMessage message = new OutgoingMediaMessage(recipients, payload, new LinkedList<Attachment>(), System.currentTimeMillis(), 0);
 
           SignalServiceDataMessage mediaMessage = createSignalServiceDataMessage(message);
@@ -1458,7 +1458,7 @@ public class WebRtcCallService extends Service implements BluetoothStateManager.
         Context context = getApplicationContext();
         long threadId = DbFactory.getThreadDatabase(context).getThreadIdForUid(thread);
         if (threadId != -1) {
-          IncomingMediaMessage infoMessage = MessageManager.createLocalInformationalMessage(context, message, threadId, 0);
+          IncomingMediaMessage infoMessage = MessageFactory.createLocalInformationalMessage(context, message, threadId, 0);
           Pair<Long, Long> messagePair = DbFactory.getMessageDatabase(context).insertSecureDecryptedMessageInbox(infoMessage, threadId);
           DbFactory.getMessageDatabase(context).markAsRead(messagePair.first);
         }

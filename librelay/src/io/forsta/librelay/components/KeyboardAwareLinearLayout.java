@@ -86,7 +86,6 @@ public class KeyboardAwareLinearLayout extends LinearLayoutCompat {
     int oldRotation = rotation;
     rotation = getDeviceRotation();
     if (oldRotation != rotation) {
-      Log.w(TAG, "rotation changed");
       onKeyboardClose();
     }
   }
@@ -132,14 +131,12 @@ public class KeyboardAwareLinearLayout extends LinearLayoutCompat {
   }
 
   protected void onKeyboardOpen(int keyboardHeight) {
-    Log.w(TAG, "onKeyboardOpen(" + keyboardHeight + ")");
     keyboardOpen = true;
 
     notifyShownListeners();
   }
 
   protected void onKeyboardClose() {
-    Log.w(TAG, "onKeyboardClose()");
     keyboardOpen = false;
     notifyHiddenListeners();
   }

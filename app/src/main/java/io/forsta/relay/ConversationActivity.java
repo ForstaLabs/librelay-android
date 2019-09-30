@@ -35,7 +35,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Vibrator;
 import android.provider.Browser;
 import android.support.annotation.NonNull;
 import android.support.v4.view.MenuItemCompat;
@@ -64,7 +63,6 @@ import android.widget.Toast;
 import com.google.android.gms.location.places.ui.PlacePicker;
 
 import org.whispersystems.libsignal.InvalidMessageException;
-import org.whispersystems.libsignal.util.guava.Optional;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
@@ -112,13 +110,12 @@ import io.forsta.librelay.media.LocationSlide;
 import io.forsta.librelay.media.MediaConstraints;
 import io.forsta.librelay.media.Slide;
 import io.forsta.librelay.media.SlideDeck;
-import io.forsta.librelay.messaging.MessageManager;
+import io.forsta.librelay.messaging.MessageFactory;
 import io.forsta.librelay.messaging.MessageSender;
 import io.forsta.librelay.notifications.MarkReadReceiver;
 import io.forsta.librelay.notifications.MessageNotifier;
 import io.forsta.librelay.permissions.Permissions;
 import io.forsta.librelay.providers.PersistentBlobProvider;
-import io.forsta.librelay.recipients.DirectoryHelper;
 import io.forsta.librelay.recipients.Recipient;
 import io.forsta.librelay.recipients.RecipientFactory;
 import io.forsta.librelay.recipients.Recipients;
@@ -153,7 +150,6 @@ public class ConversationActivity extends AuthenticationRequiredActionBarActivit
 {
   private static final String TAG = ConversationActivity.class.getSimpleName();
 
-  public static final String RECIPIENTS_EXTRA        = "recipients";
   public static final String THREAD_ID_EXTRA         = "thread_id";
   public static final String IS_ARCHIVED_EXTRA       = "is_archived";
   public static final String TEXT_EXTRA              = "draft_text";
@@ -188,11 +184,12 @@ public class ConversationActivity extends AuthenticationRequiredActionBarActivit
   private   InputPanel             inputPanel;
 
   private Recipients recipients;
-  private long       threadId;
+  private long threadId;
   private String messageRef;
   private ThreadRecord forstaThread;
-  private int        distributionType;
-  private boolean    archived;
+  private int distributionType;
+  private boolean archived;
+
   private Handler handler = new Handler();
   private ContentObserver threadObserver;
 
@@ -208,7 +205,6 @@ public class ConversationActivity extends AuthenticationRequiredActionBarActivit
   @Override
   protected void onCreate(Bundle state) {
     super.onCreate(state);
-    Log.w(TAG, "onCreate()");
 
     supportRequestWindowFeature(WindowCompat.FEATURE_ACTION_BAR_OVERLAY);
     setContentView(R.layout.conversation_activity);
@@ -225,10 +221,7 @@ public class ConversationActivity extends AuthenticationRequiredActionBarActivit
 
   @Override
   protected void onNewIntent(Intent intent) {
-    Log.w(TAG, "onNewIntent()");
-
     if (isFinishing()) {
-      Log.w(TAG, "Activity is finishing...");
       return;
     }
 
@@ -277,7 +270,6 @@ public class ConversationActivity extends AuthenticationRequiredActionBarActivit
 
   @Override
   public void onConfigurationChanged(Configuration newConfig) {
-    Log.w(TAG, "onConfigurationChanged(" + newConfig.orientation + ")");
     super.onConfigurationChanged(newConfig);
     quickAttachmentDrawer.onConfigurationChanged();
   }
@@ -431,7 +423,6 @@ public class ConversationActivity extends AuthenticationRequiredActionBarActivit
 
   @Override
   public void onBackPressed() {
-    Log.w(TAG, "onBackPressed()");
     if (container.isInputOpen()) container.hideCurrentInput(composeText);
     else                         super.onBackPressed();
   }
@@ -827,10 +818,10 @@ public class ConversationActivity extends AuthenticationRequiredActionBarActivit
     quickAttachmentDrawer = ViewUtil.findById(this, R.id.quick_attachment_drawer);
     quickAttachmentToggle = ViewUtil.findById(this, R.id.quick_attachment_toggle);
     inputPanel            = ViewUtil.findById(this, R.id.bottom_panel);
-
     ImageButton quickCameraToggle = ViewUtil.findById(this, R.id.quick_camera_toggle);
     View        composeBubble     = ViewUtil.findById(this, R.id.compose_bubble);
 
+    inputPanel.setListener(this);
     container.addOnKeyboardShownListener(this);
 
     int[]      attributes   = new int[]{io.forsta.librelay.R.attr.conversation_item_bubble_background};
@@ -924,9 +915,14 @@ public class ConversationActivity extends AuthenticationRequiredActionBarActivit
       @Override
       public void onChange(boolean selfChange) {
         Log.w(TAG, "Thread Observer onChange");
-        supportInvalidateOptionsMenu();
-        initializeThread();
-        markThreadAsRead();
+        forstaThread = DbFactory.getThreadDatabase(ConversationActivity.this).getThread(threadId);
+        if (forstaThread == null) {
+          recipients.removeListener(ConversationActivity.this);
+          finish();
+        } else {
+          supportInvalidateOptionsMenu();
+          initializeThread();
+        }
       }
     };
   }
@@ -1030,7 +1026,7 @@ public class ConversationActivity extends AuthenticationRequiredActionBarActivit
 
           draftDatabase.insertDrafts(threadId, drafts);
           ThreadRecord threadData = DbFactory.getThreadDatabase(ConversationActivity.this).getThread(threadId);
-          String snippet = MessageManager.createForstaMessageBody(ConversationActivity.this, drafts.getSnippet(ConversationActivity.this), attachmentManager.buildSlideDeck().asAttachments(), threadData);
+          String snippet = MessageFactory.createForstaMessageBody(ConversationActivity.this, drafts.getSnippet(ConversationActivity.this), attachmentManager.buildSlideDeck().asAttachments(), threadData);
           threadDatabase.updateDraftSnippet(threadId, snippet,
                                        drafts.getUriSnippet(ConversationActivity.this),
                                        System.currentTimeMillis(), Types.BASE_DRAFT_TYPE, true);
@@ -1122,7 +1118,7 @@ public class ConversationActivity extends AuthenticationRequiredActionBarActivit
       if (recipients == null) {
         Toast.makeText(ConversationActivity.this, io.forsta.librelay.R.string.ConversationActivity_recipient_is_not_valid, Toast.LENGTH_LONG).show();
       } else if(inputPanel.hasQuoteVisible()){
-        sendReplyMessage(forceSms, expiresIn, subscriptionId, messageRef);
+        sendReplyMessage(expiresIn, messageRef);
       } else {
         sendMediaMessage(forceSms, expiresIn, subscriptionId);
       }
@@ -1136,16 +1132,16 @@ public class ConversationActivity extends AuthenticationRequiredActionBarActivit
   private void sendMediaMessage(final boolean forceSms, final long expiresIn, final int subscriptionId)
       throws InvalidMessageException
   {
-    sendMediaMessage(forceSms, getMessage(), attachmentManager.buildSlideDeck(), expiresIn, subscriptionId);
+    sendMediaMessage(getMessage(), attachmentManager.buildSlideDeck(), expiresIn);
   }
 
-  private void sendReplyMessage(final boolean forceSms, final long expiresIn, final int subscriptionId, final String messageRef)
+  private void sendReplyMessage(final long expiresIn, final String messageRef)
           throws InvalidMessageException
   {
-    sendReplyMessage(forceSms, getMessage(), attachmentManager.buildSlideDeck(), expiresIn, subscriptionId, messageRef);
+    sendReplyMessage(getMessage(), attachmentManager.buildSlideDeck(), expiresIn, messageRef);
   }
 
-  private ListenableFuture<Void> sendMediaMessage(final boolean forceSms, String body, final SlideDeck slideDeck, final long expiresIn, final int subscriptionId)
+  private ListenableFuture<Void> sendMediaMessage(String body, final SlideDeck slideDeck, final long expiresIn)
       throws InvalidMessageException
   {
     final SettableFuture<Void> future          = new SettableFuture<>();
@@ -1173,7 +1169,7 @@ public class ConversationActivity extends AuthenticationRequiredActionBarActivit
     return future;
   }
 
-  private ListenableFuture<Void> sendReplyMessage(final boolean forceSms, String body, final SlideDeck slideDeck, final long expiresIn, final int subscriptionId, final String messageRef)
+  private ListenableFuture<Void> sendReplyMessage(String body, final SlideDeck slideDeck, final long expiresIn, final String messageRef)
           throws InvalidMessageException
   {
     final SettableFuture<Void> future          = new SettableFuture<>();
@@ -1209,17 +1205,6 @@ public class ConversationActivity extends AuthenticationRequiredActionBarActivit
       buttonToggle.display(sendButton);
       quickAttachmentToggle.hide();
     }
-  }
-
-  private void recordSubscriptionIdPreference(final Optional<Integer> subscriptionId) {
-    new AsyncTask<Void, Void, Void>() {
-      @Override
-      protected Void doInBackground(Void... params) {
-//        DbFactory.getRecipientPreferenceDatabase(ConversationActivity.this)
-//                       .setDefaultSubscriptionId(recipients, subscriptionId.or(-1));
-        return null;
-      }
-    }.execute();
   }
 
   @Override
@@ -1258,30 +1243,22 @@ public class ConversationActivity extends AuthenticationRequiredActionBarActivit
 
   @Override
   public void onRecorderStarted() {
-    Vibrator vibrator = (Vibrator)getSystemService(VIBRATOR_SERVICE);
-    vibrator.vibrate(20);
-
     audioRecorder.startRecording();
   }
 
   @Override
   public void onRecorderFinished() {
-    Vibrator vibrator = (Vibrator)getSystemService(VIBRATOR_SERVICE);
-    vibrator.vibrate(20);
-
     ListenableFuture<Pair<Uri, Long>> future = audioRecorder.stopRecording();
     future.addListener(new ListenableFuture.Listener<Pair<Uri, Long>>() {
       @Override
       public void onSuccess(final @NonNull Pair<Uri, Long> result) {
         try {
-          boolean    forceSms       = false;
-          int        subscriptionId = -1;
-          long       expiresIn      = DbFactory.getThreadPreferenceDatabase(ConversationActivity.this).getExpireMessages(threadId) * 1000;
-          AudioSlide audioSlide     = new AudioSlide(ConversationActivity.this, result.first, result.second, ContentType.AUDIO_AAC);
-          SlideDeck  slideDeck      = new SlideDeck();
+          long expiresIn = DbFactory.getThreadPreferenceDatabase(ConversationActivity.this).getExpireMessages(threadId) * 1000;
+          AudioSlide audioSlide = new AudioSlide(ConversationActivity.this, result.first, result.second, ContentType.AUDIO_AAC);
+          SlideDeck slideDeck = new SlideDeck();
           slideDeck.addSlide(audioSlide);
 
-          sendMediaMessage(forceSms, "", slideDeck, expiresIn, subscriptionId).addListener(new AssertedSuccessListener<Void>() {
+          sendMediaMessage("", slideDeck, expiresIn).addListener(new AssertedSuccessListener<Void>() {
             @Override
             public void onSuccess(Void nothing) {
               new AsyncTask<Void, Void, Void>() {
@@ -1308,9 +1285,6 @@ public class ConversationActivity extends AuthenticationRequiredActionBarActivit
 
   @Override
   public void onRecorderCanceled() {
-    Vibrator vibrator = (Vibrator)getSystemService(VIBRATOR_SERVICE);
-    vibrator.vibrate(50);
-
     ListenableFuture<Pair<Uri, Long>> future = audioRecorder.stopRecording();
     future.addListener(new ListenableFuture.Listener<Pair<Uri, Long>>() {
       @Override
@@ -1327,6 +1301,11 @@ public class ConversationActivity extends AuthenticationRequiredActionBarActivit
       @Override
       public void onFailure(ExecutionException e) {}
     });
+  }
+
+  @Override
+  public void onGiphySelect(Uri uri) {
+    setMedia(uri, MediaType.GIF);
   }
 
   @Override
@@ -1437,23 +1416,4 @@ public class ConversationActivity extends AuthenticationRequiredActionBarActivit
     public void onFocusChange(View v, boolean hasFocus) {}
   }
 
-  private ListenableFuture<Boolean> initializeDirectory()
-  {
-    final SettableFuture<Boolean> future = new SettableFuture<>();
-
-    new AsyncTask<Recipients, Void, Boolean>() {
-      @Override
-      protected Boolean doInBackground(Recipients... params) {
-        try {
-          Context           context      = ConversationActivity.this;
-          DirectoryHelper.refreshDirectoryFor(context, recipients);
-        } catch (Exception e) {
-          e.printStackTrace();
-        }
-        return true;
-      }
-    }.execute(recipients);
-
-    return future;
-  }
   }

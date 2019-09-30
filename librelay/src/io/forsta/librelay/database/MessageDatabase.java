@@ -302,9 +302,6 @@ public class MessageDatabase extends DbBase {
           long messageId = cursor.getLong(cursor.getColumnIndex(ID));
           addressDatabase.updateDelivered(messageId, syncMessageId.getAddress(), syncMessageId.getTimetamp());
 
-          Log.d(TAG, "Delivery receipt id: " + messageId + " ts: " + syncMessageId.getTimetamp() + " address: " + syncMessageId.getAddress());
-          Log.d(TAG, "Addresses for message: " + addresses);
-
           for (String storedAddress : addresses) {
             try {
               String ourAddress   = syncMessageId.getAddress();
@@ -384,6 +381,20 @@ public class MessageDatabase extends DbBase {
     Cursor cursor = rawQuery(RAW_ID_WHERE, new String[] {messageId + ""});
     setNotifyConverationListeners(cursor, getThreadIdForMessage(messageId));
     return cursor;
+  }
+
+  public boolean isKnownReply(String messageRef) {
+    Cursor cursor = null;
+    try {
+      cursor = rawQuery(MESSAGE_ID + " = ?", new String[] {messageRef});
+      if (cursor != null && cursor.moveToFirst()) {
+        return true;
+      }
+    } finally {
+      if (cursor != null)
+        cursor.close();
+    }
+    return false;
   }
 
   public Reader getExpireStartedMessages() {
@@ -559,9 +570,9 @@ public class MessageDatabase extends DbBase {
   public OutgoingMediaMessage getOutgoingMessage(long messageId)
       throws MmsException, NoSuchMessageException
   {
-    MessageReceiptsDatabase addr               = DbFactory.getMessageReceiptDatabase(context);
+    MessageReceiptsDatabase addr = DbFactory.getMessageReceiptDatabase(context);
     AttachmentDatabase attachmentDatabase = DbFactory.getAttachmentDatabase(context);
-    Cursor             cursor             = null;
+    Cursor cursor = null;
 
     try {
       cursor = rawQuery(RAW_ID_WHERE, new String[] {String.valueOf(messageId)});
@@ -631,9 +642,11 @@ public class MessageDatabase extends DbBase {
     contentValues.put(EXPIRES_IN, retrieved.getExpiresIn());
     contentValues.put(READ, retrieved.isExpirationUpdate() ? 1 : 0);
     if (!TextUtils.isEmpty(retrieved.getMessageRef())) {
-      contentValues.put(MESSAGE_REF, retrieved.getMessageRef());
-      if (retrieved.getVoteCount() > 0) {
-        contentValues.put(UP_VOTE, retrieved.getVoteCount());
+      if (isKnownReply(retrieved.getMessageRef())) {
+        contentValues.put(MESSAGE_REF, retrieved.getMessageRef());
+        if (retrieved.getVoteCount() > 0) {
+          contentValues.put(UP_VOTE, retrieved.getVoteCount());
+        }
       }
     }
     contentValues.put(MESSAGE_ID, retrieved.getMessageId());
@@ -642,7 +655,7 @@ public class MessageDatabase extends DbBase {
       contentValues.put(DATE_SENT, contentValues.getAsLong(DATE_RECEIVED));
     }
 
-    List<String> fromAddresses = new ArrayList<>(); //noop
+    List<String> fromAddresses = new ArrayList<>(); //For Inbox don't populate receipts table
     long messageId = insertMediaMessage(fromAddresses,
                                         retrieved.getBody(), retrieved.getAttachments(),
                                         contentValues);

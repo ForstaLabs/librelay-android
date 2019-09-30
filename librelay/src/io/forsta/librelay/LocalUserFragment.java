@@ -12,6 +12,7 @@ import io.forsta.librelay.atlas.model.AtlasUser;
 import io.forsta.librelay.components.AvatarImageView;
 import io.forsta.librelay.recipients.Recipient;
 import io.forsta.librelay.recipients.RecipientFactory;
+import io.forsta.librelay.util.TextSecurePreferences;
 
 /**
  * Created by jlewis on 5/19/17.

@@ -94,7 +94,6 @@ public class CameraView extends ViewGroup {
   public void onResume() {
     if (state != State.PAUSED) return;
     state = State.RESUMED;
-    Log.w(TAG, "onResume() queued");
     enqueueTask(new SerialAsyncTask<Void>() {
       @Override
       protected
@@ -103,7 +102,6 @@ public class CameraView extends ViewGroup {
         try {
           long openStartMillis = System.currentTimeMillis();
           camera = Optional.fromNullable(Camera.open(cameraId));
-          Log.w(TAG, "camera.open() -> " + (System.currentTimeMillis() - openStartMillis) + "ms");
           synchronized (CameraView.this) {
             CameraView.this.notifyAll();
           }
@@ -127,7 +125,6 @@ public class CameraView extends ViewGroup {
         if (getActivity().getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED) {
           onOrientationChange.enable();
         }
-        Log.w(TAG, "onResume() completed");
       }
     });
   }
@@ -135,7 +132,6 @@ public class CameraView extends ViewGroup {
   public void onPause() {
     if (state == State.PAUSED) return;
     state = State.PAUSED;
-    Log.w(TAG, "onPause() queued");
 
     enqueueTask(new SerialAsyncTask<Void>() {
       private Optional<Camera> cameraToDestroy;
@@ -153,7 +149,6 @@ public class CameraView extends ViewGroup {
             stopPreview();
             cameraToDestroy.get().setPreviewCallback(null);
             cameraToDestroy.get().release();
-            Log.w(TAG, "released old camera instance");
           } catch (Exception e) {
             Log.w(TAG, e);
           }
@@ -167,7 +162,6 @@ public class CameraView extends ViewGroup {
         outputOrientation = -1;
         removeView(surface);
         addView(surface);
-        Log.w(TAG, "onPause() completed");
       }
     });
 
@@ -202,7 +196,6 @@ public class CameraView extends ViewGroup {
     }
 
     if (previewHeight == 0 || previewWidth == 0) {
-      Log.w(TAG, "skipping layout due to zero-width/height preview size");
       return;
     }
 
@@ -217,7 +210,6 @@ public class CameraView extends ViewGroup {
 
   @Override
   protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-    Log.w(TAG, "onSizeChanged(" + oldw + "x" + oldh + " -> " + w + "x" + h + ")");
     super.onSizeChanged(w, h, oldw, oldh);
     if (camera.isPresent()) startPreview(camera.get().getParameters());
   }
@@ -313,9 +305,7 @@ public class CameraView extends ViewGroup {
         } else {
           previewSize = parameters.getPreviewSize();
         }
-        long previewStartMillis = System.currentTimeMillis();
         camera.startPreview();
-        Log.w(TAG, "camera.startPreview() -> " + (System.currentTimeMillis() - previewStartMillis) + "ms");
         state = State.ACTIVE;
         Util.runOnMain(new Runnable() {
           @Override
@@ -520,7 +510,6 @@ public class CameraView extends ViewGroup {
           throw new PreconditionsNotMetException();
         }
         while (getMeasuredHeight() <= 0 || getMeasuredWidth() <= 0 || !surface.isReady()) {
-          Log.w(TAG, String.format("waiting. surface ready? %s", surface.isReady()));
           Util.wait(CameraView.this, 0);
         }
       }

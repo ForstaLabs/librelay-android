@@ -24,7 +24,7 @@ public class NotificationState {
   private static final String REPLY_EVENT = BuildConfig.APPLICATION_ID + "." + BuildConfig.FLAVOR + ".notifications.REPLY_EVENT";
 
   private final LinkedList<NotificationItem> notifications = new LinkedList<>();
-  private final LinkedHashSet<Long> threads       = new LinkedHashSet<>();
+  private final LinkedHashSet<Long> threads = new LinkedHashSet<>();
   private boolean notify = false;
   private boolean vibrate = false;
   private String notificationChannel;
@@ -109,19 +109,12 @@ public class NotificationState {
     int    index       = 0;
 
     for (long thread : threads) {
-      Log.w("NotificationState", "Added thread: " + thread);
       threadArray[index++] = thread;
     }
 
     Intent intent = new Intent(MarkReadReceiver.CLEAR_ACTION);
     intent.putExtra(MarkReadReceiver.THREAD_IDS_EXTRA, threadArray);
     intent.setPackage(context.getPackageName());
-
-    // XXX : This is an Android bug.  If we don't pull off the extra
-    // once before handing off the PendingIntent, the array will be
-    // truncated to one element when the PendingIntent fires.  Thanks guys!
-    Log.w("NotificationState", "Pending array off intent length: " +
-        intent.getLongArrayExtra("thread_ids").length);
 
     return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
   }

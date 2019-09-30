@@ -190,7 +190,6 @@ public class MessageNotifier {
     builder.setMessageCount(notificationState.getNotificationCount(), notificationState.getThreadCount());
     builder.setMostRecentSender(notifications.get(0).getIndividualRecipient());
     builder.setGroup(NOTIFICATION_GROUP);
-    Log.w(TAG, "Vibrate " + notificationState.getVibrateState());
     builder.setOnlyAlertOnce(!notificationState.getVibrateState());
     long timestamp = notifications.get(0).getTimestamp();
     if (timestamp != 0) builder.setWhen(timestamp);

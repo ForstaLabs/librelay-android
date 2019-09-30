@@ -71,7 +71,6 @@ public class MessageDetailsActivity extends AuthenticationRequiredActionBarActiv
   public final static String RECIPIENTS_IDS_EXTRA = "recipients_ids";
 
   private long             threadId;
-  private boolean          isPushGroup;
   private ConversationItem conversationItem;
   private ViewGroup        itemParent;
   private View             metadataContainer;
@@ -161,7 +160,6 @@ public class MessageDetailsActivity extends AuthenticationRequiredActionBarActiv
     View header = inflater.inflate(io.forsta.librelay.R.layout.message_details_header, recipientsList, false);
 
     threadId          = getIntent().getLongExtra(THREAD_ID_EXTRA, -1);
-    isPushGroup       = getIntent().getBooleanExtra(IS_PUSH_GROUP_EXTRA, false);
     itemParent        = (ViewGroup) header.findViewById(io.forsta.librelay.R.id.item_container);
     recipientsList    = (ListView ) findViewById(R.id.recipients_list);
     metadataContainer =             header.findViewById(io.forsta.librelay.R.id.metadata_container);
@@ -228,7 +226,7 @@ public class MessageDetailsActivity extends AuthenticationRequiredActionBarActiv
     conversationItem.bind(messageRecord, dynamicLanguage.getCurrentLocale(),
                          new HashSet<>(), recipients);
     recipientsList.setAdapter(new MessageDetailsRecipientAdapter(this, messageRecord,
-                                                                 recipients, isPushGroup));
+                                                                 recipients));
   }
 
   private void inflateMessageViewIfAbsent(MessageRecord messageRecord) {

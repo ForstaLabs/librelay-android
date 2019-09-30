@@ -8,10 +8,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import androidx.work.Data;
 import androidx.work.WorkerParameters;
+import io.forsta.librelay.database.DbFactory;
 import io.forsta.librelay.database.MessageDatabase.SyncMessageId;
 import io.forsta.librelay.dependencies.ApplicationDependencies;
 import io.forsta.librelay.jobmanager.JobParameters;
 import io.forsta.librelay.jobmanager.SafeData;
+import io.forsta.librelay.messaging.MessageFactory;
+import io.forsta.librelay.messaging.OutgoingMediaMessage;
 import io.forsta.librelay.util.JsonUtils;
 import io.forsta.librelay.util.TextSecurePreferences;
 import org.whispersystems.signalservice.api.SignalServiceMessageSender;

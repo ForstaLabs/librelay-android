@@ -2,6 +2,7 @@ package io.forsta.librelay.components;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -37,7 +38,7 @@ public class InputPanel extends LinearLayout
   private static final int FADE_TIME = 150;
 
   private QuoteView     quoteView;
-  private AppCompatEditText composeText;
+  private ComposeText composeText;
   private View          quickCameraToggle;
   private View          quickAudioToggle;
   private View          buttonToggle;
@@ -82,6 +83,19 @@ public class InputPanel extends LinearLayout
     inputText = ViewUtil.findById(this, R.id.embedded_text_editor);
     this.microphoneRecorderView.setVisibility(View.GONE);
     this.microphoneRecorderView.setClickable(false);
+
+    composeText.setGiphySelectListener(new ComposeText.GiphySelectListener() {
+      @Override
+      public void onSelect(Uri uri) {
+        if (listener != null) {
+          listener.onGiphySelect(uri);
+        }
+      }
+    });
+  }
+
+  public void setListener(Listener listener) {
+    this.listener = listener;
   }
 
   public void setQuote(long id, @NonNull Recipient author, @NonNull String body, @NonNull SlideDeck attachments) {
@@ -101,7 +115,7 @@ public class InputPanel extends LinearLayout
   //dismiss button logic is there, so that when the "x" was pressed to remove the quote, the hint would return to the
   //original message
   public static void returnInputHint() {
-    inputText.setHint("Send Forsta message", null);
+    inputText.setHint("Send message", null);
   }
 
   public void clearQuote() {
@@ -186,6 +200,7 @@ public class InputPanel extends LinearLayout
     public void onRecorderStarted();
     public void onRecorderFinished();
     public void onRecorderCanceled();
+    void onGiphySelect(Uri uri);
   }
 
   private static class SlideToCancel {

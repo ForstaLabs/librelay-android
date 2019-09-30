@@ -34,8 +34,8 @@ import io.forsta.librelay.util.MediaUtil;
  * Created by jlewis on 10/25/17.
  */
 
-public class MessageManager {
-  private static final String TAG = MessageManager.class.getSimpleName();
+public class MessageFactory {
+  private static final String TAG = MessageFactory.class.getSimpleName();
 
   public static JSONObject getMessageVersion(int version, String body)
       throws InvalidMessagePayloadException {
@@ -74,7 +74,7 @@ public class MessageManager {
         relayContent.setMessageType(jsonBody.getString("messageType"));
       }
 
-      // Get sender from Signal envelope and mmsdatabase address field.
+      // Get sender from Signal envelope and messagedatabase address field.
       if (!relayContent.isControlMessage()) {
         JSONObject sender = jsonBody.getJSONObject("sender");
         relayContent.setSenderId(sender.getString("userId"));
@@ -153,7 +153,6 @@ public class MessageManager {
             case RelayContent.ControlTypes.READ_MARK:
               try {
                 long timeStamp = data.getLong("readMark");
-                Log.w(TAG, "Read Mark: " + timeStamp);
                 relayContent.setReadMark(timeStamp);
               } catch (Exception e) {
                 Log.w(TAG, e.getMessage());
@@ -335,7 +334,7 @@ public class MessageManager {
     return createBaseMessageBody(user, threadRecord, RelayContent.MessageTypes.CONTROL, data);
   }
 
-  public static String createThreadUpdateMessage(Context context, AtlasUser user, ThreadRecord threadRecord) {
+  public static String createThreadUpdateMessage(AtlasUser user, ThreadRecord threadRecord) {
     JSONObject data = new JSONObject();
     try {
       data.put("control", "threadUpdate");
@@ -367,6 +366,18 @@ public class MessageManager {
       data.put("callId", callId);
       data.put("originator", user.getUid());
       data.put("version", 2);
+    } catch (JSONException e) {
+      e.printStackTrace();
+    }
+    return createBaseMessageBody(user, threadRecord, RelayContent.MessageTypes.CONTROL, data);
+  }
+
+  public static String createReadMarkMessage(AtlasUser user, ThreadRecord threadRecord, long timestamp) {
+    JSONObject data = new JSONObject();
+    try {
+      JSONArray jsonUpdates = new JSONArray();
+      data.put("control", "readMark");
+      data.put("readMark", timestamp);
     } catch (JSONException e) {
       e.printStackTrace();
     }
@@ -541,6 +552,15 @@ public class MessageManager {
     }
     String jsonPayload = createBaseMessageBody(user, thread, RelayContent.MessageTypes.CONTROL, data);
     return new OutgoingEndSessionMediaMessage(recipients, jsonPayload, System.currentTimeMillis());
+  }
+
+  public static OutgoingMediaMessage createOutgoingReadMarkMessage(final Context context, final long threadId, long timestamp) {
+    ThreadRecord thread = DbFactory.getThreadDatabase(context).getThread(threadId);
+    Recipients recipients = thread.getRecipients();
+    AtlasUser user = AtlasUser.getLocalUser(context);
+    String uid = UUID.randomUUID().toString();
+    String jsonPayload = createReadMarkMessage(user, thread, timestamp);
+    return new OutgoingMediaMessage(recipients, jsonPayload, new LinkedList<Attachment>(), System.currentTimeMillis(), 0, uid, null, 0);
   }
 
   public static IncomingMediaMessage createLocalInformationalMessage(Context context, String message, long threadId, long expiresIn) {

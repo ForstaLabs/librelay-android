@@ -1,4 +1,4 @@
-package io.forsta.librelay.jobs.requirements;
+package io.forsta.librelay.jobmanager.requirements;
 
 import android.content.Context;
 import android.telephony.PhoneStateListener;
