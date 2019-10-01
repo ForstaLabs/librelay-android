@@ -75,14 +75,17 @@ public class MediaOverviewActivity extends AuthenticationRequiredActionBarActivi
 
   @Override
   protected void onPreCreate() {
-    this.setTheme(io.forsta.librelay.R.style.TextSecure_DarkTheme);
+    this.setTheme(R.style.Application_LightNoActionBar);
     dynamicLanguage.onCreate(this);
   }
 
   @Override
   protected void onCreate(Bundle bundle) {
     super.onCreate(bundle);
-    setFullscreenIfPossible();
+
+    getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+        WindowManager.LayoutParams.FLAG_FULLSCREEN);
+    getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
 
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     setContentView(R.layout.media_overview_activity);
@@ -96,16 +99,6 @@ public class MediaOverviewActivity extends AuthenticationRequiredActionBarActivi
   public void onConfigurationChanged(Configuration newConfig) {
     super.onConfigurationChanged(newConfig);
     if (gridManager != null) gridManager.setSpanCount(getResources().getInteger(R.integer.media_overview_cols));
-  }
-
-  @TargetApi(VERSION_CODES.JELLY_BEAN)
-  private void setFullscreenIfPossible() {
-    getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                         WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-    if (VERSION.SDK_INT >= VERSION_CODES.JELLY_BEAN) {
-      getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
-    }
   }
 
   @Override

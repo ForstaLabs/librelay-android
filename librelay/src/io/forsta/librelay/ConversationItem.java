@@ -60,9 +60,7 @@ import io.forsta.librelay.recipients.Recipient;
 import io.forsta.librelay.recipients.Recipients;
 import io.forsta.librelay.service.ExpiringMessageManager;
 import io.forsta.librelay.util.DateUtils;
-import io.forsta.librelay.util.DynamicTheme;
 import io.forsta.librelay.util.SaveAttachmentTask;
-import io.forsta.librelay.util.TextSecurePreferences;
 import io.forsta.librelay.util.Util;
 
 import java.util.HashSet;
@@ -247,11 +245,7 @@ public class ConversationItem extends LinearLayout
 
   private void setAudioViewTint(MessageRecord messageRecord, Recipients recipients) {
     if (messageRecord.isOutgoing()) {
-      if (DynamicTheme.LIGHT.equals(TextSecurePreferences.getTheme(context))) {
-        audioView.setTint(recipients.getColor().toConversationColor(context));
-      } else {
-        audioView.setTint(Color.WHITE);
-      }
+      audioView.setTint(recipients.getColor().toConversationColor(context));
     }
   }
 

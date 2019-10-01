@@ -26,17 +26,6 @@
     </style>
 
     <!-- ActionBar styles -->
-    <style name="TextSecure.DarkActionBar"
-           parent="@style/Widget.AppCompat.ActionBar">
-        <item name="background">@color/forsta_primary_dark</item>
-        <item name="android:icon">@drawable/actionbar_icon</item>
-        <item name="icon">@drawable/actionbar_icon</item>
-        <item name="logo">@drawable/actionbar_icon</item>
-        <item name="android:popupTheme">@style/ThemeOverlay.AppCompat.Dark</item>
-        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Dark</item>
-        <item name="titleTextStyle">@style/TextSecure.TitleTextStyle</item>
-        <item name="subtitleTextStyle">@style/TextSecure.SubtitleTextStyle</item>
-    </style>
 
     <style name="TextSecure.LightActionBar"
            parent="@style/Widget.AppCompat.ActionBar">
@@ -54,12 +43,6 @@
     <style name="TextSecure.FlatLightActionBar"
            parent="@style/TextSecure.LightActionBar">
         <item name="elevation">0dp</item>
-    </style>
-
-    <style name="TextSecure.DarkActionBar.TabBar"
-        parent="@style/Widget.AppCompat.ActionBar.TabBar">
-        <item name="background">@color/forsta_primary_dark</item>
-        <item name="android:background">@color/forsta_primary_dark</item>
     </style>
 
     <style name="TextSecure.LightActionBar.TabBar"

@@ -39,24 +39,14 @@ import android.widget.Toast;
 
 import org.json.JSONObject;
 
-import io.forsta.relay.ApplicationContext;
-import io.forsta.relay.AuthenticationRequiredActionBarActivity;
-import io.forsta.relay.ConversationActivity;
-import io.forsta.relay.ConversationListArchiveActivity;
-import io.forsta.relay.LoginActivity;
-import io.forsta.relay.ApplicationPreferencesActivity;
-
 import io.forsta.librelay.ConversationListFragment;
 import io.forsta.librelay.atlas.AtlasApi;
 import io.forsta.librelay.atlas.AtlasPreferences;
 import io.forsta.librelay.atlas.AtlasSyncAdapter;
-import io.forsta.librelay.atlas.model.AtlasOrg;
 import io.forsta.librelay.database.DbFactory;
-import io.forsta.librelay.jobs.DirectoryRefreshJob;
 import io.forsta.librelay.notifications.MessageNotifier;
 import io.forsta.librelay.recipients.Recipients;
 import io.forsta.librelay.util.DynamicLanguage;
-import io.forsta.librelay.util.DynamicTheme;
 
 public class ConversationListActivity extends AuthenticationRequiredActionBarActivity
     implements ConversationListFragment.ConversationSelectedListener, ConversationListFragment.NewConversationClickListener
@@ -65,7 +55,6 @@ public class ConversationListActivity extends AuthenticationRequiredActionBarAct
   private static IntentFilter syncIntentFilter = new IntentFilter(AtlasSyncAdapter.ATLAS_SYNC_COMPLETE);
   private BroadcastReceiver syncReceiver;
 
-  private final DynamicTheme    dynamicTheme    = new DynamicTheme   ();
   private final DynamicLanguage dynamicLanguage = new DynamicLanguage();
 
   private ConversationListFragment fragment;
@@ -73,7 +62,6 @@ public class ConversationListActivity extends AuthenticationRequiredActionBarAct
 
   @Override
   protected void onPreCreate() {
-    dynamicTheme.onCreate(this);
     dynamicLanguage.onCreate(this);
   }
 
@@ -110,7 +98,6 @@ public class ConversationListActivity extends AuthenticationRequiredActionBarAct
   @Override
   public void onResume() {
     super.onResume();
-    dynamicTheme.onResume(this);
     dynamicLanguage.onResume(this);
     getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
   }

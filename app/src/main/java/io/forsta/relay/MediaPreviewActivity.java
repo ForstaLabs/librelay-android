@@ -65,10 +65,10 @@ public class MediaPreviewActivity extends AuthenticationRequiredActionBarActivit
   @Override
   protected void onCreate(Bundle bundle) {
     super.onCreate(bundle);
-    this.setTheme(io.forsta.librelay.R.style.TextSecure_DarkTheme);
+    this.setTheme(R.style.Application_LightNoActionBar);
     dynamicLanguage.onCreate(this);
 
-    setFullscreenIfPossible();
+    getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
     getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
         WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
@@ -78,13 +78,6 @@ public class MediaPreviewActivity extends AuthenticationRequiredActionBarActivit
     initializeViews();
     initializeResources();
     initializeActionBar();
-  }
-
-  @TargetApi(VERSION_CODES.JELLY_BEAN)
-  private void setFullscreenIfPossible() {
-    if (VERSION.SDK_INT >= VERSION_CODES.JELLY_BEAN) {
-      getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
-    }
   }
 
   @Override
