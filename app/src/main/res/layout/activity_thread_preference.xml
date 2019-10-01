@@ -33,7 +33,7 @@
             android:layout_height="40dp"
             android:src="@drawable/check"
             android:visibility="gone"
-            android:background="@color/forsta_pop"
+            android:background="@color/colorPop"
             android:layout_marginLeft="10dp"/>
     </LinearLayout>
     <TextView style="@style/TextAppearance.AppCompat.Subhead"

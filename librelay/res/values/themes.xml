@@ -6,21 +6,21 @@
         <item name="theme_type">light</item>
         <item name="actionBarStyle">@style/TextSecure.LightActionBar</item>
         <item name="actionBarTabBarStyle">@style/TextSecure.LightActionBar.TabBar</item>
-        <item name="colorPrimary">@color/textsecure_primary</item>
-        <item name="colorPrimaryDark">@color/textsecure_primary_dark</item>
-        <item name="colorAccent">@color/textsecure_primary_dark</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
 
         <item name="recipient_preference_blocked">#d00000</item>
         <item name="contact_selection_label_text">#66000000</item>
         <item name="contact_selection_push_user">#ff000000</item>
         <item name="contact_selection_lay_user">#a0000000</item>
-        <item name="contact_selection_header_text">@color/textsecure_primary_dark</item>
+        <item name="contact_selection_header_text">@color/colorPrimaryDark</item>
     </style>
 
     <style name="TextSecure.HighlightTheme" parent="@style/TextSecure.LightTheme">
         <item name="actionBarStyle">@style/TextSecure.FlatLightActionBar</item>
         <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat.Dark</item>
-        <item name="android:windowBackground">@color/signal_primary</item>
+        <item name="android:windowBackground">@color/colorPrimaryDark</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="colorButtonNormal">@color/white</item>
     </style>
@@ -46,11 +46,11 @@
         <item name="theme_type">light</item>
         <item name="actionBarStyle">@style/TextSecure.LightActionBar</item>
         <item name="actionBarTabBarStyle">@style/TextSecure.LightActionBar.TabBar</item>
-        <item name="colorPrimary">@color/textsecure_primary</item>
-        <item name="colorPrimaryDark">@color/textsecure_primary_dark</item>
-        <item name="colorAccent">@color/textsecure_primary_dark</item>
-        <item name="colorControlActivated">@color/signal_primary</item>
-        <item name="colorControlHighlight">@color/signal_primary</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorControlActivated">@color/colorPrimaryDark</item>
+        <item name="colorControlHighlight">@color/colorPrimaryDark</item>
         <item name="android:windowBackground">@color/white</item>
         <item name="alertDialogTheme">@style/AppCompatAlertDialogStyle</item>
         <!--<item name="android:windowContentOverlay">@drawable/compat_actionbar_shadow_background</item>-->
@@ -66,7 +66,7 @@
 
         <item name="share_list_item_divider">@drawable/share_list_divider_shape</item>
 
-        <item name="fab_color">@color/textsecure_primary</item>
+        <item name="fab_color">@color/colorPrimaryDark</item>
         <item name="lower_right_divet">@drawable/divet_lower_right_dark</item>
 
         <item name="conversation_group_member_name">#99000000</item>
@@ -126,13 +126,6 @@
         <item name="announcement_icon">@drawable/ic_forsta_announcements_dark</item>
 
         <item name="device_link_item_card_background">@color/device_link_item_background_light</item>
-
-        <item name="import_export_item_background_color">@color/import_export_item_background_light</item>
-        <item name="import_export_item_background_shadow_color">@color/import_export_item_background_shadow_light</item>
-        <item name="import_export_item_card_background">@drawable/clickable_card_light</item>
-        <item name="import_sms">@drawable/ic_message_black</item>
-        <item name="encrypted_backup">@drawable/ic_lock_light</item>
-        <item name="plaintext_backup">@drawable/ic_content_copy_light</item>
 
         <item name="menu_new_conversation_icon">@drawable/ic_add_white_24dp</item>
         <item name="menu_group_icon">@drawable/ic_group_white_24dp</item>

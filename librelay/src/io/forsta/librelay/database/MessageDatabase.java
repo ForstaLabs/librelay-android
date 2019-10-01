@@ -666,8 +666,6 @@ public class MessageDatabase extends DbBase {
     }
 
     notifyConversationListeners(threadId);
-    jobManager.add(new TrimThreadJob(context, threadId));
-
     return new Pair<>(messageId, threadId);
   }
 
