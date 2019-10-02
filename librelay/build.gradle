@@ -1,6 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 group='com.github.ForstaLabs'
+version='android'
 
 repositories {
     maven {
@@ -160,13 +161,6 @@ android {
         exclude 'META-INF/NOTICE'
         exclude 'META-INF/proguard/androidx-annotations.pro'
     }
-    signingConfigs {
-        release {
-            storePassword ""
-            keyAlias ""
-            keyPassword ""
-        }
-    }
     buildTypes {
         debug {
             minifyEnabled false
@@ -205,6 +199,9 @@ android {
             zipAlignEnabled true
         }
     }
+
+    defaultPublishConfig "prodRelease"
+
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
@@ -257,33 +254,4 @@ def getLastCommitTimestamp() {
 
 def timestamp() {
     return new Date().format('yyyyMMddHHmmss');
-}
-
-def Properties props = new Properties()
-def propFile = new File('signing.properties')
-
-if (System.getenv('STORE_FILE') && System.getenv('STORE_PASSWORD') && System.getenv('KEY_ALIAS') && System.getenv('KEY_PASSWORD')) {
-    println 'Environment variables found for signature'
-    android.signingConfigs.release.storeFile = file(System.getenv('STORE_FILE'))
-    android.signingConfigs.release.storePassword = System.getenv('STORE_PASSWORD')
-    android.signingConfigs.release.keyAlias = System.getenv('KEY_ALIAS')
-    android.signingConfigs.release.keyPassword = System.getenv('KEY_PASSWORD')
-} else if (propFile.canRead()) {
-    println 'Props file found for signature'
-    props.load(new FileInputStream(propFile))
-
-    if (props != null &&
-            props.containsKey('STORE_FILE') &&
-            props.containsKey('STORE_PASSWORD') &&
-            props.containsKey('KEY_ALIAS') &&
-            props.containsKey('KEY_PASSWORD')) {
-        android.signingConfigs.release.storeFile = file(props['STORE_FILE'])
-        android.signingConfigs.release.storePassword = props['STORE_PASSWORD']
-        android.signingConfigs.release.keyAlias = props['KEY_ALIAS']
-        android.signingConfigs.release.keyPassword = props['KEY_PASSWORD']
-    } else {
-        println 'signing.properties found but some entries are missing'
-    }
-} else {
-    println 'signing.properties not found'
 }
