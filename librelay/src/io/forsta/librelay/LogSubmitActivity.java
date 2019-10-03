@@ -9,8 +9,6 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import io.forsta.librelay.util.DynamicTheme;
-
 /**
  * Created by jlewis on 7/5/17.
  */
@@ -18,11 +16,9 @@ import io.forsta.librelay.util.DynamicTheme;
 public class LogSubmitActivity extends AppCompatActivity implements LogSubmitFragment.OnLogSubmittedListener {
 
   private static final String TAG = LogSubmitActivity.class.getSimpleName();
-  private DynamicTheme dynamicTheme = new DynamicTheme();
 
   @Override
   protected void onCreate(Bundle icicle) {
-    dynamicTheme.onCreate(this);
     super.onCreate(icicle);
     setContentView(R.layout.log_submit_activity);
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -34,7 +30,6 @@ public class LogSubmitActivity extends AppCompatActivity implements LogSubmitFra
 
   @Override
   protected void onResume() {
-    dynamicTheme.onResume(this);
     super.onResume();
   }
 

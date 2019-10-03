@@ -39,8 +39,6 @@ import io.forsta.librelay.components.FlowLayout;
 import io.forsta.librelay.contacts.ContactSelectionListFragment;
 import io.forsta.librelay.recipients.DirectoryHelper;
 import io.forsta.librelay.util.DynamicLanguage;
-import io.forsta.librelay.util.DynamicNoActionBarTheme;
-import io.forsta.librelay.util.DynamicTheme;
 import io.forsta.librelay.util.ViewUtil;
 
 /**
@@ -55,7 +53,6 @@ public abstract class ContactSelectionActivity extends AuthenticationRequiredAct
 {
   private static final String TAG = ContactSelectionActivity.class.getSimpleName();
 
-  private final DynamicTheme    dynamicTheme    = new DynamicNoActionBarTheme();
   private final DynamicLanguage dynamicLanguage = new DynamicLanguage();
 
   protected ContactSelectionListFragment contactsFragment;
@@ -66,7 +63,7 @@ public abstract class ContactSelectionActivity extends AuthenticationRequiredAct
 
   @Override
   protected void onPreCreate() {
-    dynamicTheme.onCreate(this);
+    setTheme(R.style.Application_LightNoActionBar);
     dynamicLanguage.onCreate(this);
   }
 
@@ -91,7 +88,6 @@ public abstract class ContactSelectionActivity extends AuthenticationRequiredAct
   @Override
   public void onResume() {
     super.onResume();
-    dynamicTheme.onResume(this);
     dynamicLanguage.onResume(this);
   }
 

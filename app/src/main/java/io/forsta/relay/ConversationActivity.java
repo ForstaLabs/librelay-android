@@ -103,6 +103,7 @@ import io.forsta.librelay.database.ThreadPreferenceDatabase;
 import io.forsta.librelay.database.model.MessageRecord;
 import io.forsta.librelay.database.model.ThreadRecord;
 import io.forsta.librelay.media.PartAuthority;
+import io.forsta.librelay.preferences.ThreadPreferenceFragment;
 import io.forsta.relay.AttachmentManager.MediaType;
 import io.forsta.librelay.media.AttachmentTypeSelectorAdapter;
 import io.forsta.librelay.media.AudioSlide;
@@ -122,7 +123,6 @@ import io.forsta.librelay.recipients.Recipients;
 import io.forsta.librelay.recipients.Recipients.RecipientsModifiedListener;
 import io.forsta.librelay.service.WebRtcCallService;
 import io.forsta.librelay.util.DynamicLanguage;
-import io.forsta.librelay.util.DynamicTheme;
 import io.forsta.librelay.util.ExpirationUtil;
 import io.forsta.librelay.util.MediaUtil;
 import io.forsta.librelay.util.TextSecurePreferences;
@@ -193,12 +193,10 @@ public class ConversationActivity extends AuthenticationRequiredActionBarActivit
   private Handler handler = new Handler();
   private ContentObserver threadObserver;
 
-  private DynamicTheme    dynamicTheme    = new DynamicTheme();
   private DynamicLanguage dynamicLanguage = new DynamicLanguage();
 
   @Override
   protected void onPreCreate() {
-    dynamicTheme.onCreate(this);
     dynamicLanguage.onCreate(this);
   }
 
@@ -244,7 +242,6 @@ public class ConversationActivity extends AuthenticationRequiredActionBarActivit
   @Override
   protected void onResume() {
     super.onResume();
-    dynamicTheme.onResume(this);
     dynamicLanguage.onResume(this);
     quickAttachmentDrawer.onResume();
 
@@ -846,7 +843,7 @@ public class ConversationActivity extends AuthenticationRequiredActionBarActivit
       public void onClick(View v) {
         if (threadId != -1) {
           Intent intent = new Intent(ConversationActivity.this, ThreadPreferenceActivity.class);
-          intent.putExtra(ThreadPreferenceActivity.THREAD_ID_EXTRA, threadId);
+          intent.putExtra(ThreadPreferenceFragment.THREAD_ID_EXTRA, threadId);
 
           startActivitySceneTransition(intent, titleView.findViewById(io.forsta.librelay.R.id.title), "thread_preferences");
         }

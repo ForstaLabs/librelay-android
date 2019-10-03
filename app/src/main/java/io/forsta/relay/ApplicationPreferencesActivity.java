@@ -25,18 +25,12 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.preference.PreferenceFragment;
 
-import io.forsta.relay.AuthenticationRequiredActionBarActivity;
-import io.forsta.relay.ConversationListActivity;
-import io.forsta.relay.DeviceActivity;
-
 import io.forsta.librelay.LocalUserFragment;
 import io.forsta.librelay.LogSubmitActivity;
 import io.forsta.librelay.preferences.AdvancedPreferenceFragment;
-import io.forsta.librelay.preferences.AppearancePreferenceFragment;
 import io.forsta.librelay.preferences.ChatsPreferenceFragment;
 import io.forsta.librelay.preferences.NotificationsPreferenceFragment;
 import io.forsta.librelay.util.DynamicLanguage;
-import io.forsta.librelay.util.DynamicTheme;
 import io.forsta.librelay.util.TextSecurePreferences;
 
 /**
@@ -52,18 +46,15 @@ public class ApplicationPreferencesActivity extends AuthenticationRequiredAction
   private static final String TAG = ApplicationPreferencesActivity.class.getSimpleName();
 
   private static final String PREFERENCE_CATEGORY_NOTIFICATIONS  = "preference_category_notifications";
-  private static final String PREFERENCE_CATEGORY_APPEARANCE     = "preference_category_appearance";
   private static final String PREFERENCE_CATEGORY_CHATS          = "preference_category_chats";
   private static final String PREFERENCE_CATEGORY_ADVANCED       = "preference_category_advanced";
   private static final String PREFERENCE_CATEGORY_DEVICES        = "preference_category_devices";
 
-  private final DynamicTheme dynamicTheme    = new DynamicTheme();
   private final DynamicLanguage dynamicLanguage = new DynamicLanguage();
   private AdvancedPreferenceFragment advancedPreferenceFragment;
 
   @Override
   protected void onPreCreate() {
-    dynamicTheme.onCreate(this);
     dynamicLanguage.onCreate(this);
   }
 
@@ -84,7 +75,6 @@ public class ApplicationPreferencesActivity extends AuthenticationRequiredAction
   @Override
   public void onResume() {
     super.onResume();
-    dynamicTheme.onResume(this);
     dynamicLanguage.onResume(this);
   }
 
@@ -128,8 +118,6 @@ public class ApplicationPreferencesActivity extends AuthenticationRequiredAction
 
       this.findPreference(PREFERENCE_CATEGORY_NOTIFICATIONS)
         .setOnPreferenceClickListener(new CategoryClickListener(PREFERENCE_CATEGORY_NOTIFICATIONS));
-      this.findPreference(PREFERENCE_CATEGORY_APPEARANCE)
-        .setOnPreferenceClickListener(new CategoryClickListener(PREFERENCE_CATEGORY_APPEARANCE));
       this.findPreference(PREFERENCE_CATEGORY_CHATS)
         .setOnPreferenceClickListener(new CategoryClickListener(PREFERENCE_CATEGORY_CHATS));
       this.findPreference(PREFERENCE_CATEGORY_ADVANCED)
@@ -148,8 +136,6 @@ public class ApplicationPreferencesActivity extends AuthenticationRequiredAction
     private void setCategorySummaries() {
       this.findPreference(PREFERENCE_CATEGORY_NOTIFICATIONS)
           .setSummary(NotificationsPreferenceFragment.getSummary(getActivity()));
-      this.findPreference(PREFERENCE_CATEGORY_APPEARANCE)
-          .setSummary(AppearancePreferenceFragment.getSummary(getActivity()));
       this.findPreference(PREFERENCE_CATEGORY_CHATS)
           .setSummary(ChatsPreferenceFragment.getSummary(getActivity()));
     }
@@ -168,9 +154,6 @@ public class ApplicationPreferencesActivity extends AuthenticationRequiredAction
         switch (category) {
         case PREFERENCE_CATEGORY_NOTIFICATIONS:
           fragment = new NotificationsPreferenceFragment();
-          break;
-        case PREFERENCE_CATEGORY_APPEARANCE:
-          fragment = new AppearancePreferenceFragment();
           break;
         case PREFERENCE_CATEGORY_CHATS:
           fragment = new ChatsPreferenceFragment();

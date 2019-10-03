@@ -5,63 +5,6 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:minHeight="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        android:theme="@style/TextSecure.LightActionBar">
-
-        <LinearLayout android:layout_width="match_parent"
-                      android:layout_height="match_parent"
-                      android:orientation="horizontal"
-                      android:gravity="center_vertical">
-
-            <io.forsta.librelay.components.AvatarImageView
-                android:id="@+id/avatar"
-                android:foreground="@drawable/contact_photo_background"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:cropToPadding="true"
-                app:inverted="true"
-                android:visibility="gone"/>
-
-            <LinearLayout android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:orientation="vertical"
-                          android:paddingLeft="10dp">
-
-                <io.forsta.librelay.components.emoji.EmojiTextView
-                    android:id="@+id/name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:transitionName="thread_prferences"
-                    style="@style/TextSecure.TitleTextStyle"
-                    tools:ignore="UnusedAttribute" />
-
-                <TextView android:id="@+id/blocked_indicator"
-                          android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:text="@string/recipient_preference_activity__blocked"
-                          android:textSize="12sp"
-                          android:textStyle="bold"
-                          android:textColor="?recipient_preference_blocked"
-                          android:textAllCaps="true"
-                          android:background="@drawable/blocked_indicator_background"
-                          android:paddingTop="3dp"
-                          android:paddingBottom="3dp"
-                          android:paddingLeft="5dp"
-                          android:paddingRight="5dp"
-                          android:layout_marginTop="2dp"
-                          tools:ignore="UnusedAttribute" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-    </android.support.v7.widget.Toolbar>
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -90,7 +33,7 @@
             android:layout_height="40dp"
             android:src="@drawable/check"
             android:visibility="gone"
-            android:background="@color/forsta_pop"
+            android:background="@color/colorPop"
             android:layout_marginLeft="10dp"/>
     </LinearLayout>
     <TextView style="@style/TextAppearance.AppCompat.Subhead"

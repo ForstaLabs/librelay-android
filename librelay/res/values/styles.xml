@@ -26,21 +26,10 @@
     </style>
 
     <!-- ActionBar styles -->
-    <style name="TextSecure.DarkActionBar"
-           parent="@style/Widget.AppCompat.ActionBar">
-        <item name="background">@color/forsta_primary_dark</item>
-        <item name="android:icon">@drawable/actionbar_icon</item>
-        <item name="icon">@drawable/actionbar_icon</item>
-        <item name="logo">@drawable/actionbar_icon</item>
-        <item name="android:popupTheme">@style/ThemeOverlay.AppCompat.Dark</item>
-        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Dark</item>
-        <item name="titleTextStyle">@style/TextSecure.TitleTextStyle</item>
-        <item name="subtitleTextStyle">@style/TextSecure.SubtitleTextStyle</item>
-    </style>
 
     <style name="TextSecure.LightActionBar"
            parent="@style/Widget.AppCompat.ActionBar">
-        <item name="background">@color/forsta_primary_dark</item>
+        <item name="background">@color/colorPrimary</item>
         <item name="elevation">2dp</item>
         <item name="logo">@drawable/actionbar_icon</item>
         <item name="icon">@drawable/actionbar_icon</item>
@@ -56,20 +45,14 @@
         <item name="elevation">0dp</item>
     </style>
 
-    <style name="TextSecure.DarkActionBar.TabBar"
-        parent="@style/Widget.AppCompat.ActionBar.TabBar">
-        <item name="background">@color/forsta_primary_dark</item>
-        <item name="android:background">@color/forsta_primary_dark</item>
-    </style>
-
     <style name="TextSecure.LightActionBar.TabBar"
         parent="@style/Widget.AppCompat.ActionBar.TabBar">
-        <item name="android:background">@color/forsta_primary_dark</item>
-        <item name="background">@color/forsta_primary_dark</item>
+        <item name="android:background">@color/colorPrimary</item>
+        <item name="background">@color/colorPrimary</item>
     </style>
 
     <style name="TextSecure.TitleTextStyle" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
-        <item name="android:textColor">@color/forsta_primary</item>
+        <item name="android:textColor">@color/white</item>
         <item name="android:textColorHint">#BFffffff</item>
     </style>
 
@@ -80,7 +63,7 @@
     <style name="TextSecure.IntroActionBar" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
         <item name="background">@null</item>
         <item name="icon">@android:color/transparent</item>
-        <item name="colorButtonNormal">@color/textsecure_primary</item>
+        <item name="colorButtonNormal">@color/colorPrimary</item>
     </style>
 
     <style name="transparent_progress">

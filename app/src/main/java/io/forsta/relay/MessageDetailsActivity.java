@@ -55,7 +55,6 @@ import io.forsta.librelay.recipients.RecipientFactory;
 import io.forsta.librelay.recipients.Recipients;
 import io.forsta.librelay.util.DateUtils;
 import io.forsta.librelay.util.DynamicLanguage;
-import io.forsta.librelay.util.DynamicTheme;
 import io.forsta.librelay.util.ExpirationUtil;
 import io.forsta.librelay.util.Util;
 
@@ -84,14 +83,12 @@ public class MessageDetailsActivity extends AuthenticationRequiredActionBarActiv
   private ListView         recipientsList;
   private LayoutInflater   inflater;
 
-  private DynamicTheme     dynamicTheme    = new DynamicTheme();
   private DynamicLanguage  dynamicLanguage = new DynamicLanguage();
 
   private boolean running;
 
   @Override
   protected void onPreCreate() {
-    dynamicTheme.onCreate(this);
     dynamicLanguage.onCreate(this);
   }
 
@@ -109,7 +106,6 @@ public class MessageDetailsActivity extends AuthenticationRequiredActionBarActiv
   @Override
   protected void onResume() {
     super.onResume();
-    dynamicTheme.onResume(this);
     dynamicLanguage.onResume(this);
     getSupportActionBar().setTitle(R.string.AndroidManifest__message_details);
 

@@ -7,19 +7,16 @@ import io.forsta.relay.AuthenticationRequiredActionBarActivity;
 
 import io.forsta.librelay.DeviceListFragment;
 import io.forsta.librelay.util.DynamicLanguage;
-import io.forsta.librelay.util.DynamicTheme;
 
 public class DeviceActivity extends AuthenticationRequiredActionBarActivity {
   private static final String TAG = DeviceActivity.class.getSimpleName();
 
-  private final DynamicTheme    dynamicTheme    = new DynamicTheme();
   private final DynamicLanguage dynamicLanguage = new DynamicLanguage();
 
   private DeviceListFragment deviceListFragment;
 
   @Override
   public void onPreCreate() {
-    dynamicTheme.onCreate(this);
     dynamicLanguage.onCreate(this);
   }
 
@@ -35,7 +32,6 @@ public class DeviceActivity extends AuthenticationRequiredActionBarActivity {
   @Override
   public void onResume() {
     super.onResume();
-    dynamicTheme.onResume(this);
     dynamicLanguage.onResume(this);
   }
 

@@ -44,7 +44,6 @@ import io.forsta.librelay.media.PartAuthority;
 import io.forsta.librelay.providers.PersistentBlobProvider;
 import io.forsta.librelay.recipients.Recipients;
 import io.forsta.librelay.util.DynamicLanguage;
-import io.forsta.librelay.util.DynamicTheme;
 import io.forsta.librelay.util.FileUtils;
 import io.forsta.librelay.util.MediaUtil;
 import io.forsta.librelay.util.ViewUtil;
@@ -59,7 +58,6 @@ public class ShareActivity extends AuthenticationRequiredActionBarActivity
 {
   private static final String TAG = ShareActivity.class.getSimpleName();
 
-  private final DynamicTheme dynamicTheme    = new DynamicTheme   ();
   private final DynamicLanguage dynamicLanguage = new DynamicLanguage();
 
   private ViewGroup    fragmentContainer;
@@ -70,7 +68,6 @@ public class ShareActivity extends AuthenticationRequiredActionBarActivity
 
   @Override
   protected void onPreCreate() {
-    dynamicTheme.onCreate(this);
     dynamicLanguage.onCreate(this);
   }
 
@@ -96,7 +93,6 @@ public class ShareActivity extends AuthenticationRequiredActionBarActivity
   @Override
   public void onResume() {
     super.onResume();
-    dynamicTheme.onResume(this);
     dynamicLanguage.onResume(this);
     getSupportActionBar().setTitle(io.forsta.librelay.R.string.ShareActivity_share_with);
   }

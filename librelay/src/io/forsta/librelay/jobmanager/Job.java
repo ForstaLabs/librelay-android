@@ -30,6 +30,7 @@ public abstract class Job extends Worker implements Serializable {
   static final String KEY_RETRY_COUNT        = "Job_retry_count";
   static final String KEY_RETRY_UNTIL        = "Job_retry_until";
   static final String KEY_SUBMIT_TIME        = "Job_submit_time";
+  static final String KEY_FAILED             = "Job_failed";
   static final String KEY_REQUIRES_NETWORK   = "Job_requires_network";
 
   private JobParameters parameters;
@@ -75,31 +76,23 @@ public abstract class Job extends Worker implements Serializable {
       ((ContextDependent)this).setContext(getApplicationContext());
     }
 
-    boolean foregroundRunning = false;
-
     try {
       initialize(new SafeData(data));
 
-      if (withinRetryLimits(data)) {
-        if (requirementsMet(data)) {
-          if (needsForegroundService(data)) {
-            Log.i(TAG, "Running a foreground service with description '" + getDescription() + "' to aid in job execution." + logSuffix());
-            GenericForegroundService.startForegroundTask(getApplicationContext(), getDescription());
-            foregroundRunning = true;
-          }
-
-          onRun();
-
-          log("Successfully completed." + logSuffix());
-          return Result.SUCCESS;
-        } else {
-          log("Retrying due to unmet requirements." + logSuffix());
-          return retry();
-        }
-      } else {
+      if (!withinRetryLimits(data)) {
         warn("Failing after hitting the retry limit." + logSuffix());
         return cancel();
       }
+
+      if (!requirementsMet(data)) {
+        log("Retrying due to unmet requirements." + logSuffix());
+        return retry();
+      }
+
+      onRun();
+
+      log("Successfully completed." + logSuffix());
+      return Result.SUCCESS;
     } catch (Exception e) {
       if (onShouldRetry(e)) {
         log("Retrying after a retryable exception." + logSuffix(), e);
@@ -107,11 +100,6 @@ public abstract class Job extends Worker implements Serializable {
       }
       warn("Failing due to an exception." + logSuffix(), e);
       return cancel();
-    } finally {
-      if (foregroundRunning) {
-        Log.i(TAG, "Stopping the foreground service." + logSuffix());
-        GenericForegroundService.stopForegroundTask(getApplicationContext());
-      }
     }
   }
 
@@ -128,14 +116,6 @@ public abstract class Job extends Worker implements Serializable {
     }
 
     onAdded();
-  }
-
-  /**
-   * @return A string that represents what the task does. Will be shown in a foreground notification
-   *         if necessary.
-   */
-  protected String getDescription() {
-    return getApplicationContext().getString(R.string.Job_working_in_the_background);
   }
 
   /**
@@ -215,13 +195,6 @@ public abstract class Job extends Worker implements Serializable {
     }
 
     return System.currentTimeMillis() < retryUntil;
-  }
-
-  private boolean needsForegroundService(@NonNull Data data) {
-    NetworkRequirement networkRequirement = new NetworkRequirement(getApplicationContext());
-    boolean            requiresNetwork    = data.getBoolean(KEY_REQUIRES_NETWORK, false);
-
-    return requiresNetwork && !networkRequirement.isPresent();
   }
 
   private void log(@NonNull String message) {
