@@ -65,14 +65,12 @@ public class MediaPreviewActivity extends AuthenticationRequiredActionBarActivit
   @Override
   protected void onCreate(Bundle bundle) {
     super.onCreate(bundle);
-    this.setTheme(R.style.Application_LightNoActionBar);
     dynamicLanguage.onCreate(this);
 
     getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
     getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
         WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     setContentView(R.layout.media_preview_activity);
 
     initializeViews();
@@ -97,6 +95,7 @@ public class MediaPreviewActivity extends AuthenticationRequiredActionBarActivit
     getSupportActionBar().setTitle(recipient == null ? getString(R.string.MediaPreviewActivity_you)
         : recipient.toShortString());
     getSupportActionBar().setSubtitle(relativeTimeSpan);
+    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
   }
 
   @Override
