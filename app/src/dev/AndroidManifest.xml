@@ -20,7 +20,7 @@
             android:name="io.forsta.relay.receivers.NotificationReplyReceiver"
             android:exported="false">
             <intent-filter>
-                <action android:name="io.forsta.librelay.dev.notifications.REPLY_EVENT"/>
+                <action android:name="io.forsta.librelay.dev.notifications.REPLY"/>
             </intent-filter>
         </receiver>
     </application>

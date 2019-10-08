@@ -23,14 +23,10 @@ public class MultipleRecipientNotificationBuilder extends AbstractNotificationBu
   public MultipleRecipientNotificationBuilder(Context context, NotificationPrivacyPreference privacy) {
     super(context, privacy);
 
-    setColor(context.getResources().getColor(R.color.textsecure_primary));
-    setSmallIcon(R.drawable.icon_notification);
     setContentTitle(context.getString(R.string.app_name));
-    // TODO Reference to ConversationListActivity needs to be removed
-//    setContentIntent(PendingIntent.getActivity(context, 0, new Intent(context, ConversationListActivity.class), 0));
     setCategory(NotificationCompat.CATEGORY_MESSAGE);
     setPriority(NotificationCompat.PRIORITY_HIGH);
-    setDeleteIntent(PendingIntent.getBroadcast(context, 0, new Intent(context, MessageNotifier.DeleteReceiver.class), 0));
+    setContentIntent(PendingIntent.getBroadcast(context, 0, new Intent(context, ReplyReceiver.class), 0));
   }
 
   public void setMessageCount(int messageCount, int threadCount) {

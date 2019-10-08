@@ -20,9 +20,6 @@ import java.util.List;
 import io.forsta.librelay.database.RecipientPreferenceDatabase;
 
 public class NotificationState {
-
-  private static final String REPLY_EVENT = BuildConfig.APPLICATION_ID + "." + BuildConfig.FLAVOR + ".notifications.REPLY_EVENT";
-
   private final LinkedList<NotificationItem> notifications = new LinkedList<>();
   private final LinkedHashSet<Long> threads = new LinkedHashSet<>();
   private boolean notify = false;
@@ -119,13 +116,12 @@ public class NotificationState {
     return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
   }
 
-  public PendingIntent getQuickReplyIntent(Context context, long threadId) {
+  public PendingIntent getReplyIntent(Context context, long threadId) {
     if (threads.size() != 1) return null;
 
-    Intent intent = new Intent(REPLY_EVENT);
-    intent.putExtra("thread_id", threadId);
+    Intent intent = new Intent(ReplyReceiver.REPLY_ACTION);
+    intent.putExtra(ReplyReceiver.THREAD_ID, threadId);
     intent.setPackage(context.getPackageName());
-
     return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
   }
 

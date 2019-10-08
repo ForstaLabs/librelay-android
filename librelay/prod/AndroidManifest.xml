@@ -42,7 +42,11 @@
                     <action android:name="io.forsta.librelay.notifications.CLEAR"/>
                 </intent-filter>
             </receiver>
-
+			<receiver android:name="io.forsta.librelay.notifications.ReplyReceiver">
+				<intent-filter>
+					<action android:name="io.forsta.librelay.notifications.REPLY"/>
+				</intent-filter>
+			</receiver>
             <receiver
                 android:name="io.forsta.librelay.service.RegistrationReceiver"
                 android:exported="false">
@@ -55,8 +59,6 @@
                     <action android:name="io.forsta.librelay.DIRECTORY_REFRESH"/>
                     <action android:name="android.intent.action.BOOT_COMPLETED"/>
                 </intent-filter>
-            </receiver>
-            <receiver android:name="io.forsta.librelay.notifications.MessageNotifier$DeleteReceiver">
             </receiver>
         </application>
 </manifest>

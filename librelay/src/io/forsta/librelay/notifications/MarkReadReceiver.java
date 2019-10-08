@@ -29,14 +29,13 @@ public class MarkReadReceiver extends BroadcastReceiver {
   @Override
   public void onReceive(final Context context, Intent intent)
   {
+    Log.w(TAG, "Received CLEAR_ACTION");
     if (!CLEAR_ACTION.equals(intent.getAction()))
       return;
 
     final long[] threadIds = intent.getLongArrayExtra(THREAD_IDS_EXTRA);
 
     if (threadIds != null) {
-      Log.w("TAG", "threadIds length: " + threadIds.length);
-
       ((NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE))
                                    .cancel(MessageNotifier.NOTIFICATION_ID);
 
