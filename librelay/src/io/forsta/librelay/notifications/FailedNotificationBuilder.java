@@ -1,8 +1,6 @@
 package io.forsta.librelay.notifications;
 
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.BitmapFactory;
 
 import io.forsta.librelay.R;
@@ -14,7 +12,7 @@ public class FailedNotificationBuilder extends AbstractNotificationBuilder {
   public FailedNotificationBuilder(Context context, NotificationPrivacyPreference privacy) {
     super(context, privacy);
 
-    setSmallIcon(R.drawable.icon_notification);
+    setSmallIcon(R.drawable.ic_notifications_gray);
     setLargeIcon(BitmapFactory.decodeResource(context.getResources(),
                                               R.drawable.ic_action_warning_red));
     setContentTitle(context.getString(R.string.MessageNotifier_message_delivery_failed));
