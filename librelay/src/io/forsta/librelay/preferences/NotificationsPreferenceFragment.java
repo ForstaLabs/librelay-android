@@ -12,6 +12,7 @@ import android.preference.MultiSelectListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 
 import java.util.ArrayList;
@@ -63,7 +64,7 @@ public class NotificationsPreferenceFragment extends ListSummaryPreferenceFragme
   @Override
   public void onResume() {
     super.onResume();
-//    ((ApplicationPreferencesActivity) getActivity()).getSupportActionBar().setTitle(R.string.preferences__notifications);
+    ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(R.string.preferences__notifications);
   }
 
   private class RingtoneSummaryListener implements Preference.OnPreferenceChangeListener {

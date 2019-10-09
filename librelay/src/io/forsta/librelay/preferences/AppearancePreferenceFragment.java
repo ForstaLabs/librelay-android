@@ -3,6 +3,7 @@ package io.forsta.librelay.preferences;
 import android.content.Context;
 import android.os.Bundle;
 import android.preference.ListPreference;
+import android.support.v7.app.AppCompatActivity;
 
 import io.forsta.librelay.R;
 import io.forsta.librelay.util.TextSecurePreferences;
@@ -25,19 +26,17 @@ public class AppearancePreferenceFragment extends ListSummaryPreferenceFragment 
   @Override
   public void onStart() {
     super.onStart();
-//    getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener((ApplicationPreferencesActivity)getActivity());
   }
 
   @Override
   public void onResume() {
     super.onResume();
-//    ((ApplicationPreferencesActivity) getActivity()).getSupportActionBar().setTitle(R.string.preferences__appearance);
+    ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.preferences__appearance);
   }
 
   @Override
   public void onStop() {
     super.onStop();
-//    getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener((ApplicationPreferencesActivity) getActivity());
   }
 
   public static CharSequence getSummary(Context context) {
