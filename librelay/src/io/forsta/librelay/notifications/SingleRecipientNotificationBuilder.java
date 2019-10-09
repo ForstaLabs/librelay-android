@@ -47,9 +47,6 @@ public class SingleRecipientNotificationBuilder extends AbstractNotificationBuil
                                             @NonNull NotificationPrivacyPreference privacy)
   {
     super(context, privacy);
-
-    setSmallIcon(R.drawable.icon_notification);
-    setColor(context.getResources().getColor(R.color.textsecure_primary));
     setCategory(NotificationCompat.CATEGORY_MESSAGE);
 
     if (!NotificationChannels.supported()) {

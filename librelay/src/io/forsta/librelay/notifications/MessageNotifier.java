@@ -159,7 +159,7 @@ public class MessageNotifier {
     if (timestamp != 0) builder.setWhen(timestamp);
 
     builder.addActions(notificationState.getMarkAsReadIntent(context),
-        notificationState.getQuickReplyIntent(context, notifications.get(0).getThreadId()));
+        notificationState.getReplyIntent(context, notifications.get(0).getThreadId()));
 
     ListIterator<NotificationItem> iterator = notifications.listIterator(notifications.size());
 
@@ -296,14 +296,6 @@ public class MessageNotifier {
       // NOTE :: I don't totally trust this thing, so I'm catching
       // everything.
       Log.w("MessageNotifier", t);
-    }
-  }
-
-  public static class DeleteReceiver extends BroadcastReceiver {
-
-    @Override
-    public void onReceive(Context context, Intent intent) {
-
     }
   }
 
