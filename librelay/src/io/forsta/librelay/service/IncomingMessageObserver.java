@@ -86,9 +86,9 @@ public class IncomingMessageObserver implements ConstraintObserver.Notifier {
     Log.d(TAG, String.format("Network requirement: %s, app visible: %s, gcm disabled: %b",
         networkConstraint.isMet(), appVisible, false));
 
-    return TextSecurePreferences.isPushRegistered(context)      &&
+    return TextSecurePreferences.isPushRegistered(context) &&
         TextSecurePreferences.isWebsocketRegistered(context) &&
-        (appVisible)                        &&
+        appVisible &&
         networkConstraint.isMet();
   }
 

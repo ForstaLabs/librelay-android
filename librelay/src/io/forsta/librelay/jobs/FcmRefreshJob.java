@@ -69,8 +69,6 @@ public class FcmRefreshJob extends ContextJob {
 
   @Override
   public void onRun() throws Exception {
-    if (TextSecurePreferences.isFcmDisabled(context)) return;
-
     Log.w(TAG, "FCM Reregistering...");
 
     int result = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(context);
