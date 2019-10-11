@@ -29,7 +29,7 @@ public abstract class AbstractNotificationBuilder extends NotificationCompat.Bui
     this.privacy = privacy;
 
     setColor(context.getResources().getColor(R.color.textsecure_primary));
-    setSmallIcon(R.drawable.ic_notifications_gray);
+    setSmallIcon(R.drawable.ic_message_white);
     setChannelId(NotificationChannels.getMessagesChannel(context));
     setLed();
   }

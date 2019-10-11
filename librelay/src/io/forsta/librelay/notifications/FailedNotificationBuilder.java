@@ -12,7 +12,7 @@ public class FailedNotificationBuilder extends AbstractNotificationBuilder {
   public FailedNotificationBuilder(Context context, NotificationPrivacyPreference privacy) {
     super(context, privacy);
 
-    setSmallIcon(R.drawable.ic_notifications_gray);
+    setSmallIcon(R.drawable.ic_message_white);
     setLargeIcon(BitmapFactory.decodeResource(context.getResources(),
                                               R.drawable.ic_action_warning_red));
     setContentTitle(context.getString(R.string.MessageNotifier_message_delivery_failed));
