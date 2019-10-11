@@ -7,6 +7,7 @@ import android.preference.Preference;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.preference.PreferenceFragment;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import io.forsta.librelay.R;
@@ -40,6 +41,7 @@ public class AdvancedPreferenceFragment extends PreferenceFragment {
   @Override
   public void onResume() {
     super.onResume();
+    ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.preferences__advanced);
   }
 
   public void setOnClickCallbacks(OnClickCallbacks callbacks) {

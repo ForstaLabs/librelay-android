@@ -34,17 +34,15 @@ public class IncomingMessageObserver implements ConstraintObserver.Notifier {
 
   private static final String TAG = IncomingMessageObserver.class.getSimpleName();
 
-  public  static final  int FOREGROUND_ID            = 313399;
-  private static final long REQUEST_TIMEOUT_MINUTES  = 1;
+  private static final long REQUEST_TIMEOUT_MINUTES = 1;
 
-  private static SignalServiceMessagePipe pipe             = null;
+  private static SignalServiceMessagePipe pipe = null;
 
   private final Context context;
   private final NetworkConstraint networkConstraint;
   private final SignalServiceMessageReceiver receiver;
 
   private boolean appVisible;
-
 
   public IncomingMessageObserver(@NonNull Context context) {
     this.context           = context;
@@ -53,10 +51,6 @@ public class IncomingMessageObserver implements ConstraintObserver.Notifier {
 
     new NetworkConstraintObserver(ApplicationContext.getInstance(context)).register(this);
     new MessageRetrievalThread().start();
-
-    if (TextSecurePreferences.isFcmDisabled(context)) {
-      ContextCompat.startForegroundService(context, new Intent(context, ForegroundService.class));
-    }
 
     ProcessLifecycleOwner.get().getLifecycle().addObserver(new DefaultLifecycleObserver() {
       @Override
@@ -89,14 +83,12 @@ public class IncomingMessageObserver implements ConstraintObserver.Notifier {
   }
 
   private synchronized boolean isConnectionNecessary() {
-    boolean isGcmDisabled = TextSecurePreferences.isFcmDisabled(context);
-
     Log.d(TAG, String.format("Network requirement: %s, app visible: %s, gcm disabled: %b",
-        networkConstraint.isMet(), appVisible, isGcmDisabled));
+        networkConstraint.isMet(), appVisible, false));
 
-    return TextSecurePreferences.isPushRegistered(context)      &&
+    return TextSecurePreferences.isPushRegistered(context) &&
         TextSecurePreferences.isWebsocketRegistered(context) &&
-        (appVisible || isGcmDisabled)                        &&
+        appVisible &&
         networkConstraint.isMet();
   }
 
@@ -165,30 +157,6 @@ public class IncomingMessageObserver implements ConstraintObserver.Notifier {
     public void uncaughtException(Thread t, Throwable e) {
       Log.w(TAG, "*** Uncaught exception!");
       Log.w(TAG, e);
-    }
-  }
-
-  public static class ForegroundService extends Service {
-
-    @Override
-    public @Nullable
-    IBinder onBind(Intent intent) {
-      return null;
-    }
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-      super.onStartCommand(intent, flags, startId);
-
-      NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), NotificationChannels.OTHER);
-      builder.setContentTitle(getApplicationContext().getString(R.string.MessageRetrievalService_forsta));
-      builder.setContentText(getApplicationContext().getString(R.string.MessageRetrievalService_background_connection_enabled));
-      builder.setPriority(NotificationCompat.PRIORITY_MIN);
-      builder.setWhen(0);
-      builder.setSmallIcon(R.drawable.ic_forsta_notification);
-      startForeground(FOREGROUND_ID, builder.build());
-
-      return Service.START_STICKY;
     }
   }
 }
