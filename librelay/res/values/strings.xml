@@ -24,12 +24,12 @@
     <string name="NotificationChannel_other">Other</string>
     <string name="NotificationChannel_missing_display_name">Unknown</string>
 
-    <string name="MessageRetrievalService_forsta">Relay Message Retrieval Service</string>
+    <string name="MessageRetrievalService_forsta">Message Retrieval Service</string>
     <string name="MessageRetrievalService_background_connection_enabled">Background connection enabled</string>
 
     <!-- Relay Strings -->
-    <string name="forsta_login_title">Login to Relay</string>
-    <string name="forsta_login_title_join">Join Relay</string>
+    <string name="forsta_login_title">Login</string>
+    <string name="forsta_login_title_join">Join</string>
     <string name="forsta_login_account_firstname_label">First Name</string>
     <string name="forsta_login_account_fullname_label">Full Name</string>
     <string name="forsta_login_account_username_label">Username</string>
@@ -79,9 +79,9 @@
     <string name="ApplicationPreferencesActivity_this_will_permanently_unlock_signal_and_message_notifications">This will permanently unlock Relay and message notifications.</string>
     <string name="ApplicationPreferencesActivity_disable">Disable</string>
     <string name="ApplicationPreferencesActivity_unregistering">Unregistering</string>
-    <string name="ApplicationPreferencesActivity_unregistering_from_signal_messages_and_calls">Unregistering from Relay messages...</string>
+    <string name="ApplicationPreferencesActivity_unregistering_from_signal_messages_and_calls">Unregistering...</string>
     <string name="ApplicationPreferencesActivity_disable_signal_messages_and_calls">Disable Relay messages?</string>
-    <string name="ApplicationPreferencesActivity_disable_signal_messages_and_calls_by_unregistering">Disable Relay messages by unregistering from the server. You will need to re-register your phone number to use them again in the future.</string>
+    <string name="ApplicationPreferencesActivity_disable_signal_messages_and_calls_by_unregistering">Disable messages by unregistering from the server. You will need to re-register your phone number to use them again in the future.</string>
     <string name="ApplicationPreferencesActivity_error_connecting_to_server">Error connecting to server!</string>
     <string name="ApplicationPreferencesActivity_sms_enabled">SMS Enabled</string>
     <string name="ApplicationPreferencesActivity_touch_to_change_your_default_sms_app">Touch to change your default SMS app</string>
@@ -148,7 +148,7 @@
 
     <!-- ContactsDatabase -->
     <string name="ContactsDatabase_message_s">Message %s</string>
-    <string name="ContactsDatabase_signal_call_s">Relay Call %s</string>
+    <string name="ContactsDatabase_signal_call_s">Call %s</string>
 
     <!-- ConversationItem -->
     <string name="ConversationItem_message_size_d_kb">Message size: %d KB</string>
@@ -316,23 +316,6 @@
     <!-- ShareActivity -->
     <string name="ShareActivity_share_with">Share with</string>
 
-    <!-- ExperienceUpgradeActivity -->
-    <string name="ExperienceUpgradeActivity_welcome_to_signal_dgaf">Welcome to Relay.</string>
-    <string name="ExperienceUpgradeActivity_textsecure_is_now_called_signal">Thanks for upgrading to the latest Relay.</string>
-    <string name="ExperienceUpgradeActivity_welcome_to_signal_excited">Welcome to Relay!</string>
-    <string name="ExperienceUpgradeActivity_textsecure_is_now_signal">Thanks for upgrading to the latest Relay.</string>
-    <string name="ExperienceUpgradeActivity_textsecure_is_now_signal_long">Thanks for upgrading to the latest Relay.</string>
-    <!-- ExportFragment -->
-    <string name="ExportFragment_export">Export</string>
-    <string name="ExportFragment_export_plaintext_to_storage">Export plaintext to storage?</string>
-    <string name="ExportFragment_warning_this_will_export_the_plaintext_contents">Warning, this will export the plaintext contents of your Relay messages to storage.</string>
-    <string name="ExportFragment_cancel">Cancel</string>
-    <string name="ExportFragment_exporting">Exporting</string>
-    <string name="ExportFragment_exporting_plaintext_to_storage">Exporting plaintext to storage...</string>
-    <string name="ExportFragment_error_unable_to_write_to_storage">Error, unable to write to storage.</string>
-    <string name="ExportFragment_error_while_writing_to_storage">Error while writing to storage.</string>
-    <string name="ExportFragment_export_successful">Export successful.</string>
-
     <!-- FcmRefreshJob -->
     <string name="GcmRefreshJob_Permanent_Signal_communication_failure">Permanent Relay communication failure!</string>
     <string name="GcmRefreshJob_Signal_was_unable_to_register_with_Google_Play_Services">Relay was unable to register with Google Play Services. Relay messages have been disabled, please try re-registering in Settings &gt; Advanced.</string>
@@ -358,40 +341,6 @@
     <!-- GroupMembersDialog -->
     <string name="GroupMembersDialog_me">Me</string>
 
-    <!-- ImportExportActivity -->
-    <string name="ImportExportActivity_import">Import</string>
-    <string name="ImportExportActivity_export">Export</string>
-
-    <!-- ImportFragment -->
-    <string name="ImportFragment_import_system_sms_database">Import system SMS database?</string>
-    <string name="ImportFragment_this_will_import_messages_from_the_system">This will import
-        messages from the system\'s default SMS database to Relay. If you\'ve previously
-        imported the system\'s SMS database, importing again will result in duplicated messages.
-    </string>
-    <string name="ImportFragment_import">Import</string>
-    <string name="ImportFragment_cancel">Cancel</string>
-    <string name="ImportFragment_restore_encrypted_backup">Restore encrypted backup?</string>
-    <string name="ImportFragment_restoring_an_encrypted_backup_will_completely_replace_your_existing_keys">
-        Restoring an encrypted backup will completely replace your existing keys, preferences, and
-        messages. You will lose any information that\'s in your current Relay install but not
-        in the backup.
-    </string>
-    <string name="ImportFragment_restore">Restore</string>
-    <string name="ImportFragment_import_plaintext_backup">Import plaintext backup?</string>
-    <string name="ImportFragment_this_will_import_messages_from_a_plaintext_backup">This will import
-        messages from a plaintext backup. If you\'ve previously imported this backup,
-        importing again will result in duplicated messages.
-    </string>
-    <string name="ImportFragment_importing">Importing</string>
-    <string name="ImportFragment_import_plaintext_backup_elipse">Importing plaintext backup...</string>
-    <string name="ImportFragment_no_plaintext_backup_found">No plaintext backup found!</string>
-    <string name="ImportFragment_error_importing_backup">Error importing backup!</string>
-    <string name="ImportFragment_import_complete">Import complete!</string>
-    <string name="ImportFragment_restoring">Restoring</string>
-    <string name="ImportFragment_restoring_encrypted_backup">Restoring encrypted backup...</string>
-    <string name="ImportFragment_no_encrypted_backup_found">No encrypted backup found!</string>
-    <string name="ImportFragment_restore_complete">Restore complete!</string>
-
     <!-- InputPanel -->
     <string name="InputPanel_tap_and_hold_to_record_a_voice_message_release_to_send">Tap and hold to record a voice message, release to send</string>
 
@@ -401,31 +350,6 @@
     <string name="QuoteView_photo">Photo</string>
     <string name="QuoteView_document">Document</string>
     <string name="QuoteView_you">You</string>
-
-    <!-- InviteActivity -->
-    <string name="InviteActivity_share">Share</string>
-    <string name="InviteActivity_choose_contacts">Choose contacts</string>
-    <string name="InviteActivity_cancel">Cancel</string>
-    <string name="InviteActivity_sending">Sending...</string>
-    <string name="InviteActivity_heart_content_description">Heart</string>
-    <string name="InviteActivity_invitations_sent">Invitations sent!</string>
-    <string name="InviteActivity_invite_to_signal">Invite to Relay</string>
-    <plurals name="InviteActivity_send_sms_to_friends">
-        <item quantity="one">SEND SMS TO 1 FRIEND</item>
-        <item quantity="other">SEND SMS TO %d FRIENDS</item>
-    </plurals>
-    <plurals name="InviteActivity_send_sms_invites">
-        <item quantity="one">Send 1 SMS invite?</item>
-        <item quantity="other">Send %d SMS invites?</item>
-    </plurals>
-    <string name="InviteActivity_lets_switch_to_signal">Please download the Relay secure messaging app for encrypted messaging. %1$s</string>
-    <string name="InviteActivity_no_app_to_share_to">It looks like you don\'t have any apps to share to.</string>
-    <string name="InviteActivity_invite_a_friend">Invite a friend to use Relay Relay.</string>
-
-    <!-- KeyScanningActivity -->
-    <string name="KeyScanningActivity_no_scanned_key_found_exclamation">No scanned key found!</string>
-    <string name="KeyScanningActivity_install_barcode_Scanner">Install Barcode Scanner?</string>
-    <string name="KeyScanningActivity_this_application_requires_barcode_scanner_would_you_like_to_install_it">Relay needs Barcode Scanner for QR codes.</string>
 
     <!-- MessageDetailsRecipient -->
     <string name="MessageDetailsRecipient_failed_to_send">Failed to send</string>
@@ -527,7 +451,7 @@
     <string name="RecipientPreferenceActivity_enabled">Enabled</string>
     <string name="RecipientPreferenceActivity_disabled">Disabled</string>
 
-    <!-- RedPhone -->
+    <!-- Calling -->
     <string name="RedPhone_answering">Answering</string>
     <string name="RedPhone_ending_call">Ending call</string>
     <string name="RedPhone_dialing">Dialing</string>

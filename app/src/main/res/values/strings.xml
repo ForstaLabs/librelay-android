@@ -2,4 +2,7 @@
     <string name="app_name">ForstaLabs</string>
     <string name="relay_main_button">Open Relay</string>
     <string name="relay_dashbboard_button">Open Relay</string>
+
+    <string name="forsta_login_title">Login to Relay</string>
+    <string name="forsta_login_title_join">Join Relay</string>
 </resources>
