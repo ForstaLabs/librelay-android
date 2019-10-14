@@ -44,59 +44,10 @@ Atlas User and tag directory storage and services
 - Tag sync services
 
 ### Video Calling
-The WebRtcCallService provides and full implmentation of the webrtc 'signaling' messages that are required to setup WebRTC connections between clients.
+The WebRtcCallService provides a full implmentation of the webrtc 'signaling' messages that are required to setup WebRTC connections between clients.
 
 ## Installation
-
-#### For downloading from repository
-Modify build.gradle. Add reference to jitpack.io:
-```
-repositories {
-    ...
-    maven {
-        url 'https://jitpack.io'
-    }
-    ...
-}
-
-dependencies {
-   ...
-   compile 'com.github.ForstaLabs:librelay-android:v1.0.0.0'
-   ...
-}
-```
-
-#### For downloading from source:
-Clone librelay-android repo
-git clone git@github.com:ForstaLabs/librelay-android.git
-
-In AndroidStudio.
-Add librelay Module.
-- File > New > Import Module
-- Select path to librelay-android project files and select folder 'librelay'.
-
-Check settings.gradle to make sure new Module has been added
-```
-include ':app', ":librelay"
-```
-If not, add the ":librelay" module.
-
-Add dependency for librelay module.
-- File > Project Structure
-- Select application module
-- Select Dependencies tab
-- Click +
-- Select 'Module dependency'
-- Select ':librelay'
-
-Make sure your application's build.gradle has included the new dependency
-```
-dependencies {
-    implementation project(':librelay')
-}
-```
-
-You will also need to include repositories used in the librelay library in order to build locally
+You will need to include repositories used in the librelay library in order to build
 ```
 repositories {
         maven {
@@ -119,7 +70,16 @@ repositories {
         }
 }
 ```        
-Current beta release also require the following changes to your application's build.gradle
+Add the library dependency into your application's build.gradle file.
+```
+dependencies {
+   ...
+   implementation 'com.github.ForstaLabs:librelay-android:v1.0.6'
+   ...
+}
+```
+
+Current beta release also requires the following changes to your application's build.gradle
 ```
 android {
     ...
@@ -138,3 +98,14 @@ dependencies {
     ...
 }
 ```
+
+Finally, your projects ApplicationContext will need to extend from io.forsta.librelay.ApplicattionContext.java
+```
+public class ApplicationContext extends io.forsta.librelay.ApplicationContext {}
+```
+
+## License
+Licensed under the GPLv3: http://www.gnu.org/licenses/gpl-3.0.html
+
+- Copyright 2014-2016 Open Whisper Systems
+- Copyright 2017-2019 Forsta, Inc.
