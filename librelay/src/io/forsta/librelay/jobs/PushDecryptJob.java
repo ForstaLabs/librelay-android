@@ -16,6 +16,7 @@ import io.forsta.librelay.atlas.model.RelayContent;
 import io.forsta.librelay.database.DbFactory;
 import io.forsta.librelay.database.MessageDatabase;
 import io.forsta.librelay.messaging.MessageFactory;
+import io.forsta.librelay.notifications.NotificationUpdateReceiver;
 import io.forsta.librelay.recipients.Recipient;
 import io.forsta.librelay.service.ForstaServiceAccountManager;
 import io.forsta.librelay.util.InvalidMessagePayloadException;
@@ -416,6 +417,7 @@ public class PushDecryptJob extends ContextJob {
               attachment.getAttachmentId()));
     }
 
+    context.sendBroadcast(NotificationUpdateReceiver.getUpdateIntent(context, messageAndThreadId.second));
     MessageNotifier.updateNotification(context, messageAndThreadId.second);
   }
 

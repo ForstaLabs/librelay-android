@@ -23,6 +23,13 @@
                 <action android:name="io.forsta.librelay.dev.notifications.REPLY"/>
             </intent-filter>
         </receiver>
+        <receiver
+            android:name="io.forsta.librelay.notifications.NotificationUpdateReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="io.forsta.librelay.dev.notifications.UPDATE"/>
+            </intent-filter>
+        </receiver>
         <receiver android:name="io.forsta.librelay.service.DirectoryRefreshListener">
             <intent-filter>
                 <action android:name="io.forsta.librelay.dev.DIRECTORY_REFRESH"/>

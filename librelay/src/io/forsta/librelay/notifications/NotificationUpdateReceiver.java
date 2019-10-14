@@ -18,11 +18,11 @@ public class NotificationUpdateReceiver extends BroadcastReceiver {
   public void onReceive(Context context, Intent intent) {
     Log.w(TAG, "Notification update received");
     long threadId = intent.getLongExtra(THREAD_ID, -1);
-    if (threadId > 0) {
-      MessageNotifier.updateNotification(context, threadId);
-    } else {
-      MessageNotifier.updateNotification(context);
-    }
+//    if (threadId > 0) {
+//      MessageNotifier.updateNotification(context, threadId);
+//    } else {
+//      MessageNotifier.updateNotification(context);
+//    }
   }
 
   public static Intent getUpdateIntent(Context context, long threadId) {
