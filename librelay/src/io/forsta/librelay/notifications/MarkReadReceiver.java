@@ -22,8 +22,8 @@ import java.util.List;
 
 public class MarkReadReceiver extends BroadcastReceiver {
 
-  private static final String TAG              = MarkReadReceiver.class.getSimpleName();
-  public static final  String CLEAR_ACTION     = BuildConfig.APPLICATION_ID + "." + BuildConfig.FLAVOR + ".notifications.CLEAR";
+  private static final String TAG = MarkReadReceiver.class.getSimpleName();
+  public static final  String CLEAR_ACTION = BuildConfig.APPLICATION_ID + "." + BuildConfig.FLAVOR + ".notifications.CLEAR";
   public static final  String THREAD_IDS_EXTRA = "thread_ids";
 
   @Override

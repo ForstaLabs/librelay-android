@@ -125,8 +125,6 @@
         <service
             android:name="io.forsta.librelay.service.RegistrationService"
             android:enabled="true"/>
-        <service android:enabled="true"
-            android:name="io.forsta.librelay.service.IncomingMessageObserver$ForegroundService"/>
         <service
             android:name="io.forsta.librelay.service.AccountAuthenticatorService"
             android:exported="true">

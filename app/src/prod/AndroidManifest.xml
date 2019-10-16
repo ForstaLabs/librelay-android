@@ -6,14 +6,14 @@
             android:name="io.forsta.relay.receivers.RegistrationReceiver"
             android:exported="false">
             <intent-filter>
-                <action android:name="io.forsta.librelay.REGISTRATION_EVENT"/>
+                <action android:name="io.forsta.librelay.prod.REGISTRATION_EVENT"/>
             </intent-filter>
         </receiver>
         <receiver
             android:name="io.forsta.relay.receivers.FirebaseReceiver"
             android:exported="false">
             <intent-filter>
-                <action android:name="io.forsta.librelay.FCM_EVENT"/>
+                <action android:name="io.forsta.librelay.prod.FCM_EVENT"/>
             </intent-filter>
         </receiver>
 
@@ -21,7 +21,7 @@
             android:name="io.forsta.relay.receivers.NotificationReplyReceiver"
             android:exported="false">
             <intent-filter>
-                <action android:name="io.forsta.librelay.notifications.REPLY"/>
+                <action android:name="io.forsta.librelay.prod.notifications.REPLY"/>
             </intent-filter>
         </receiver>
     </application>

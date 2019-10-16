@@ -16,7 +16,6 @@ import io.forsta.librelay.atlas.model.RelayContent;
 import io.forsta.librelay.database.DbFactory;
 import io.forsta.librelay.database.MessageDatabase;
 import io.forsta.librelay.messaging.MessageFactory;
-import io.forsta.librelay.recipients.Recipient;
 import io.forsta.librelay.service.ForstaServiceAccountManager;
 import io.forsta.librelay.util.InvalidMessagePayloadException;
 import io.forsta.librelay.BuildConfig;

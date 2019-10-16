@@ -39,24 +39,24 @@
                 android:enabled="true"
                 android:exported="true">
                 <intent-filter>
-                    <action android:name="io.forsta.librelay.notifications.CLEAR"/>
+                    <action android:name="io.forsta.librelay.prod.notifications.CLEAR"/>
                 </intent-filter>
             </receiver>
 			<receiver android:name="io.forsta.librelay.notifications.ReplyReceiver">
 				<intent-filter>
-					<action android:name="io.forsta.librelay.notifications.REPLY"/>
+					<action android:name="io.forsta.librelay.prod.notifications.REPLY"/>
 				</intent-filter>
 			</receiver>
             <receiver
                 android:name="io.forsta.librelay.service.RegistrationReceiver"
                 android:exported="false">
                 <intent-filter>
-                    <action android:name="io.forsta.librelay.REGISTRATION_EVENT"/>
+                    <action android:name="io.forsta.librelay.prod.REGISTRATION_EVENT"/>
                 </intent-filter>
             </receiver>
             <receiver android:name="io.forsta.librelay.service.DirectoryRefreshListener">
                 <intent-filter>
-                    <action android:name="io.forsta.librelay.DIRECTORY_REFRESH"/>
+                    <action android:name="io.forsta.librelay.prod.DIRECTORY_REFRESH"/>
                     <action android:name="android.intent.action.BOOT_COMPLETED"/>
                 </intent-filter>
             </receiver>

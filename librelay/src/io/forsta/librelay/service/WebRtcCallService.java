@@ -1473,8 +1473,7 @@ public class WebRtcCallService extends Service implements BluetoothStateManager.
   }
 
   private void startCallCardActivity() {
-    Intent activityIntent = new Intent();
-    activityIntent.setClass(this, WebRtcCallActivity.class);
+    Intent activityIntent = new Intent(this, WebRtcCallActivity.class);
     activityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     this.startActivity(activityIntent);
   }

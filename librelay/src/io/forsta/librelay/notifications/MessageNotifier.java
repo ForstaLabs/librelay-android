@@ -73,7 +73,6 @@ public class MessageNotifier {
         .notify((int)threadId, builder.build());
   }
 
-  // Main entry point for incoming message notifications.
   public static void updateNotification(@NonNull  Context context,
                                         long      threadId)
   {
